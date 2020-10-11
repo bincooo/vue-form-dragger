@@ -30,7 +30,7 @@ export default {
     build: {
         text: function (data, bind, _fn_bind_, _fn_build_) {
             console.log(data, bind, _fn_bind_, _fn_build_)
-            return `<el-link type="primary">{{data.name}}</el-link>`
+            return `<el-link type="primary">${data.name}</el-link>`
         }
     }
 }

@@ -50,7 +50,7 @@ function container(data, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach(item => {
-            html += __fn_build__(item, _bind_)
+            html += __fn_build__(item, _bind_, __fn_bind__, __fn_build__)
         })
         return html
     }
@@ -66,7 +66,7 @@ function layout(data, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach((item, index) => {
-            html += `<el-col id='${data.key}_${index}' :span='${item.span}'>${__fn_build__(item.list, _bind_)}</el-col>`
+            html += `<el-col id='${data.key}_${index}' :span='${item.span}'>${__fn_build__(item.list, _bind_, __fn_bind__, __fn_build__)}</el-col>`
         })
         return html
     }
