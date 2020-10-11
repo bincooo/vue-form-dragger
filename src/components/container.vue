@@ -11,7 +11,7 @@
             <i class="dr-mover el-icon-rank" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <el-container style="height: 100%; padding: 4px">
-              <container :selector.sync=localSelector :data=item.drag />
+              <container :map="map" :selector.sync=localSelector :data=item.drag />
             </el-container>
           </div>
         </div>
@@ -25,7 +25,7 @@
             <i class="el-icon-document-copy" @click="copyCommand(index)" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <el-col v-for="(it, index) in item.drag" :key=index :span="it.span">
-              <container :selector.sync="localSelector" :data="it.list"/>
+              <container :map="map" :selector.sync="localSelector" :data="it.list"/>
             </el-col>
           </el-row>
         </el-container>
@@ -146,10 +146,22 @@
           </div>
         </div>
 
+        <!-- 自定义组件 -->
+        <div v-else-if="map[item.type]" :key="item.key" style="margin: 2px">
+          <div :class="{'dr-area mask': true, 'dr-active': (localSelector && localSelector.key === item.key)}"
+               @click.stop="selectCommand(index)">
+            <i class="dr-mover el-icon-rank" />
+            <i class="el-icon-document-copy" @click="copyCommand(index)" />
+            <i class="el-icon-close" @click="closeCommand(index)"/>
+            <div style="overflow: auto">
+              <component v-bind:is="map[item.type]" :item="item" />
+            </div>
+          </div>
+        </div>
+
 
       </template>
     </draggable>
-    <!-- 空白时显示拖拽提示 -->
   </el-container>
 </template>
 
@@ -168,7 +180,13 @@ export default {
       required: true
     },
     selector: Object,
-    root: Boolean
+    root: Boolean,
+    map: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
   },
   data() {
     return {
@@ -268,6 +286,7 @@ export default {
   }
 }
 
+/*空白时显示拖拽提示*/
 .dr-empty::before {
   content: '请拖入组件';
   position: absolute;

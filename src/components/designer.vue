@@ -1,9 +1,9 @@
 <template>
-  <el-container class="dr-designer" :style="size">
+  <el-container class="dr-designer" :style="{width, height}">
     <!-- === start 左侧模块面板 === -->
-    <el-aside class="dr-modeler" :width="modelerConfig.width">
-      <draggable :list="modelerConfig.list" v-bind="{group:{name: 'viewer',pull:'clone',put:false},sort: false}" :move=moveCommand>
-        <div class="dr-module-item" v-for="(item, index) in modelerConfig.list" :key="index">{{ item.name }}</div>
+    <el-aside class="dr-modeler" width="200px">
+      <draggable :list="modeler.list" v-bind="{group:{name: 'viewer',pull:'clone',put:false},sort: false}" :move=moveCommand>
+        <div class="dr-module-item" v-for="(item, index) in modeler.list" :key="index">{{ item.name }}</div>
       </draggable>
     </el-aside>
     <!-- === end 左侧模块面板 === -->
@@ -11,7 +11,7 @@
     <!-- === start 中间视图面板 === -->
     <el-main class="dr-viewer">
       <el-form inline>
-        <container root :selector.sync="selector" :data="list" style="height: 100%" />
+        <container :map="data.viewer" root :selector.sync="selector" :data="list" style="height: 100%" />
       </el-form>
     </el-main>
     <!-- === end 中间视图面板 === -->
@@ -29,7 +29,9 @@
             </el-container>
         </el-tab-pane>
         <el-tab-pane label="配置项" name="setter">
-          <parameter v-if="selector" :data.sync="selector" />
+            <slot :config.sync="selector">
+              <parameter v-if="selector" :data.sync="selector" />
+            </slot>
         </el-tab-pane>
         <el-tab-pane label="其他" name="other">
           <div style="padding: 20px 20px 5px 20px">
@@ -74,20 +76,18 @@
 <script>
 import Vue from 'vue'
 import formatter from 'vue-beautify'
-import { modelerConfig } from './config'
 import draggable from 'vuedraggable'
 import container from './container'
 import parameter from './parameter'
-
-import Coder from '../utils/genarator'
+import modeler from './config'
 
 
 export default {
   name: 'designer',
   data() {
     return {
-      modelerConfig,
-      list: [],
+      list: [ ],
+      modeler: undefined,
       selector: undefined,
       codeVisible: false,
       previewVisible: false,
@@ -96,14 +96,17 @@ export default {
     }
   },
   props: {
-    size: {
+    data: {
       type: Object,
-      default: function () {
-        return {
-          width: '100%',
-          height: '100%'
-        }
-      }
+      default() { return {} }
+    },
+    width: {
+      type: String,
+      default() {return '100%'}
+    },
+    height: {
+      type: String,
+      default() {return '100%'}
     }
   },
   components: {
@@ -115,6 +118,9 @@ export default {
     json() {
       return JSON.stringify(this.list, null, 2)
     }
+  },
+  created() {
+    this.modeler = new modeler(this.data.button, this.data.build)
   },
   methods: {
     moveCommand(e) {
@@ -131,8 +137,8 @@ export default {
       console.log('addCommand', e)
     },
     generator() {
-      let html = Coder(this.list)
-      this.template = formatter(html.template)
+      let buildMap = this.modeler.build(this.list)
+      this.template = formatter(buildMap.template)
       this.codeVisible = true
     },
     previewer() {
@@ -145,8 +151,8 @@ export default {
         if (!children) {
           element.querySelector(".el-dialog__body").innerHTML = '<div id="preview"/>'
         }
-        const Preview = Vue.extend(Coder(self.list))
-        self.preview = new Preview().$mount('#preview')
+        const _Vue_ = Vue.extend(self.modeler.build(self.list))
+        self.preview = new _Vue_().$mount('#preview')
       })
     },
     metadata() {

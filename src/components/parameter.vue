@@ -33,6 +33,9 @@
         <el-form-item v-if="Object.keys(data).indexOf('labelWidth') >= 0" label="标签宽度">
           <el-input type="number" v-model.number="data.labelWidth"/>
         </el-form-item>
+        <el-form-item v-if="Object.keys(data).indexOf('disabled') >= 0" label="禁用">
+          <el-switch v-model="data.disabled" />
+        </el-form-item>
       </div>
       <!-- === end 通用配置项 === -->
 
@@ -71,16 +74,6 @@
       </div>
       <!-- === end 选项配置项 === -->
 
-
-      <!-- === start 其他配置项 === -->
-      <div v-if="Object.keys(data).indexOf('disabled') >= 0">
-        <el-divider content-position="left">其他</el-divider>
-        <el-form-item label="禁用">
-          <el-switch v-model="data.disabled" />
-        </el-form-item>
-      </div>
-      <!-- === end 其他配置项 === -->
-
     </el-form>
   </el-container>
 </template>
@@ -94,13 +87,6 @@ export default {
         return true
       }
     }
-  },
-  data() {
-    return {
-    }
-  },
-  created() {
-    console.log('数据：', this.data)
   }
 }
 </script>

@@ -1,32 +1,18 @@
-const __map__ = {}
-export default function encoder(data) {
-    if (!data || typeof data !== 'object') {
-        return
-    }
-    const local = {}
-    return {
-        template: `<el-container><el-form inline style='width: 100%' :model='local' label-width='80px'>${exec(data, 'local.', local)}</el-form></el-container>`,
-        data() {
-            return {
-                local
-            }
-        }
-    }
-}
+const __map__ = {}, pre = 'local.'
 
 /**
  * 递归方法
  */
-function exec(data, pre, local) {
+function __fn_build__(data, bind, fn_bind, fn_build) {
     if (Array.isArray(data)) {
         let html = ''
         data.forEach(item => {
-            html += exec(item, pre, local)
+            html += __fn_build__(item, bind, fn_bind, fn_build)
         })
         return html
     } else {
         if (__map__[data.type]) {
-            return __map__[data.type](data, pre, local)
+            return __map__[data.type](data, bind, fn_bind, fn_build)
         }
         else {
             return ''
@@ -37,11 +23,11 @@ function exec(data, pre, local) {
 /**
  * 数据绑定
  */
-function __fn_bind__(data, local) {
+function __fn_bind__(data, bind) {
     if (data.value && data.value.trim().length > 0) {
         if (data.value.indexOf('.') > 0) {
             const split = data.value.split('.')
-            let len = split.length, d = local
+            let len = split.length, d = bind
             split.forEach((it, index) => {
                 if (index + 1 !== len) {
                     d[it] = {}
@@ -51,7 +37,7 @@ function __fn_bind__(data, local) {
                 }
             })
         } else {
-            local[data.value] = data.type === 'checkbox' ? [] : undefined
+            bind[data.value] = data.type === 'checkbox' ? [] : undefined
         }
         return true
     } else return false
@@ -60,11 +46,11 @@ function __fn_bind__(data, local) {
 /**
  * 容器组件生成代码
  */
-function container(data, pre, local) {
+function container(data, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach(item => {
-            html += exec(item, pre, local)
+            html += __fn_build__(item, _bind_)
         })
         return html
     }
@@ -76,11 +62,11 @@ __map__.container = container
 /**
  * 布局组件生成代码
  */
-function layout(data, pre, local) {
+function layout(data, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach((item, index) => {
-            html += `<el-col id='${data.key}_${index}' :span='${item.span}'>${exec(item.list, pre, local)}</el-col>`
+            html += `<el-col id='${data.key}_${index}' :span='${item.span}'>${__fn_build__(item.list, _bind_)}</el-col>`
         })
         return html
     }
@@ -92,8 +78,8 @@ __map__.layout = layout
 /**
  * 输入框生成代码
  */
-function input(data, pre, local) {
-    let bind = __fn_bind__(data, local)
+function input(data, _bind_) {
+    let bind = __fn_bind__(data, _bind_)
     return `<el-form-item size='${data.size}' label='${data.name}'><el-input ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.input = input
@@ -101,7 +87,7 @@ __map__.input = input
 /**
  * 选择框生成代码
  */
-function select(data, pre, local) {
+function select(data, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach(item => {
@@ -109,7 +95,7 @@ function select(data, pre, local) {
         })
         return html
     }
-    let bind = __fn_bind__(data, local)
+    let bind = __fn_bind__(data, _bind_)
     return `<el-form-item size='${data.size}' label='${data.name}'><el-select ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}' value=''>${item(data.option)}</el-select></el-form-item>`
 }
 __map__.select = select
@@ -117,8 +103,8 @@ __map__.select = select
 /**
  * 日期框生成代码
  */
-function date(data, pre, local) {
-    let bind = __fn_bind__(data, local)
+function date(data, pre, _bind_) {
+    let bind = __fn_bind__(data, _bind_)
     return `<el-form-item size='${data.size}' label='${data.name}'><el-date-picker ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' id='${data.key}' ${data.disabled?'disabled':''} type="date" placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.date = date
@@ -127,8 +113,8 @@ __map__.date = date
 /**
  * 开关框生成代码
  */
-function _switch(data, pre, local) {
-    let bind = __fn_bind__(data, local)
+function _switch(data, pre, _bind_) {
+    let bind = __fn_bind__(data, _bind_)
     return `<el-form-item  size='${data.size}' label='${data.name}'><el-switch id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} ${data.disabled?'disabled':''}/></el-form-item>`
 }
 __map__.switch = _switch
@@ -137,7 +123,7 @@ __map__.switch = _switch
 /**
  * 多选框生成代码
  */
-function checkbox(data, pre, local) {
+function checkbox(data, pre, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach((item, index) => {
@@ -145,7 +131,7 @@ function checkbox(data, pre, local) {
         })
         return html
     }
-    let bind = __fn_bind__(data, local)
+    let bind = __fn_bind__(data, _bind_)
     return `<el-form-item  size='${data.size}' label='${data.name}'><el-checkbox-group id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''}>${item(data.option)}</el-checkbox-group></el-form-item>`
 }
 __map__.checkbox = checkbox
@@ -154,7 +140,7 @@ __map__.checkbox = checkbox
 /**
  * 单选框生成代码
  */
-function radio(data, pre, local) {
+function radio(data, pre, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach((item, index) => {
@@ -162,7 +148,7 @@ function radio(data, pre, local) {
         })
         return html
     }
-    let bind = __fn_bind__(data, local)
+    let bind = __fn_bind__(data, _bind_)
     return `<el-form-item  size='${data.size}' label='${data.name}'><el-radio-group id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''}>${item(data.option)}</el-radio-group></el-form-item>`
 }
 __map__.radio = radio
@@ -171,8 +157,44 @@ __map__.radio = radio
 /**
  * 文本域代码生成
  */
-function textarea(data, pre, local) {
-    let bind = __fn_bind__(data, local)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-input resize='none' id='data.key' ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' type="textarea" placeholder='${data.placeholder}'/></el-form-item>`
+function textarea(data, _bind_) {
+    let bind = __fn_bind__(data, _bind_)
+    return `<el-form-item size='${data.size}' label='${data.name}'><el-input resize='none' id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' type="textarea" placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.textarea = textarea
+
+
+
+class encoder {
+    constructor(map = {}) {
+        this.__map__ = __map__
+        for(const key in map) {
+            this.put(key, map[key])
+        }
+    }
+
+    put(key, _Fn_) {
+        this.__map__[key] = _Fn_
+    }
+
+    del(key) {
+        delete this.__map__[key]
+    }
+
+    build(data) {
+        if (!data || typeof data !== 'object') {
+            return
+        }
+        const local = {}
+        return {
+            template: `<el-container><el-form inline style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
+            data() {
+                return {
+                    local
+                }
+            }
+        }
+    }
+}
+
+export default encoder
