@@ -1,4 +1,4 @@
-# vue-designer
+# vue-form-dragger
 
 
 基于 [vue](https://github.com/vuejs/vue) 和 [element-ui](https://github.com/ElemeFE/element) 实现的可视化表单设计器
