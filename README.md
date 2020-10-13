@@ -15,8 +15,12 @@
 * [vuedraggable 2.x+](https://github.com/SortableJS/Vue.Draggable)
 * [vue 2.x+](https://github.com/vuejs/vue)
 
+## 使用与拓展
+* [使用案例](https://github.com/bingco-zhan/vue-form-dragger/blob/main/src/App.vue)
+* [拓展案例](https://github.com/bingco-zhan/vue-form-dragger/tree/main/src/examples)
+
 ## 展示
-<img src="https://raw.githubusercontent.com/bingco-zhan/vue-form-dragger/main/images/1602158048.jpg" width="500px" height="300px" />
-<img src="https://raw.githubusercontent.com/bingco-zhan/vue-form-dragger/main/images/1602158085.jpg" width="500px" height="300px" />
-<img src="https://raw.githubusercontent.com/bingco-zhan/vue-form-dragger/main/images/1602158121.jpg" width="500px" height="300px" />
-<img src="https://raw.githubusercontent.com/bingco-zhan/vue-form-dragger/main/images/1602158169.jpg" width="500px" height="300px" />
+<img src="https://cdn.jsdelivr.net/gh/bingco-zhan/cdn@0.0.3/vue-form-dragger/images/1602158048.jpg" width="500px" height="300px" />
+<img src="https://cdn.jsdelivr.net/gh/bingco-zhan/cdn@0.0.3/vue-form-dragger/images/1602158085.jpg" width="500px" height="300px" />
+<img src="https://cdn.jsdelivr.net/gh/bingco-zhan/cdn@0.0.3/vue-form-dragger/images/1602158121.jpg" width="500px" height="300px" />
+<img src="https://cdn.jsdelivr.net/gh/bingco-zhan/cdn@0.0.3/vue-form-dragger/images/1602158169.jpg" width="500px" height="300px" />

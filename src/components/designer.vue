@@ -50,7 +50,7 @@
     <!-- === end 参数面板 === -->
 
     <!-- === start 代码展示区 === -->
-    <el-dialog class="code_dialog" title="代码展示" :visible.sync="codeVisible">
+    <el-dialog fullscreen class="code_dialog" title="代码展示" :visible.sync="codeVisible">
       <div style="width: 100%; border: 1px solid gainsboro; overflow: auto; max-height: 400px" v-highlight>
         <pre style="font-size: 12px; margin: 2px"><code class="html" style="font-family: 'Courier New', serif" v-text="template" /></pre>
       </div>
@@ -62,8 +62,10 @@
     <!-- === end 代码展示区 === -->
 
     <!-- === start 预览展示区 === -->
-    <el-dialog id="preview_dialog" class="preview_dialog" title="预览展示" :visible.sync="previewVisible">
-      <div id="preview"></div>
+    <el-dialog width="98%" id="preview_dialog" class="preview_dialog" title="预览展示" :visible.sync="previewVisible">
+      <div  style="height: 98%">
+        <div id="preview"></div>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="previewVisible = false">关闭</el-button>
         <el-button size="mini" type="primary" @click="metadata">获取数据</el-button>
