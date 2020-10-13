@@ -46,3 +46,24 @@ export default class OUtil {
         }
     }
 }
+
+
+/**
+ * 数据流转文件下载
+ */
+function exportFile(name, data) {
+    const urlKit = window.URL || window.webkitURL || window
+    const blob = new Blob([data])
+    const link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+    link.href = urlKit.createObjectURL(blob)
+    link.download = name
+    const event = document.createEvent("MouseEvents")
+    event.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+    link.dispatchEvent(event)
+}
+
+
+export {
+    OUtil,
+    exportFile
+}

@@ -50,22 +50,20 @@
     <!-- === end 参数面板 === -->
 
     <!-- === start 代码展示区 === -->
-    <el-dialog fullscreen class="code_dialog" title="代码展示" :visible.sync="codeVisible">
+    <el-dialog width="90%" class="code_dialog" title="代码展示" :visible.sync="codeVisible">
       <div style="width: 100%; border: 1px solid gainsboro; overflow: auto; max-height: 400px" v-highlight>
         <pre style="font-size: 12px; margin: 2px"><code class="html" style="font-family: 'Courier New', serif" v-text="template" /></pre>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="codeVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="codeVisible = false">确 定</el-button>
+        <el-button size="mini" type="primary" @click="download">导 出</el-button>
       </span>
     </el-dialog>
     <!-- === end 代码展示区 === -->
 
     <!-- === start 预览展示区 === -->
-    <el-dialog width="98%" id="preview_dialog" class="preview_dialog" title="预览展示" :visible.sync="previewVisible">
-      <div  style="height: 98%">
-        <div id="preview"></div>
-      </div>
+    <el-dialog width="90%" id="preview_dialog" class="preview_dialog" title="预览展示" :visible.sync="previewVisible">
+      <div id="preview" />
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="previewVisible = false">关闭</el-button>
         <el-button size="mini" type="primary" @click="metadata">获取数据</el-button>
@@ -82,6 +80,8 @@ import draggable from 'vuedraggable'
 import container from './container'
 import parameter from './parameter'
 import modeler from './config'
+
+import { exportFile } from '../utils/objects'
 
 
 export default {
@@ -159,62 +159,16 @@ export default {
     },
     metadata() {
       this.$alert(JSON.stringify(this.preview.local), '数据获取')
+    },
+    download() {
+      let buildMap = this.modeler.build(this.list)
+      const dataStr = JSON.stringify(buildMap.data())
+      const data = `&lt;template>${buildMap.template}&lt;/template>&lt;script>export default { data() { ${dataStr} }}&lt;/script>`
+      const template = formatter(data)
+      exportFile(new Date().getTime() + '.vue', template)
+      this.codeVisible = false
     }
   }
 }
 </script>
-
-<style lang="scss">
-/*整体容器样式*/
-.dr-designer {
-  border: 1px solid slategrey;
-  height: 100%;
-  font-size: 12px;
-}
-
-/*模块面板样式*/
-.dr-modeler {
-  border-right: 1px solid slategrey;
-  .dr-module-item {
-    border: 1px solid grey;
-    margin: 4px;
-    width: 89px;
-    display: inline-block;
-    line-height: 25px;
-    text-align: center;
-  }
-  .dr-module-item:hover {
-    box-shadow: 2px 2px 2px #888888;
-    cursor: move;
-  }
-}
-
-/*视图面板样式*/
-.dr-viewer {
-  height: 100%;
-  overflow: auto;
-  form {
-    height: 100%;
-  }
-}
-
-/*参数面板样式*/
-.dr-parameter {
-  border-left: 1px solid slategrey;
-  .el-tabs {
-    height: 100%;
-    > .el-tabs__header {
-      margin-bottom: 0;
-    }
-  }
-  .el-tabs__content {
-    height: calc(100% - 40px);
-    > .el-tab-pane {
-      height: 100%;
-    }
-    section {
-      height: 100%;
-    }
-  }
-}
-</style>
+<style lang="scss">@import './index';</style>

@@ -90,32 +90,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.dr-param_item {
-  height: 100%;
-  padding-top: 20px;
-  overflow: auto;
-  .el-input {
-    width: 170px;
-  }
-  .dr-param_item_col {
-    width: 100px;
-  }
-  .dr-param_item_gutter {
-    width: 80px;
-    margin-right: 8px;
-  }
-  .el-button {
-    margin-left: 2px;
-  }
-  .dr-param_option-key {
-    width: 150px;
-    margin-left: 10px;
-  }
-  .dr-param_option-value {
-    width: 70px;
-    margin-left: 10px;
-  }
-}
-</style>
