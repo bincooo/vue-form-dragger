@@ -1,4 +1,4 @@
-const __map__ = {}, pre = 'local.'
+const __map__ = {}, pre = 'form.'
 
 /**
  * 递归方法
@@ -33,11 +33,11 @@ function __fn_bind__(data, bind) {
                     d[it] = {}
                     d = d[it]
                 } else {
-                    d[it] = data.type === 'checkbox' ? [] : undefined
+                    d[it] = data.type === 'checkbox' ? [] : ''
                 }
             })
         } else {
-            bind[data.value] = data.type === 'checkbox' ? [] : undefined
+            bind[data.value] = data.type === 'checkbox' ? [] : ''
         }
         return true
     } else return false
@@ -190,7 +190,7 @@ class encoder {
             template: `<el-container><el-form inline style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
             data() {
                 return {
-                    local
+                    form: local
                 }
             }
         }

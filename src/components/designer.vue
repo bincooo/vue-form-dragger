@@ -138,9 +138,14 @@ export default {
     addCommand(e) {
       console.log('addCommand', e)
     },
+    handleCode() {
+      const buildMap = this.modeler.build(this.list)
+      const dataStr = JSON.stringify(buildMap.data()).replace(/"([^"]+)":/g,"$1:")
+      const code = `<template>${buildMap.template}</template><script>export default { data() { return ${dataStr} }}${'</'}script><style></style>`
+      return formatter(code)
+    },
     generator() {
-      let buildMap = this.modeler.build(this.list)
-      this.template = formatter(buildMap.template)
+      this.template = this.handleCode()
       this.codeVisible = true
     },
     previewer() {
@@ -158,17 +163,23 @@ export default {
       })
     },
     metadata() {
-      this.$alert(JSON.stringify(this.preview.local), '数据获取')
+      this.$alert(JSON.stringify(this.preview.form) || "{ }", '数据获取')
     },
     download() {
-      let buildMap = this.modeler.build(this.list)
-      const dataStr = JSON.stringify(buildMap.data())
-      const data = `&lt;template>${buildMap.template}&lt;/template>&lt;script>export default { data() { ${dataStr} }}&lt;/script>`
-      const template = formatter(data)
-      exportFile(new Date().getTime() + '.vue', template)
-      this.codeVisible = false
+      const template =  this.handleCode()
+      this.$prompt("请输入名称", "提示", {
+        inputPattern: /.+/
+      }).then(res => {
+        if (res.action === 'confirm') {
+          exportFile(res.value + '.vue', template)
+          this.codeVisible = false
+        }
+      })
     }
   }
 }
 </script>
-<style lang="scss">@import './index';</style>
+
+<style lang="scss">
+  @import './index';
+</style>
