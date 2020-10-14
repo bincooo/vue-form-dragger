@@ -38,8 +38,8 @@
             <i class="el-icon-document-copy" @click="copyCommand(index)" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <div style="overflow: auto">
-              <el-form-item :label-width="item.labelWidth + 'px'" :size="item.size" :label="item.name">
-                <el-input :style="{width: item.width + 'px'}" :disabled="item.disabled" :placeholder="item.placeholder"/>
+              <el-form-item :label-width="item.labelWidth" :size="item.size" :label="item.name">
+                <el-input :style="{width: item.width}" :disabled="item.disabled" :placeholder="item.placeholder"/>
               </el-form-item>
             </div>
           </div>
@@ -53,8 +53,8 @@
             <i class="el-icon-document-copy" @click="copyCommand(index)" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <div style="overflow: auto">
-              <el-form-item :label-width="item.labelWidth + 'px'" :label=item.name :size="item.size">
-                <el-select :style="{width: item.width + 'px'}" :disabled="item.disabled" :placeholder=item.placeholder value="">
+              <el-form-item :label-width="item.labelWidth" :label=item.name :size="item.size">
+                <el-select :style="{width: item.width}" :disabled="item.disabled" :placeholder=item.placeholder value="">
                   <el-option v-for="o in item.option" :label=o.label :value=o.value :key=o.value />
                 </el-select>
               </el-form-item>
@@ -71,8 +71,8 @@
             <i class="el-icon-document-copy" @click="copyCommand(index)" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <div style="overflow: auto">
-              <el-form-item :label-width="item.labelWidth + 'px'" :size=item.size :label=item.name>
-                <el-date-picker :style="{width: item.width + 'px'}" :disabled="item.disabled" type="date" :placeholder=item.placeholder />
+              <el-form-item :label-width="item.labelWidth" :size=item.size :label=item.name>
+                <el-date-picker :style="{width: item.width}" :disabled="item.disabled" type="date" :placeholder=item.placeholder />
               </el-form-item>
             </div>
           </div>
@@ -87,7 +87,7 @@
             <i class="el-icon-document-copy" @click="copyCommand(index)" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <div style="overflow: auto">
-              <el-form-item :label-width="item.labelWidth + 'px'" :size=item.size :label=item.name>
+              <el-form-item :label-width="item.labelWidth" :size=item.size :label=item.name>
                 <el-switch :disabled="item.disabled"></el-switch>
               </el-form-item>
             </div>
@@ -103,7 +103,7 @@
             <i class="el-icon-document-copy" @click="copyCommand(index)" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <div style="overflow: auto">
-              <el-form-item :label-width="item.labelWidth + 'px'" :size=item.size :label=item.name>
+              <el-form-item :label-width="item.labelWidth" :size=item.size :label=item.name>
                 <el-checkbox-group v-model="local.checkbox">
                     <el-checkbox v-for="o in item.option" :disabled="o.disabled" :label=o.label :key=o.value />
                 </el-checkbox-group>
@@ -121,7 +121,7 @@
             <i class="el-icon-document-copy" @click="copyCommand(index)" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <div style="overflow: auto">
-              <el-form-item :label-width="item.labelWidth + 'px'" :size=item.size :label="item.name">
+              <el-form-item :label-width="item.labelWidth" :size=item.size :label="item.name">
                 <el-radio-group v-model="local.radio">
                   <el-radio v-for="o in item.option" :disabled="o.disabled" :label=o.label :key=o.value />
                 </el-radio-group>
@@ -139,8 +139,8 @@
             <i class="el-icon-document-copy" @click="copyCommand(index)" />
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <div style="overflow: auto">
-              <el-form-item :label-width="item.labelWidth + 'px'" :size="item.size" :label="item.name">
-                <el-input resize='none' :disabled="item.disabled" :style="{width: item.width + 'px'}" type="textarea" :placeholder="item.placeholder"/>
+              <el-form-item :label-width="item.labelWidth" :size="item.size" :label="item.name">
+                <el-input resize='none' :disabled="item.disabled" :style="{width: item.Width}" type="textarea" :placeholder="item.placeholder"/>
               </el-form-item>
             </div>
           </div>

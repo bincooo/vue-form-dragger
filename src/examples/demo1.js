@@ -5,7 +5,29 @@ export default {
             type: 'text',
             name: '文字',
             value: '',
-            disabled: false
+            disabled: false,
+            data: ''
+        },
+        {
+            type: 'table',
+            name: '表格',
+            width: '100%',
+            height: '',
+            value: '',
+            column: [
+                {
+                    fixed: '',
+                    label: '名称',
+                    width: '100px',
+                    prop: ''
+                },
+                {
+                    fixed: '',
+                    label: '日期',
+                    width: '100px',
+                    prop: ''
+                }
+            ]
         }
     ],
 
@@ -14,6 +36,12 @@ export default {
     viewer: {
         text: {
             template: '<el-link type="primary">{{item.name}}</el-link>',
+            props: ['item']
+        },
+        table: {
+            template: '<el-table border :style="{width: (item.width === \'100%\' ? \'calc(\' + item.width + \' - 6px)\':item.width), border: \'1px solid silver\', margin: \'3px\'}"> \
+                            <el-table-column v-for="(col, index) in item.column" :fixed="col.fixed" :label="col.label" :width="col.width" :key="index" /> \
+                       </el-table>',
             props: ['item']
         }
     },
@@ -31,6 +59,17 @@ export default {
         text: function (data, bind, _fn_bind_, _fn_build_) {
             console.log(data, bind, _fn_bind_, _fn_build_)
             return `<el-link type="primary">${data.name}</el-link>`
+        },
+        table: function (data, _bind_, _fn_bind_) {
+            const item = function(list) {
+                let html = ''
+                list.forEach(item => {
+                    html += `<el-table-column ${item.prop ? ":prop='" + item.prop + "'":""} fixed="${item.fixed}" label="${item.label}" width="${item.width}" />`
+                })
+                return html
+            }
+            let bind = _fn_bind_(data, _bind_, () => [])
+            return `<el-table border ${bind?':data="form.' + data.value + '"' : ''} style="width: ${data.width}; border: 1px solid silver">${item(data.column)}</el-table>`
         }
     }
 }

@@ -115,6 +115,7 @@
   }
   > div > .el-form-item {
     margin-bottom: 14px;
+    width: calc(100% - 10px);
     > .el-form-item__label, >.el-form-item__content {
       line-height: 20px;
     }

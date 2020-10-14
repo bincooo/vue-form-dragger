@@ -23,28 +23,28 @@ const __config_list__ = [
         type: 'input',
         name: '输入框',
         size: 'mini',
-        width: 200,
+        width: '200px',
         value: '',
         disabled: false,
-        labelWidth: 80,
+        labelWidth: '80px',
         placeholder: '请输入'
     }, {
         type: 'textarea',
         name: '文本域',
         size: 'mini',
-        width: 200,
+        width: '200px',
         value: '',
         disabled: false,
-        labelWidth: 80,
+        labelWidth: '80px',
         placeholder: '请输入文本'
     }, {
         type: 'select',
         name: '选择框',
         size: 'mini',
-        width: 200,
+        width: '200px',
         value: '',
         disabled: false,
-        labelWidth: 80,
+        labelWidth: '80px',
         placeholder: '请选择',
         option: [
             {
@@ -59,10 +59,10 @@ const __config_list__ = [
         type: 'date',
         name: '日期',
         size: 'mini',
-        width: 200,
+        width: '200px',
         value: '',
         disabled: false,
-        labelWidth: 80,
+        labelWidth: '80px',
         placeholder: '请选择日期'
     }, {
         type: 'switch',
@@ -77,7 +77,7 @@ const __config_list__ = [
         size: 'mini',
         value: '',
         disabled: false,
-        labelWidth: 80,
+        labelWidth: '80px',
         option: [
             {
                 label: '选择一',
@@ -95,7 +95,7 @@ const __config_list__ = [
         size: 'mini',
         value: '',
         disabled: false,
-        labelWidth: 80,
+        labelWidth: '80px',
         option: [
             {
                 label: '选择一',

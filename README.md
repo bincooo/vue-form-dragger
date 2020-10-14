@@ -10,6 +10,8 @@
 * 减少大量代码编写
 * 实现表单数据绑定
 
+[live demo](http://www.bingco.top/form-dragger)
+
 ## 三方类库
 * [element-ui 2.x+](https://github.com/ElemeFE/element)
 * [vuedraggable 2.x+](https://github.com/SortableJS/Vue.Draggable)

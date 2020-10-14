@@ -10,7 +10,7 @@
 
     <!-- === start 中间视图面板 === -->
     <el-main class="dr-viewer">
-      <el-form inline>
+      <el-form>
         <container :map="data.viewer" root :selector.sync="selector" :data="list" style="min-height: 100%" />
       </el-form>
     </el-main>

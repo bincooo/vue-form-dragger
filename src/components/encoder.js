@@ -23,7 +23,7 @@ function __fn_build__(data, bind, fn_bind, fn_build) {
 /**
  * 数据绑定
  */
-function __fn_bind__(data, bind) {
+function __fn_bind__(data, bind, _fn_) {
     if (data.value && data.value.trim().length > 0) {
         if (data.value.indexOf('.') > 0) {
             const split = data.value.split('.')
@@ -33,11 +33,11 @@ function __fn_bind__(data, bind) {
                     d[it] = {}
                     d = d[it]
                 } else {
-                    d[it] = data.type === 'checkbox' ? [] : ''
+                    d[it] = data.type === 'checkbox' ? [] : (_fn_ ? _fn_() : '')
                 }
             })
         } else {
-            bind[data.value] = data.type === 'checkbox' ? [] : ''
+            bind[data.value] = data.type === 'checkbox' ? [] : (_fn_ ? _fn_() : '')
         }
         return true
     } else return false
@@ -80,7 +80,7 @@ __map__.layout = layout
  */
 function input(data, _bind_) {
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-input ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}'/></el-form-item>`
+    return `<el-form-item size='${data.size}' label='${data.name}'><el-input ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.input = input
 
@@ -96,16 +96,16 @@ function select(data, _bind_) {
         return html
     }
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-select ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}' value=''>${item(data.option)}</el-select></el-form-item>`
+    return `<el-form-item size='${data.size}' label='${data.name}'><el-select ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}' value=''>${item(data.option)}</el-select></el-form-item>`
 }
 __map__.select = select
 
 /**
  * 日期框生成代码
  */
-function date(data, pre, _bind_) {
+function date(data, _bind_) {
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-date-picker ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' id='${data.key}' ${data.disabled?'disabled':''} type="date" placeholder='${data.placeholder}'/></el-form-item>`
+    return `<el-form-item size='${data.size}' label='${data.name}'><el-date-picker ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} type="date" placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.date = date
 
@@ -113,7 +113,7 @@ __map__.date = date
 /**
  * 开关框生成代码
  */
-function _switch(data, pre, _bind_) {
+function _switch(data, _bind_) {
     let bind = __fn_bind__(data, _bind_)
     return `<el-form-item  size='${data.size}' label='${data.name}'><el-switch id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} ${data.disabled?'disabled':''}/></el-form-item>`
 }
@@ -123,7 +123,7 @@ __map__.switch = _switch
 /**
  * 多选框生成代码
  */
-function checkbox(data, pre, _bind_) {
+function checkbox(data, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach((item, index) => {
@@ -140,7 +140,7 @@ __map__.checkbox = checkbox
 /**
  * 单选框生成代码
  */
-function radio(data, pre, _bind_) {
+function radio(data, _bind_) {
     const item = function(list) {
         let html = ''
         list.forEach((item, index) => {
@@ -159,7 +159,7 @@ __map__.radio = radio
  */
 function textarea(data, _bind_) {
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-input resize='none' id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}px' type="textarea" placeholder='${data.placeholder}'/></el-form-item>`
+    return `<el-form-item size='${data.size}' label='${data.name}'><el-input resize='none' id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' type="textarea" placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.textarea = textarea
 
@@ -187,7 +187,7 @@ class encoder {
         }
         const local = {}
         return {
-            template: `<el-container><el-form inline style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
+            template: `<el-container><el-form style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
             data() {
                 return {
                     form: local
