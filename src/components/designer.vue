@@ -50,15 +50,7 @@
     <!-- === end 参数面板 === -->
 
     <!-- === start 代码展示区 === -->
-    <el-dialog width="90%" class="code_dialog" title="代码展示" :visible.sync="codeVisible">
-      <div style="width: 100%; border: 1px solid gainsboro; overflow: auto; max-height: 400px" v-highlight>
-        <pre style="font-size: 12px; margin: 2px"><code class="html" style="font-family: 'Courier New', serif" v-text="template" /></pre>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="codeVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="download">导 出</el-button>
-      </span>
-    </el-dialog>
+    <code-dialog :template="template" :code-visible.sync="codeVisible" />
     <!-- === end 代码展示区 === -->
 
     <!-- === start 预览展示区 === -->
@@ -79,9 +71,10 @@ import formatter from 'vue-beautify'
 import draggable from 'vuedraggable'
 import container from './container'
 import parameter from './parameter'
+import CodeDialog from './code_dialog'
 import modeler from './config'
 
-import { exportFile } from '../utils/objects'
+
 
 
 export default {
@@ -114,7 +107,13 @@ export default {
   components: {
     draggable,
     container,
-    parameter
+    parameter,
+    CodeDialog
+  },
+  watch: {
+    selector(val) {
+      this.$emit("activeChange", val)
+    }
   },
   computed: {
     json() {
@@ -163,18 +162,7 @@ export default {
       })
     },
     metadata() {
-      this.$alert(JSON.stringify(this.preview.form) || "{ }", '数据获取')
-    },
-    download() {
-      const template =  this.handleCode()
-      this.$prompt("请输入名称", "提示", {
-        inputPattern: /.+/
-      }).then(res => {
-        if (res.action === 'confirm') {
-          exportFile(res.value + '.vue', template)
-          this.codeVisible = false
-        }
-      })
+      this.$alert(JSON.stringify(this.preview.data) || "{ }", '数据获取')
     }
   }
 }

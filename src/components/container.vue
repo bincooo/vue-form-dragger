@@ -218,20 +218,7 @@ export default {
         key: `${local.type}_${new Date().getTime()}`
       })
       if (e.pullMode === 'clone') {
-
-        if (local.type === 'container' || local.type === 'layout') {
-          this.$set(this.data, newIndex, {
-            ...this.data[newIndex],
-            drag: this.outil.agn(this.data[newIndex].drag)
-          })
-        }
-
-        if (local.option) {
-          this.$set(this.data, newIndex, {
-            ...this.data[newIndex],
-            option: this.outil.agn(this.data[newIndex].option)
-          })
-        }
+        this.$set(this.data, newIndex, {... this.outil.agn(this.data[newIndex])})
       }
       this.localSelector = this.data[newIndex];
     },

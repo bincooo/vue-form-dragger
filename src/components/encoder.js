@@ -1,4 +1,4 @@
-const __map__ = {}, pre = 'form.'
+const __map__ = {}, pre = 'data.'
 
 /**
  * 递归方法
@@ -190,7 +190,7 @@ class encoder {
             template: `<el-container><el-form style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
             data() {
                 return {
-                    form: local
+                    data: local
                 }
             }
         }

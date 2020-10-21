@@ -11,6 +11,7 @@ export default {
         {
             type: 'table',
             name: '表格',
+            size: 'mini',
             width: '100%',
             height: '',
             value: '',
@@ -39,7 +40,7 @@ export default {
             props: ['item']
         },
         table: {
-            template: '<el-table border :style="{width: (item.width === \'100%\' ? \'calc(\' + item.width + \' - 6px)\':item.width), border: \'1px solid silver\', margin: \'3px\'}"> \
+            template: '<el-table :size="item.size" border :style="{width: (item.width === \'100%\' ? \'calc(\' + item.width + \' - 6px)\':item.width), margin: \'3px\'}"> \
                             <el-table-column v-for="(col, index) in item.column" :fixed="col.fixed" :label="col.label" :width="col.width" :key="index" /> \
                        </el-table>',
             props: ['item']
@@ -69,7 +70,7 @@ export default {
                 return html
             }
             let bind = _fn_bind_(data, _bind_, () => [])
-            return `<el-table border ${bind?':data="form.' + data.value + '"' : ''} style="width: ${data.width}; border: 1px solid silver">${item(data.column)}</el-table>`
+            return `<el-table size="${data.size}" border ${bind?':data="data.' + data.value + '"' : ''} style="width: ${data.width}">${item(data.column)}</el-table>`
         }
     }
 }
