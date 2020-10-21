@@ -40,10 +40,13 @@ export default {
             props: ['item']
         },
         table: {
-            template: '<el-table :size="item.size" border :style="{width: (item.width === \'100%\' ? \'calc(\' + item.width + \' - 6px)\':item.width), margin: \'3px\'}"> \
+            template: '<el-table :ref="item.key" :size="item.size" border :style="{width: (item.width === \'100%\' ? \'calc(\' + item.width + \' - 6px)\':item.width), margin: \'3px\'}"> \
                             <el-table-column v-for="(col, index) in item.column" :fixed="col.fixed" :label="col.label" :width="col.width" :key="index" /> \
                        </el-table>',
-            props: ['item']
+            props: ['item'],
+            created() {
+                // console.log("simple table!")
+            }
         }
     },
 
