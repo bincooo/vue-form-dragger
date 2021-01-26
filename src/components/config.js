@@ -1,9 +1,5 @@
 const __config_list__ = [
     {
-        type: 'container',
-        name: '容器',
-        drag: []
-    }, {
         type: 'layout',
         name: '布局',
         gutter: 10,

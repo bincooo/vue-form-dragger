@@ -44,22 +44,6 @@ function __fn_bind__(data, bind, _fn_) {
 }
 
 /**
- * 容器组件生成代码
- */
-function container(data, _bind_) {
-    const item = function(list) {
-        let html = ''
-        list.forEach(item => {
-            html += __fn_build__(item, _bind_, __fn_bind__, __fn_build__)
-        })
-        return html
-    }
-    return `<el-container>${item(data.drag)}</el-container>`
-}
-__map__.container = container
-
-
-/**
  * 布局组件生成代码
  */
 function layout(data, _bind_) {

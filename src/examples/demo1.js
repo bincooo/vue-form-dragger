@@ -51,8 +51,9 @@ export default {
     },
 
 
-    /*生成代码模板*/
+
     /**
+     * 生成代码模板
      * function 有四个参数：
      *  data: 构建数据
      *  bind: 数据绑定

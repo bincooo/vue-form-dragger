@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { exportFile } from '../utils/objects'
+import { exportFile } from '@/utils/objects'
 
 export default {
   name: "code_dialog",
@@ -34,13 +34,12 @@ export default {
   },
   methods: {
     download() {
-      const template =  this.handleCode()
       this.$prompt("请输入名称", "提示", {
         inputPattern: /.+/
       }).then(res => {
         if (res.action === 'confirm') {
-          exportFile(res.value + '.vue', template)
-          this.codeVisible = false
+          exportFile(res.value + '.vue', this.template)
+          this.visible = false
         }
       })
     }
