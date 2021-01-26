@@ -54,7 +54,7 @@
     <!-- === end 代码展示区 === -->
 
     <!-- === start 预览展示区 === -->
-    <el-dialog width="90%" id="preview_dialog" class="preview_dialog" title="预览展示" :visible.sync="previewVisible">
+    <el-dialog width="1000px" id="preview_dialog" class="preview_dialog" title="预览展示" :visible.sync="previewVisible">
       <div id="preview" />
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="previewVisible = false">关闭</el-button>

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog width="90%" class="code_dialog" title="代码展示" :visible.sync="visible">
+  <el-dialog width="1000px" class="code_dialog" title="代码展示" :visible.sync="visible">
     <div style="width: 100%; border: 1px solid gainsboro; overflow: auto; max-height: 400px" v-highlight>
       <pre style="font-size: 12px; margin: 2px"><code class="html" style="font-family: 'Courier New', serif" v-text="template" /></pre>
     </div>
