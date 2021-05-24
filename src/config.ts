@@ -9,6 +9,16 @@ const config: any = {
   compoments: {
     form: FormElement
   },
+  // 属性面板表单构建信息
+  props: {
+    form: [{
+      title: '基本',
+      layout: [{
+        el: 'inline',
+        // TODO
+      }]
+    }]
+  },
   // 组件拖拽条件约束
   condition: {
     root: ['form']

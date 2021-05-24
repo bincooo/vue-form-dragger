@@ -2,18 +2,31 @@
   <div @mousedown="showHandler" class="__setup-panel_" v-show="config.setup.show">
     <transition name="fade">
       <div class="__inner_" v-show="config.setup.show">
-        setup panel
+        <div>{{ modelValue?.name }}</div>
+        <div>{{ modelValue?.key }}</div>
+        <collapse :active="1">
+          <collapse-wrapper idx="1" title="标题1">
+            <p>hello collapse 1</p>
+          </collapse-wrapper>
+          <collapse-wrapper idx="2" title="标题2">
+            <p>hello collapse 2</p>
+          </collapse-wrapper>
+        </collapse>
       </div>
     </transition>
   </div>
 </template>
 
 <script lang="ts">
-import { Inject } from "vue-property-decorator"
 import { Options, Vue } from "vue-class-component"
+import { Inject } from "vue-property-decorator"
+import Collapse from "./collapse/index.vue"
+import CollapseWrapper from "./collapse/wrapper.vue"
+
 @Options({
   name: "setup-panel",
-  props: ["modelValue"]
+  props: ["modelValue", "collapse"],
+  components: { Collapse, CollapseWrapper }
 })
 export default class Setup extends Vue {
   @Inject() config!: any
@@ -41,11 +54,26 @@ export default class Setup extends Vue {
     height: 100%;
     float: right;
     box-sizing: border-box;
+    > div:nth-child(1) {
+      text-align: center;
+      font-size: 14px;
+      margin: 4px 0;
+    }
+    > div:nth-child(2) {
+      text-align: center;
+      font-size: 10px;
+      font-family: "Courier New", Courier, monospace;
+      color: #a0a0a0;
+      padding-bottom: 6px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid @global-border-color;
+    }
   }
   > .fade-enter-active {
     transition: all 0.3s ease-out;
   }
-  > .fade-enter-from, > .fade-leave-to {
+  > .fade-enter-from,
+  > .fade-leave-to {
     transform: translateX(20px);
     opacity: 0;
   }
