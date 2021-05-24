@@ -1,8 +1,8 @@
 <template>
   <div
     class="__container-panel_"
-    @mouseleave="$emit('update:showmenu', false)"
-    @click="$emit('update:showmenu', false)"
+    @mouseleave="config.showmenu = false"
+    @click="config.showmenu = false"
   >
     <div class="__inner_" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
       <div class="__view_" :style="{ ...modelValue.size }">
@@ -33,10 +33,10 @@
       <Ruler id="ruler_1" />
       <Ruler id="ruler_2" left />
     </div>
-    <ul ref="menu" class="__contextmenu_" v-show="showmenu">
-      <li @click="menuhandler(1)"><i class="fa fa-trash" />删除</li>
-      <li @click="menuhandler(2)"><i class="fa fa-clipboard" />复制</li>
-      <li @click="menuhandler(3)"><i class="fa fa-cogs" />设置</li>
+    <ul ref="menu" class="__contextmenu_" v-show="this.config.showmenu">
+      <li @click="menuHandler(1)"><i class="fa fa-trash" />删除</li>
+      <li @click="menuHandler(2)"><i class="fa fa-clipboard" />复制</li>
+      <li @click="menuHandler(3)"><i class="fa fa-cogs" />设置</li>
     </ul>
   </div>
 </template>
@@ -46,56 +46,65 @@ import { Options, Vue } from "vue-class-component"
 import { Inject, Ref } from "vue-property-decorator"
 import Ruler from "./ruler.vue"
 import draggable from "vuedraggable"
-import Obj from "@/utils/obj"
+import mitt from "mitt"
 
 @Options({
   name: "container-panel",
-  props: ["modelValue", "showmenu"],
+  props: ["modelValue"],
   components: { Ruler, draggable }
 })
 export default class Container extends Vue {
   @Inject() readonly config!: any
-  @Inject() readonly coper!: Obj.Coper
   readonly modelValue!: any
   @Ref() readonly menu!: any
 
-  created() {}
+  created() {
+    this.config.mitt = mitt()
+  }
 
   onAdd(e: any): void {
     const index = e.newIndex
     const data = this.modelValue.list[index]
     const ndata: any = {}
-    this.coper.copy(ndata, {
+    this.config.CPKit.copy(ndata, {
       ...data,
-      key: `${data.el}_${Date.now()}`
+      key: `${data.el}-${Date.now()}`
     })
     this.modelValue.list.splice(index, 1, ndata)
   }
 
   contextmenu(evt: any, element: any) {
     evt.returnValue = false
-    this.$emit("update:showmenu", true)
+    this.config.showmenu = true
     const menu = this.menu
     menu.style.left = `${evt.layerX}px`
     menu.style.top = `${evt.layerY + 10}px`
     this.config.token = evt.currentTarget.getAttribute("token")
   }
 
-  menuhandler(num:number) {
-      switch(num) {
-          case 1: {
-              console.log('删除')
-              break
-          }
-          case 2: {
-              console.log('复制')
-              break
-          }
-          case 3: {
-              console.log('配置')
-              break
-          }
+  menuHandler(other: number) {
+    const { setup, token, mitt, CPKit } = this.config
+    const g_list: any[] = this.modelValue.list || []
+    const list = g_list.filter((item: any) => item.key === token)
+    const data = list.length > 0 ? list[0] : null
+    switch (other) {
+      case 1: {
+        ;(() => (!!data ? g_list.splice(g_list.indexOf(data), 1) : mitt.emit(`del:${token}`)))()
+        break
       }
+      case 2: {
+        (() => (!!data ? g_list.splice(g_list.indexOf(data), 0, CPKit.copy({}, {
+          ...data,
+          key: `${data.el}-${Date.now()}`
+        })) : mitt.emit(`copy:${token}`)))()
+        break
+      }
+      case 3: {
+        setup.show = true
+        ;(() => (!!data ? setup.element = data : mitt.emit(`set:${token}`, (data:any) => setup.element = data)))()
+        break
+      }
+    }
   }
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
   <div class="drag-builder" :style="size">
     <element-panel :element="config.element" />
-    <container-panel v-model:showmenu="showmenu" v-model="data" />
-    <setup-panel />
+    <container-panel v-model="data" />
+    <setup-panel v-model="config.setup.element" />
   </div>
 </template>
 
@@ -19,9 +19,7 @@ import Obj, { is } from "@/utils/obj"
   components: { ElementPanel, ContainerPanel, SetupPanel }
 })
 export default class DragBuilder extends Vue {
-  showmenu: boolean = false
   @Provide() config: any = {}
-  @Provide() coper: Obj.Coper = new Obj.Coper()
   data: any = {
     size: {},
     list: []
@@ -35,15 +33,29 @@ export default class DragBuilder extends Vue {
     }
   }
 
-  mounted() {
-    const $fontaware = document.body.querySelector("#fontaware")
-    if (!$fontaware) {
-      const $script = document.createElement("script")
-      $script.id = "fontaware"
-      $script.src = "//use.fontawesome.com/355056eaf2.js"
-      document.body.appendChild($script)
+  created() {
+    this.config.CPKit = new Obj.Coper()
+    this.config.showmenu = false
+    this.config.setup = {
+      show: false,
+      element: null
     }
-    this.$el.oncontextmenu = (evt:any) => evt.returnValue = false
+
+  }
+
+  mounted() {
+    this.jsLoad("#fonticon", "//use.fontawesome.com/355056eaf2.js")
+    this.$el.oncontextmenu = (evt: any) => (evt.returnValue = false)
+  }
+
+  jsLoad(key:string, src: string) {
+    const dom = document.body.querySelector(key)
+    if (!dom) {
+      const script = document.createElement("script")
+      script.src = src
+      script.id = "fontaware"
+      document.body.appendChild(script)
+    }
   }
 }
 </script>

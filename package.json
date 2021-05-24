@@ -9,6 +9,7 @@
   "dependencies": {
     "ant-design-vue": "^2.1.6",
     "core-js": "^3.6.5",
+    "mitt": "^2.1.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
     "vue-property-decorator": "^9.1.2",
