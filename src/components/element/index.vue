@@ -1,22 +1,13 @@
 <template>
   <div class="__element-panel_">
     <div class="__search_">
-      <input
-        @keyup="
-          (e) => {
-            if (e.code === 'Enter') onSearch(e.target)
-          }
-        "
-        value=""
-      />
-      <i
-        class="fa fa-search"
-        @click="
-          (e) => {
-            onSearch(e.target.previousElementSibling)
-          }
-        "
-      />
+      <input @keyup="(e) => {
+        if (e.code === 'Enter') onSearch(e.target)
+      }" value="" />
+      <i class="fa fa-search"
+        @click="(e) => {
+          onSearch(e.target.previousElementSibling)
+        }" />
     </div>
     <div class="_-" name="通用" />
     <draggable
@@ -27,8 +18,9 @@
         pull: 'clone',
         put: false
       }"
-      @end="onEnd"
-      @start="onStart"
+      :move="(e) => onMove(3, e)"
+      @end="(e) => onMove(2, e)"
+      @start="(e) => onMove(1, e)"
       item-key="type"
     >
       <template #item="d">
@@ -42,6 +34,7 @@
 </template>
 
 <script lang="ts">
+import { Inject } from "vue-property-decorator"
 import { Options, Vue } from "vue-class-component"
 import draggable from "vuedraggable"
 @Options({
@@ -50,17 +43,35 @@ import draggable from "vuedraggable"
   components: { draggable }
 })
 export default class Element extends Vue {
+  @Inject() config!: any
   search: string = ""
 
   onSearch(search: any) {
     this.search = search.value
     search.focus()
   }
-  onEnd(val: any) {
-    val.from.classList.remove("__moving_")
-  }
-  onStart(val: any) {
-    val.from.classList.add("__moving_")
+
+  onMove(other: number, evt: any) {
+    const classname: string = "__moving_"
+    switch (other) {
+      case 1:
+        evt.from.classList.add(classname)
+        break
+      case 2:
+        evt.from.classList.remove(classname)
+        break
+      case 3:
+        const { condition } = this.config
+        const element = evt.draggedContext.element
+        if (!condition.root) return true
+        else if (!evt.to.hasAttribute("box")) {
+          return condition.root.includes(element.el)
+        } else {
+          const condi = condition[evt.to.getAttribute("box")]
+          if (!condi) return true
+          else return condi.includes(element.el)
+        }
+    }
   }
 }
 </script>
