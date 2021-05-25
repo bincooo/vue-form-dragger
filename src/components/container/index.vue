@@ -1,29 +1,26 @@
 <template>
   <div
     class="__container-panel_"
-    @mouseleave="config.showmenu = false"
-    @click="config.showmenu = false"
+    @click="showmenu = false"
+    @mouseleave="showmenu = false"
   >
     <div class="__inner_" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
       <div class="__view_" :style="{ ...modelValue.size }">
         <draggable
           class="__drag_"
           ghost-class="__placeholder_"
-          :group="{
-            name: 'container',
-            pull: 'clone',
-            put: true
-          }"
+          group="container"
           :list="modelValue.list"
           animation="300"
           item-key="type"
           @add="onAdd"
+          :move=onMove
         >
           <template #item="d">
             <component
-              @contextmenu.stop="contextmenu($event, d.element)"
-              :box="d.element.el"
               :token="d.element.key"
+              @contextmenu.stop="contextmenu($event, d.element)"
+              v-model="d.element"
               class="__box_"
               :is="config.compoments[d.element.el]"
             />
@@ -33,7 +30,7 @@
       <Ruler id="ruler_1" />
       <Ruler id="ruler_2" left />
     </div>
-    <ul ref="menu" class="__contextmenu_" v-show="this.config.showmenu">
+    <ul ref="menu" class="__contextmenu_" v-show="this.showmenu">
       <li @click="menuHandler(1)"><i class="fa fa-trash" />删除</li>
       <li @click="menuHandler(2)"><i class="fa fa-clipboard" />复制</li>
       <li @click="menuHandler(3)"><i class="fa fa-cogs" />设置</li>
@@ -57,9 +54,17 @@ export default class Container extends Vue {
   @Inject() readonly config!: any
   readonly modelValue!: any
   @Ref() readonly menu!: any
+  showmenu: boolean = false
 
   created() {
     this.config.mitt = mitt()
+    this.config.showmenu = (x:string, y:string, token: string) => {
+      this.showmenu = true
+      const menu = this.menu
+      menu.style.top = y
+      menu.style.left = x
+      this.config.token = token
+    }
   }
 
   onAdd(e: any): void {
@@ -73,13 +78,24 @@ export default class Container extends Vue {
     this.modelValue.list.splice(index, 1, ndata)
   }
 
+  onMove(evt:any) {
+    // 根节点处理
+    const condition = this.config.condition
+    const element = evt.draggedContext.element
+    if (!evt.to.hasAttribute("data-box")) {
+      return !!condition["root"] ? condition["root"].includes(element.el) : true
+    }
+    // 子节点处理
+    else {
+      const el = evt.to.getAttribute("data-box")
+      return !!condition[el] ? condition[el].includes(element.el) : true
+    }
+  }
+
   contextmenu(evt: any, element: any) {
     evt.returnValue = false
-    this.config.showmenu = true
-    const menu = this.menu
-    menu.style.left = `${evt.layerX}px`
-    menu.style.top = `${evt.layerY + 10}px`
-    this.config.token = evt.currentTarget.getAttribute("token")
+    const { layerX, layerY, currentTarget } = evt
+    this.config.showmenu(`${layerX}px`, `${layerY + 10}px`, currentTarget.getAttribute("token"))
   }
 
   menuHandler(other: number) {
@@ -154,7 +170,7 @@ export default class Container extends Vue {
       box-sizing: border-box;
       border: 1px solid red;
       background-color: @global-background-color;
-      > .__drag_ {
+      .__drag_ {
         width: 100%;
         height: 100%;
         box-sizing: border-box;
@@ -193,6 +209,7 @@ export default class Container extends Vue {
   }
 
   > .__contextmenu_ {
+    box-sizing: unset;
     position: absolute;
     top: 20px;
     left: 50px;

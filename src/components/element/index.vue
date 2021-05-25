@@ -64,10 +64,10 @@ export default class Element extends Vue {
         const { condition } = this.config
         const element = evt.draggedContext.element
         if (!condition.root) return true
-        else if (!evt.to.hasAttribute("box")) {
+        else if (!evt.to.hasAttribute("data-box")) {
           return condition.root.includes(element.el)
         } else {
-          const condi = condition[evt.to.getAttribute("box")]
+          const condi = condition[evt.to.getAttribute("data-box")]
           if (!condi) return true
           else return condi.includes(element.el)
         }
@@ -76,7 +76,7 @@ export default class Element extends Vue {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .drag-builder > .__element-panel_ {
   *,
   *::before,

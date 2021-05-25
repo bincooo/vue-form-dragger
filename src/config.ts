@@ -35,7 +35,8 @@ const config: any = {
   },
   // 组件拖拽条件约束
   condition: {
-    root: ['form']
+    root: ["form"],
+    form: ["input"]
   },
   // 组件标签
   element: [
