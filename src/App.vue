@@ -12,6 +12,7 @@
 import { Options, Vue } from "vue-class-component"
 import DragBuilder from './components/drag-builder.vue'
 import config from './config'
+import "ant-design-vue/dist/antd.css";
 @Options({
   name: 'app',
   components: {
@@ -23,4 +24,6 @@ export default class App extends Vue {
 }
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+
+</style>

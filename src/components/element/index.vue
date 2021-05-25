@@ -2,15 +2,21 @@
   <div class="__element-panel_">
     <div class="__search_">
       <input
-        @keyup="(e) => {
+        @keyup="
+          (e) => {
             if (e.code === 'Enter') onSearch(e.target)
-          }"
-        value="" />
+          }
+        "
+        value=""
+      />
       <i
         class="fa fa-search"
-        @click="(e) => {
-          onSearch(e.target.previousElementSibling)
-        }"/>
+        @click="
+          (e) => {
+            onSearch(e.target.previousElementSibling)
+          }
+        "
+      />
     </div>
     <div class="_-" name="通用" />
     <draggable
@@ -61,6 +67,11 @@ export default class Element extends Vue {
 
 <style lang="less">
 .drag-builder > .__element-panel_ {
+  *,
+  *::before,
+  *::after {
+    box-sizing: unset;
+  }
   width: @element-panel-width;
   position: absolute;
   border: 1px solid @global-border-color;
@@ -130,7 +141,7 @@ export default class Element extends Vue {
     background-color: @element-background-color;
     display: inline-block;
     user-select: none;
-    width: 110px;
+    width: 105px;
     padding: 8px 5px;
     margin: 2px;
     font-size: 12px;
@@ -140,7 +151,7 @@ export default class Element extends Vue {
   }
 
   .__moving_::after {
-      content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;

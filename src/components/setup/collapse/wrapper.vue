@@ -21,7 +21,7 @@ import { Options, Vue } from "vue-class-component"
   props: {
     title: String,
     idx: {
-      type: String || Number,
+      type: [String, Number],
       required: true
     }
   }
@@ -64,6 +64,7 @@ export default class CollapseWrapper extends Vue {
   }
   > .content {
     border-bottom: 1px solid #e8e8e8;
+    padding: 5px 5px;
   }
   > .fade-enter-active {
     transition: all 0.3s ease-out;

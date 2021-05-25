@@ -5,12 +5,13 @@
         <div>{{ modelValue?.name }}</div>
         <div>{{ modelValue?.key }}</div>
         <collapse :active="1">
-          <collapse-wrapper idx="1" title="标题1">
-            <p>hello collapse 1</p>
-          </collapse-wrapper>
-          <collapse-wrapper idx="2" title="标题2">
-            <p>hello collapse 2</p>
-          </collapse-wrapper>
+          <template v-for="(item, index) in config.props[modelValue?.el]" :key="index">
+            <collapse-wrapper :idx="index" :title="item.title">
+              <template v-for="(it, index) in item.layout" :key="index">
+                <component :is="it.el" :layout=it />
+              </template>
+            </collapse-wrapper>
+          </template>
         </collapse>
       </div>
     </transition>
@@ -66,7 +67,7 @@ export default class Setup extends Vue {
       color: #a0a0a0;
       padding-bottom: 6px;
       margin-bottom: 4px;
-      border-bottom: 1px solid @global-border-color;
+      border-bottom: 1px solid #e8e8e8;
     }
   }
   > .fade-enter-active {

@@ -1,5 +1,6 @@
 import {
-  FormElement
+  FormElement,
+  InputElement
 } from '@/components/container/items'
 
 const config: any = {
@@ -7,15 +8,28 @@ const config: any = {
   size: {},
   // 组件
   compoments: {
-    form: FormElement
+    form: FormElement,
+    input: InputElement
   },
   // 属性面板表单构建信息
   props: {
     form: [{
       title: '基本',
       layout: [{
-        el: 'inline',
-        // TODO
+        el: 'block',
+        item: [{
+          el: 'field',
+          title: '名称',
+          field: 'text',
+          callback: (binding:any, cache:any) => {
+            console.log('callback', binding, cache)
+          }
+        }]
+      }]
+    }, {
+      title: '其他',
+      layout: [{
+        el: 'block'
       }]
     }]
   },
@@ -39,6 +53,11 @@ const config: any = {
       el: "layout",
       name: "布局",
       icon: "fa fa-th"
+    },
+    {
+      el: 'input',
+      name: '文本输入框',
+      icon: 'fa fa-keyboard-o'
     }
   ]
 }
