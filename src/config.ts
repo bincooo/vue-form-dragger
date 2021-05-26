@@ -19,10 +19,12 @@ const config: any = {
         el: 'block',
         item: [{
           el: 'field',
-          title: '名称',
+          title: '表单布局',
           field: 'text',
-          callback: (binding:any, cache:any) => {
-            console.log('callback', binding, cache)
+          callback: (binding:any, val:any) => {
+            // console.log(binding, val)
+            binding.meta = binding.meta || {}
+            binding.meta.layout = val
           }
         }]
       }]

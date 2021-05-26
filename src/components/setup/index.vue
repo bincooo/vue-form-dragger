@@ -4,7 +4,7 @@
       <div class="__inner_" v-show="config.setup.show">
         <div>{{ modelValue?.name }}</div>
         <div>{{ modelValue?.key }}</div>
-        <collapse :active="1">
+        <collapse :active="0">
           <template v-for="(item, index) in config.props[modelValue?.el]" :key="index">
             <collapse-wrapper :idx="index" :title="item.title">
               <template v-for="(it, index) in item.layout" :key="index">

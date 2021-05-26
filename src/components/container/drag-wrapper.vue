@@ -7,6 +7,7 @@
     :list="modelValue"
     animation="300"
     item-key="type"
+    :component-data="attribute?.props()"
     @start="(e) => attribute.move(1, e)"
     @end="(e) => attribute.move(2, e)"
     :move="(e) => attribute.move(3, e)"

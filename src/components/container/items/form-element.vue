@@ -1,12 +1,13 @@
 <template>
-  <div title="表单" v-unmarsk>
+  <div title="表单" v-unmarsk style="padding-bottom: 20px">
     <drag-wrapper
       v-model="modelValue.children"
       :data-box="modelValue.el"
       :attribute="{
         tag: 'a-form',
         move: onMove,
-        size: { minHeight: '200px' }
+        size: { minHeight: '60px' },
+        props: getComponentData
       }"
     />
   </div>
@@ -14,7 +15,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component"
 import DragWrapper from "@/components/container/drag-wrapper.vue"
-import { Inject } from "vue-property-decorator"
+import { Inject, Watch } from "vue-property-decorator"
 import { bind } from "./index"
 
 @Options({
@@ -26,16 +27,26 @@ export default class FormElement extends Vue {
   @Inject() config: any
   readonly modelValue!: any
 
+  @Watch("modelValue.meta.layout")
+  onLayout(val:any) {
+    const { mitt } = this.config
+    mitt.emit('layout', val)
+  }
+
   created() {
     const element = this.modelValue
     if (!!element && !element.children) {
       element.children = []
+    }
+    if (!!element && !element.meta) {
+      element.meta = {}
     }
   }
 
   onMove(other: number, evt: any) {
     const { children } = this.modelValue
     const index = evt.newIndex
+    const condition = this.config.condition
     switch (other) {
       case 1:
         console.log("start --->")
@@ -43,11 +54,18 @@ export default class FormElement extends Vue {
       case 2:
         console.log("end --->")
         break
-      case 3:
-        console.log("move --->")
-        break
-      case 4:
-        console.log("add --->")
+      case 3: // 移动事件
+            // 根节点处理
+        const element = evt.draggedContext.element
+        if (!evt.to.hasAttribute("data-box")) {
+          return !!condition["root"] ? condition["root"].includes(element.el) : true
+        }
+        // 子节点处理
+        else {
+          const el = evt.to.getAttribute("data-box")
+          return !!condition[el] ? condition[el].includes(element.el) : true
+        }
+      case 4: // add 事件
         // 表单不允许嵌套
         const path = evt.path
         for (let index = 0; index < path.length; index++) {
@@ -61,8 +79,6 @@ export default class FormElement extends Vue {
           }
         }
         // =============
-        const condition = (this.config.condition || {})[this.modelValue.el]
-        if (!condition) return false
         const { CPKit } = this.config
         const ndata = CPKit.copy({}, {
             ...children[index],
@@ -73,5 +89,12 @@ export default class FormElement extends Vue {
         return true
     }
   }
+
+  getComponentData() {
+    return {
+      layout: this.modelValue.meta.layout
+    }
+  }
+
 }
 </script>

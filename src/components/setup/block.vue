@@ -13,7 +13,6 @@ import { Options, Vue } from "vue-class-component"
 export default class Block extends Vue {
   readonly layout: any
   mounted() {
-    console.log(this.layout)
   }
 }
 </script>

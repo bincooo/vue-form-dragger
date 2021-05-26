@@ -2,17 +2,20 @@
   <div class="field">
     <span>{{ item.title }}</span>
     <div>
-      <input type="text" @keyup="item.callback(item, $event.target.value)" />
+      <input type="text" @keyup="item.callback(config.setup.element, $event.target.value)" />
     </div>
   </div>
 </template>
 <script lang="ts">
+import { Inject } from "vue-property-decorator"
 import { Options, Vue } from "vue-class-component"
 @Options({
   name: "field",
-  props: ["item"]
+  props: ["modelValue", "item"]
 })
-export default class Field extends Vue {}
+export default class Field extends Vue {
+  @Inject() config!: any
+}
 </script>
 
 <style lang="less">

@@ -29,9 +29,6 @@ import { Options, Vue } from "vue-class-component"
 export default class CollapseWrapper extends Vue {
   @Inject() native!: any
   readonly idx: string | number | null | undefined = undefined
-  created() {
-    this.native.active = this.idx
-  }
 
   onClick(evt: any) {
     this.native.active = this.idx

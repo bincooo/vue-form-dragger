@@ -20,7 +20,7 @@ export default class Collapse extends Vue {
     this.active = this.active === null ? val : null
   }
 
-  mounted() {
+  created() {
     this.native.active = this.active
   }
 }

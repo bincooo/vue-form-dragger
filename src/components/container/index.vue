@@ -69,14 +69,22 @@ export default class Container extends Vue {
   }
 
   onAdd(e: any): void {
+    console.log('onadd');
     const index = e.newIndex
-    const data = this.modelValue.list[index]
+    const list = this.modelValue.list
+    const data = list[index]
     const ndata: any = {}
     this.config.CPKit.copy(ndata, {
       ...data,
       key: `${data.el}-${Date.now()}`
     })
-    this.modelValue.list.splice(index, 1, ndata)
+    list.splice(index, 1, ndata)
+    const condition = this.config.condition
+    if (!condition["root"] || condition["root"].includes(data.el)) {
+      list.splice(index, 1, ndata)
+    } else {
+      list.splice(index, 1)
+    }
   }
 
   onMove(evt:any) {
@@ -106,7 +114,6 @@ export default class Container extends Vue {
     const data = list.length > 0 ? list[0] : null
     switch (other) {
       case 1: {
-        console.log('删除动作', token);
         ;(() => (!!data ? g_list.splice(g_list.indexOf(data), 1) : mitt.emit(`del:${token}`)))()
         break
       }
@@ -201,7 +208,9 @@ export default class Container extends Vue {
         > .__placeholder_ {
           background-color: rgb(37, 186, 255);
           position: relative;
-          height: 3px;
+          min-height: 3px;
+          min-width: 200px;
+          padding: 0;
           font-size: 0;
           margin: 2px;
           border: 0px solid;
