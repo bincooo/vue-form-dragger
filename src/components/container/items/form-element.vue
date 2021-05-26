@@ -15,7 +15,7 @@
 import { Options, Vue } from "vue-class-component"
 import DragWrapper from "@/components/container/drag-wrapper.vue"
 import { Inject } from "vue-property-decorator"
-import { bind } from "./index"
+import { bind, unbind } from "./index"
 
 @Options({
   name: "form-element",
@@ -35,6 +35,8 @@ export default class FormElement extends Vue {
 
   onMove(other: number, evt: any) {
     console.log("other:" + other, evt)
+    const { children } = this.modelValue
+    const index = evt.newIndex
     switch (other) {
       case 1:
         console.log("start --->")
@@ -47,7 +49,6 @@ export default class FormElement extends Vue {
         break
       case 4:
         console.log("add --->")
-        const index = evt.newIndex
         // 表单不允许嵌套
         const path = evt.path
         for (let index = 0; index < path.length; index++) {
@@ -63,19 +64,13 @@ export default class FormElement extends Vue {
         // =============
         const condition = (this.config.condition || {})[this.modelValue.el]
         if (!condition) return false
-        const { children } = this.modelValue
-        const { mitt, CPKit } = this.config
-        const ndata = CPKit.copy(
-          {},
-          {
+        const { CPKit } = this.config
+        const ndata = CPKit.copy({}, {
             ...children[index],
             key: `${children[index].el}-${Date.now()}`
-          }
-        )
+        })
         children.splice(index, 1, ndata)
-        bind(this.config, 1, ndata.key, children)
-        bind(this.config, 2, ndata.key, children)
-        bind(this.config, 3, ndata.key, children)
+        bind(this.config, ndata.key, children)
         return true
     }
   }

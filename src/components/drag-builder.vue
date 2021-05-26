@@ -13,6 +13,7 @@ import ElementPanel from "./element/index.vue"
 import ContainerPanel from "./container/index.vue"
 import SetupPanel from "./setup/index.vue"
 import Obj, { is } from "@/utils/obj"
+
 @Options({
   name: "drag-builder",
   props: ["config"],
@@ -35,12 +36,22 @@ export default class DragBuilder extends Vue {
 
   created() {
     this.config.CPKit = new Obj.Coper()
+    class HandlerImpl implements Obj.Handler {
+      order: number = 1
+      support(param: Obj.Parameter): boolean {
+        return param.key === "key"
+      }
+      worked(param: Obj.Parameter, data: any, chain: Obj.Fn) {
+        const split:string[] = data.split("-")
+        return `${split[0]}-${Date.now()}`
+      }
+    }
+    this.config.CPKit.addHandler(new HandlerImpl())
     this.config.showmenu = false
     this.config.setup = {
       show: false,
       element: null
     }
-
   }
 
   mounted() {
@@ -48,7 +59,7 @@ export default class DragBuilder extends Vue {
     this.$el.oncontextmenu = (evt: any) => (evt.returnValue = false)
   }
 
-  jsLoad(key:string, src: string) {
+  jsLoad(key: string, src: string) {
     const dom = document.body.querySelector(key)
     if (!dom) {
       const script = document.createElement("script")

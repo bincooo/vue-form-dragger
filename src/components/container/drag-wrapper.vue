@@ -11,6 +11,7 @@
     @end="(e) => attribute.move(2, e)"
     :move="(e) => attribute.move(3, e)"
     @add="(e) => attribute.move(4, e)"
+    @remove="(e) => attribute.move(5, e)"
   >
     <template #item="d">
       <component
