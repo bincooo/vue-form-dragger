@@ -1,22 +1,22 @@
 <template>
   <draggable
-    :tag="tag"
+    :tag="attribute.tag"
     class="__drag_"
     ghost-class="__placeholder_"
     group="container"
     :list="modelValue"
     animation="300"
     item-key="type"
-    @start="(e) => move(1, e)"
-    @end="(e) => move(2, e)"
-    :move="(e) => move(3, e)"
-    @add="(e) => move(4, e)"
+    @start="(e) => attribute.move(1, e)"
+    @end="(e) => attribute.move(2, e)"
+    :move="(e) => attribute.move(3, e)"
+    @add="(e) => attribute.move(4, e)"
   >
     <template #item="d">
       <component
         :token="d.element.key"
         @contextmenu.stop="contextmenu($event, d.element)"
-        class="__box_"
+        class="__box_ marsk"
         :is="config.compoments[d.element.el]"
       />
     </template>
@@ -31,21 +31,20 @@ import draggable from "vuedraggable"
 @Options({
   name: "drag-wrapper",
   components: { draggable },
-  props: {
-    tag: String,
-    modelValue: Object,
-    size: Object,
-    move: Function
-  }
+  props: ["modelValue", "attribute"]
 })
 export default class DragWrapper extends Vue {
   @Inject() config: any
-  readonly size?: any
-  readonly move: Function = () => {}
+  readonly attribute: any = {}
+
+  created() {
+    const attribute = this.attribute
+    attribute.move = attribute.move || function() {}
+  }
 
   mounted() {
     const { style } = this.$el
-    const { width, height, minWidth, minHeight } = this.size || {}
+    const { width, height, minWidth, minHeight } = this.attribute.size || {}
     style.width = width
     style.height = height
     style.minWidth = minWidth
@@ -53,9 +52,10 @@ export default class DragWrapper extends Vue {
   }
 
   contextmenu(evt: any, element: any) {
-    evt.returnValue = false
     const { layerX, layerY, currentTarget } = evt
-    this.config.showmenu(`${layerX}px`, `${layerY + 10}px`, currentTarget.getAttribute("token"))
+    this.config.showmenu(`${layerX + 30}px`, `${layerY + 30}px`, element.key)
+    evt.preventDefault()
+    evt.returnValue = false
   }
 }
 </script>

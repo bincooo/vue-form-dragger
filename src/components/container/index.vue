@@ -21,7 +21,7 @@
               :token="d.element.key"
               @contextmenu.stop="contextmenu($event, d.element)"
               v-model="d.element"
-              class="__box_"
+              class="__box_ marsk"
               :is="config.compoments[d.element.el]"
             />
           </template>
@@ -95,7 +95,7 @@ export default class Container extends Vue {
   contextmenu(evt: any, element: any) {
     evt.returnValue = false
     const { layerX, layerY, currentTarget } = evt
-    this.config.showmenu(`${layerX}px`, `${layerY + 10}px`, currentTarget.getAttribute("token"))
+    this.config.showmenu(`${layerX + 5}px`, `${layerY + 25}px`, currentTarget.getAttribute("token"))
   }
 
   menuHandler(other: number) {
@@ -170,6 +170,21 @@ export default class Container extends Vue {
       box-sizing: border-box;
       border: 1px solid red;
       background-color: @global-background-color;
+      .marsk {
+        position: relative;
+        * {
+          z-index: 0;
+        }
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          z-index: 10;
+        }
+      }
       .__drag_ {
         width: 100%;
         height: 100%;
@@ -182,6 +197,7 @@ export default class Container extends Vue {
         }
         > .__placeholder_ {
           background-color: rgb(37, 186, 255);
+          position: relative;
           height: 3px;
           font-size: 0;
           margin: 2px;
@@ -220,6 +236,7 @@ export default class Container extends Vue {
     padding: 2px;
     width: 50px;
     text-align: center;
+    z-index: 1000;
     > li {
       list-style: none;
       z-index: 100;
