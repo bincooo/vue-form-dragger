@@ -106,6 +106,7 @@ export default class Container extends Vue {
     const data = list.length > 0 ? list[0] : null
     switch (other) {
       case 1: {
+        console.log('删除动作', token);
         ;(() => (!!data ? g_list.splice(g_list.indexOf(data), 1) : mitt.emit(`del:${token}`)))()
         break
       }

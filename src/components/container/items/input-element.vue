@@ -11,6 +11,5 @@ import { Options, Vue } from "vue-class-component"
 @Options({
   name: "input-element"
 })
-export default class InputElement extends Vue {
-}
+export default class InputElement extends Vue {}
 </script>

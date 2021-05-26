@@ -17,7 +17,9 @@
       <component
         :token="d.element.key"
         @contextmenu.stop="contextmenu($event, d.element)"
+        v-model="d.element"
         class="__box_ marsk"
+        :contextmenu="(fn) => (childrenmenu = fn)"
         :is="config.compoments[d.element.el]"
       />
     </template>
@@ -37,6 +39,7 @@ import draggable from "vuedraggable"
 export default class DragWrapper extends Vue {
   @Inject() config: any
   readonly attribute: any = {}
+  childrenmenu?: Function
 
   created() {
     const attribute = this.attribute
@@ -53,8 +56,12 @@ export default class DragWrapper extends Vue {
   }
 
   contextmenu(evt: any, element: any) {
-    const { layerX, layerY, currentTarget } = evt
-    this.config.showmenu(`${layerX + 30}px`, `${layerY + 30}px`, element.key)
+    const { layerX, layerY } = evt
+    const { offsetLeft, offsetTop } = evt.target
+    this.config.showmenu(`${offsetLeft + layerX + 5}px`, `${offsetTop + layerY + 25}px`, element.key)
+    if (!!this.childrenmenu) {
+      this.childrenmenu(evt, element)
+    }
     evt.preventDefault()
     evt.returnValue = false
   }

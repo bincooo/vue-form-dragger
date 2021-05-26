@@ -15,7 +15,7 @@
 import { Options, Vue } from "vue-class-component"
 import DragWrapper from "@/components/container/drag-wrapper.vue"
 import { Inject } from "vue-property-decorator"
-import { bind, unbind } from "./index"
+import { bind } from "./index"
 
 @Options({
   name: "form-element",
@@ -34,7 +34,6 @@ export default class FormElement extends Vue {
   }
 
   onMove(other: number, evt: any) {
-    console.log("other:" + other, evt)
     const { children } = this.modelValue
     const index = evt.newIndex
     switch (other) {
