@@ -36,8 +36,22 @@ export default [
               return binding.meta.width
             },
             callback: (binding: any, val: any) => {
+              
               binding.meta = binding.meta || {}
               binding.meta.width = val
+            }
+          },
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "提示信息",
+            field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.placeholder
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.placeholder = val
             }
           }
         ]

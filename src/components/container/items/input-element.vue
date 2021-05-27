@@ -1,7 +1,7 @@
 <template>
-  <div :style="{minWidth}">
+  <div :style="{ minWidth }">
     <a-form-item :label="label" style="padding: 0 2px">
-      <a-input v-blur :placeholder="this.modelValue.placeholder" :style="{ width: minWidth }" />
+      <a-input v-blur :placeholder="modelValue.meta.placeholder" :style="{ width: modelValue.meta?.minWidth }" />
     </a-form-item>
   </div>
 </template>
@@ -23,8 +23,8 @@ export default class InputElement extends Vue {
   }
 
   get minWidth() {
-    const width = this.modelValue.mate?.width
-    return !!width ? width : "280px"
+    const width = this.modelValue.meta?.width
+    return !!width ? width : "190px"
   }
 
   created() {
