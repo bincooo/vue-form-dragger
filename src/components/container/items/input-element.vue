@@ -1,5 +1,5 @@
 <template>
-  <div :style="style">
+  <div>
     <a-form-item label="Activity name">
       <a-input v-blur />
     </a-form-item>
@@ -14,18 +14,5 @@ import { Options, Vue } from "vue-class-component"
 })
 export default class InputElement extends Vue {
   @Inject() config: any
-  style: any = {}
-
-  mounted() {
-    const mitt = this.config.mitt
-    mitt.on("layout", (val:string) => {
-      if (val === "inline") {
-          this.style.height = "42px"
-          this.style.maxHeight = "42px"
-      } else {
-        this.style.height = undefined
-      }
-    })
-  }
 }
 </script>

@@ -48,12 +48,15 @@ export default class DragWrapper extends Vue {
   }
 
   mounted() {
-    const { style } = this.$el
-    const { width, height, minWidth, minHeight } = this.attribute.size || {}
-    style.width = width
-    style.height = height
-    style.minWidth = minWidth
-    style.minHeight = minHeight
+    const { CPKit } = this.config
+    // const { style } = this.$el
+    const style = this.attribute.style || {}
+    // const { width, height, minWidth, minHeight } = this.attribute.style || {}
+    // style.width = width
+    // style.height = height
+    // style.minWidth = minWidth
+    // style.minHeight = minHeight
+    CPKit.copy(this.$el.style, style)
   }
 
   contextmenu(evt: any, element: any) {

@@ -1,12 +1,12 @@
 <template>
-  <div title="表单" v-unmarsk style="padding-bottom: 20px">
+  <div title="表单" v-unmarsk style="padding-left: 10px">
     <drag-wrapper
       v-model="modelValue.children"
       :data-box="modelValue.el"
       :attribute="{
         tag: 'a-form',
         move: onMove,
-        size: { minHeight: '60px' },
+        style: { minHeight: '60px' },
         props: getComponentData
       }"
     />
@@ -30,7 +30,7 @@ export default class FormElement extends Vue {
   @Watch("modelValue.meta.layout")
   onLayout(val:any) {
     const { mitt } = this.config
-    mitt.emit('layout', val)
+    mitt.emit(`layout:${this.modelValue.key}`, val)
   }
 
   created() {
