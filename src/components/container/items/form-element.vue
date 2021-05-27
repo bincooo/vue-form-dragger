@@ -34,7 +34,10 @@ export default class FormElement extends Vue {
       element.children = []
     }
     if (!!element && !element.meta) {
-      element.meta = {}
+      element.meta = {
+        labelCol: { span: 4 },
+        wrapperCol: { span:14 }
+      }
     }
   }
 
@@ -95,11 +98,10 @@ export default class FormElement extends Vue {
   }
 
   componentData() {
-    const { colon, layout, labelAlign, labelCol, wrapperCol } = this.modelValue.meta
+    const { layout, labelCol, wrapperCol } = this.modelValue.meta
     return {
-      colon, layout, labelAlign,
-      labelCol: labelCol,
-      wrapperCol: wrapperCol
+      ...this.modelValue.meta,
+      wrapperCol: layout === "inline" ? {} : wrapperCol
     }
   }
 

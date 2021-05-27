@@ -2,19 +2,23 @@
   <div class="field">
     <span>{{ item.title }}</span>
     <div v-if="item.field === 'text'">
-      <input type="text" @keyup="item.callback(config.setup.element, $event.target.value)" />
+      <input type="text" :value="item.get(config.setup.element)"
+        @keyup="item.callback(config.setup.element, $event.target.value)" />
     </div>
     <div v-else-if="item.field === 'select'">
       <select @change="item.callback(config.setup.element, $event.target.value)">
-        <option v-for="(item, key) in item.map" :value="key" :key="key">
-            {{item}}
+        <option v-for="(value, key) in item.map" 
+          :selected="key === item.get(config.setup.element)" :value="key" :key="key">
+            {{value}}
         </option>
       </select>
     </div>
     <div v-if="item.field === 'radio'">
       <div class="switch">
-        <input text="No" type="radio" :name="item.title" @change="item.callback(config.setup.element, $event.target.value)" value=0 />
-        <input text="Yes" type="radio" :name="item.title" @change="item.callback(config.setup.element, $event.target.value)" value=1 />
+        <input text="No" type="radio" :checked="0 == item.get(config.setup.element)" 
+          :name="item.title" @change="item.callback(config.setup.element, $event.target.value)" value=0 />
+        <input text="Yes" type="radio" :checked="1 == item.get(config.setup.element)"
+          :name="item.title" @change="item.callback(config.setup.element, $event.target.value)" value=1 />
       </div>
     </div>
   </div>

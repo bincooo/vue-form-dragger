@@ -12,6 +12,9 @@ export default [
             el: "field", // 组件名称
             title: "标签",
             field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.label
+            },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.label = val
@@ -29,6 +32,9 @@ export default [
             el: "field", // 组件名称
             title: "宽度",
             field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.width
+            },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.width = val

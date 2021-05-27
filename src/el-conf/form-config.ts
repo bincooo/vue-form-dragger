@@ -17,6 +17,9 @@ export default [
               vertical: "垂直布局",
               inline: "内联布局"
             },
+            get(binding: any) {
+              return binding.meta?.layout
+            },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.layout = val
@@ -35,6 +38,9 @@ export default [
             el: "field", // 组件名称
             title: "跨度",
             field: "text", // 输入框类型
+            get(binding:any) {
+              return binding.meta.labelCol?.span
+            },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.labelCol = binding.meta.labelCol || {}
@@ -46,6 +52,9 @@ export default [
             el: "field", // 组件名称
             title: "偏移",
             field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.labelCol?.offset
+            },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.labelCol = binding.meta.labelCol || {}
@@ -65,6 +74,9 @@ export default [
             el: "field", // 组件名称
             title: "跨度",
             field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.wrapperCol?.span
+            },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.wrapperCol = binding.meta.wrapperCol || {}
@@ -76,6 +88,9 @@ export default [
             el: "field", // 组件名称
             title: "偏移",
             field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.wrapperCol?.offset
+            },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.wrapperCol = binding.meta.wrapperCol || {}
@@ -92,8 +107,12 @@ export default [
           {
             // 标签数据
             el: "field", // 组件名称
-            title: "跨度",
+            title: "显示冒号",
             field: "radio", // 输入框类型
+            get(binding: any) {
+              const colon = binding.meta.colon
+              return !!colon ? colon : true
+            },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.colon = (val === "1")
@@ -106,6 +125,10 @@ export default [
             map: {
                 left: '左对齐',
                 right: '右对齐'
+            },
+            get(binding: any) {
+              const labelAlign = binding.meta.labelAlign
+              return !!labelAlign ? labelAlign : "right"
             },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
