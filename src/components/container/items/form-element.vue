@@ -1,5 +1,5 @@
 <template>
-  <div title="表单" v-unmarsk style="padding-left: 10px">
+  <section title="表单" v-unmarsk style="padding-left: 10px">
     <drag-wrapper
       v-model="modelValue.children"
       :data-box="modelValue.el"
@@ -10,7 +10,7 @@
         props: componentData
       }"
     />
-  </div>
+  </section>
 </template>
 <script lang="ts">
 import { Options, Vue } from "vue-class-component"
@@ -95,11 +95,11 @@ export default class FormElement extends Vue {
   }
 
   componentData() {
+    const { colon, layout, labelAlign, labelCol, wrapperCol } = this.modelValue.meta
     return {
-      colon: this.modelValue.meta.colon,
-      layout: this.modelValue.meta.layout,
-      labelCol: this.modelValue.meta.labelCol,
-      wrapperCol: this.modelValue.meta.wrapperCol
+      colon, layout, labelAlign,
+      labelCol: labelCol,
+      wrapperCol: wrapperCol
     }
   }
 

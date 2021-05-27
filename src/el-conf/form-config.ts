@@ -38,7 +38,7 @@ export default [
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.labelCol = binding.meta.labelCol || {}
-              binding.meta.labelCol.spen = val
+              binding.meta.labelCol.span = Number(val)
             }
           },
           {
@@ -68,7 +68,7 @@ export default [
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.wrapperCol = binding.meta.wrapperCol || {}
-              binding.meta.wrapperCol.spen = val
+              binding.meta.wrapperCol.span = Number(val)
             }
           },
           {
@@ -109,7 +109,7 @@ export default [
             },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
-              binding.meta.colon = (val === "1")
+              binding.meta.labelAlign = val
             }
           }
         ]

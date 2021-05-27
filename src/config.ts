@@ -3,7 +3,8 @@ import {
   InputElement
 } from '@/components/container/items'
 
-import formConfig from './form-config'
+import formConfig from './el-conf/form-config'
+import inputConfig from './el-conf/input-config'
 
 const config: any = {
   // 编辑器大小
@@ -15,7 +16,8 @@ const config: any = {
   },
   // 属性面板表单构建信息
   props: {
-    form: formConfig
+    form: formConfig,
+    input: inputConfig
   },
   // 组件拖拽条件约束
   condition: {

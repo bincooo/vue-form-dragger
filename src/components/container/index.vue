@@ -59,12 +59,13 @@ export default class Container extends Vue {
 
   created() {
     this.config.mitt = mitt()
-    this.config.showmenu = (x:string, y:string, token: string) => {
+    this.config.showmenu = (x:string, y:string, element: any) => {
       this.showmenu = true
       const menu = this.menu
       menu.style.top = y
       menu.style.left = x
-      this.config.token = token
+      this.config.token = element.key
+      this.config.setup.element = element
     }
   }
 
@@ -104,7 +105,7 @@ export default class Container extends Vue {
   contextmenu(evt: any, element: any) {
     evt.returnValue = false
     const { layerX, layerY, currentTarget } = evt
-    this.config.showmenu(`${layerX + 5}px`, `${layerY + 25}px`, currentTarget.getAttribute("token"))
+    this.config.showmenu(`${layerX + 5}px`, `${layerY + 25}px`, element)
   }
 
   menuHandler(other: number) {
@@ -127,7 +128,7 @@ export default class Container extends Vue {
       }
       case 3: {
         setup.show = true
-        ;(() => (!!data ? setup.element = data : mitt.emit(`set:${token}`, (data:any) => setup.element = data)))()
+        //;(() => (!!data ? setup.element = data : mitt.emit(`set:${token}`, (data:any) => setup.element = data)))()
         break
       }
     }

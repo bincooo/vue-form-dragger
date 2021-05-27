@@ -56,7 +56,7 @@ export default class DragWrapper extends Vue {
   contextmenu(evt: any, element: any) {
     const { layerX, layerY } = evt
     const { offsetLeft, offsetTop } = evt.target
-    this.config.showmenu(`${offsetLeft + layerX + 5}px`, `${offsetTop + layerY + 25}px`, element.key)
+    this.config.showmenu(`${offsetLeft + layerX + 5}px`, `${offsetTop + layerY + 25}px`, element)
     if (!!this.childrenmenu) {
       this.childrenmenu(evt, element)
     }
