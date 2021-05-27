@@ -53,8 +53,7 @@ export default class Grid extends Vue {
   margin-top: 10px;
   padding-top: 5px;
   padding-bottom: 2px;
-  border-top: 1px dashed @global-border-color;
-  border-bottom: 1px dashed @global-border-color;
+  border: 1px dashed @global-border-color;
   box-sizing: border-box;
   position: relative;
   &::before {

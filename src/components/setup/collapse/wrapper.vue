@@ -51,7 +51,7 @@ export default class CollapseWrapper extends Vue {
     }
     > i {
       position: absolute;
-      top: 2px;
+      top: 4px;
       right: 0;
       margin: 4px;
       width: 16px;

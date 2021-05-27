@@ -96,7 +96,10 @@ export default class FormElement extends Vue {
 
   componentData() {
     return {
-      layout: this.modelValue.meta.layout
+      colon: this.modelValue.meta.colon,
+      layout: this.modelValue.meta.layout,
+      labelCol: this.modelValue.meta.labelCol,
+      wrapperCol: this.modelValue.meta.wrapperCol
     }
   }
 
