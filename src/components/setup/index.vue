@@ -1,7 +1,7 @@
 <template>
   <div @mousedown="showHandler" class="__setup-panel_" v-show="config.setup.show">
     <transition name="fade">
-      <div class="__inner_" v-show="config.setup.show">
+      <div class="inner" v-show="config.setup.show">
         <div>{{ modelValue?.name }}</div>
         <div>{{ modelValue?.key }}</div>
         <collapse :active="0">
@@ -48,7 +48,7 @@ export default class Setup extends Vue {
   position: relative;
   top: -100%;
   z-index: 1000;
-  > .__inner_ {
+  > .inner {
     background-color: @global-background-color;
     width: @setup-panle-width;
     border: 1px solid @global-border-color;

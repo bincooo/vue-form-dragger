@@ -14,9 +14,5 @@ import { Options, Vue } from "vue-class-component"
 })
 export default class InputElement extends Vue {
   @Inject() config: any
-  
-  updated() {
-    console.log(1234455);
-  }
 }
 </script>

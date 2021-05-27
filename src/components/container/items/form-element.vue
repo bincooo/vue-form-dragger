@@ -15,7 +15,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component"
 import DragWrapper from "@/components/container/drag-wrapper.vue"
-import { Inject, Watch } from "vue-property-decorator"
+import { Inject } from "vue-property-decorator"
 import { bind } from "./index"
 
 @Options({

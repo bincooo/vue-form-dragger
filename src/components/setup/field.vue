@@ -26,7 +26,7 @@ export default class Field extends Vue {
 </script>
 
 <style lang="less">
-.drag-builder > .__setup-panel_ .__inner_ .layout > .field {
+.drag-builder > .__setup-panel_ .inner .field {
   > span {
     font-size: 12px;
     color: @global-font-color;
