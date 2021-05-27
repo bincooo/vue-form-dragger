@@ -49,13 +49,7 @@ export default class DragWrapper extends Vue {
 
   mounted() {
     const { CPKit } = this.config
-    // const { style } = this.$el
     const style = this.attribute.style || {}
-    // const { width, height, minWidth, minHeight } = this.attribute.style || {}
-    // style.width = width
-    // style.height = height
-    // style.minWidth = minWidth
-    // style.minHeight = minHeight
     CPKit.copy(this.$el.style, style)
   }
 

@@ -6,8 +6,8 @@
       :attribute="{
         tag: 'a-form',
         move: onMove,
-        style: { minHeight: '60px' },
-        props: getComponentData
+        style: { minHeight: '200px', alignContent: 'flex-start' },
+        props: componentData
       }"
     />
   </div>
@@ -26,12 +26,7 @@ import { bind } from "./index"
 export default class FormElement extends Vue {
   @Inject() config: any
   readonly modelValue!: any
-
-  @Watch("modelValue.meta.layout")
-  onLayout(val:any) {
-    const { mitt } = this.config
-    mitt.emit(`layout:${this.modelValue.key}`, val)
-  }
+  cache: any = {}
 
   created() {
     const element = this.modelValue
@@ -45,17 +40,26 @@ export default class FormElement extends Vue {
 
   onMove(other: number, evt: any) {
     const { children } = this.modelValue
-    const index = evt.newIndex
+    const { newIndex:index, item:div } = evt
     const condition = this.config.condition
     switch (other) {
-      case 1:
-        console.log("start --->")
+      case 1: // 开始移动
+        const model = this.modelValue
+        this.cache.minWidth = div.style.minWidth
+        this.cache.maxHeight = div.style.maxHeight
+        this.cache.minHeight = div.style.minHeight
+        if (model.meta?.layout !== "inline") {
+          div.style.maxHeight = "3px"
+          div.style.minHeight = "3px"
+        }
         break
-      case 2:
-        console.log("end --->")
+      case 2: // 结束移动
+        const { minHeight, maxHeight } = this.cache
+        div.style.minHeight = minHeight
+        div.style.maxHeight = maxHeight
         break
       case 3: // 移动事件
-            // 根节点处理
+        // 根节点处理
         const element = evt.draggedContext.element
         if (!evt.to.hasAttribute("data-box")) {
           return !!condition["root"] ? condition["root"].includes(element.el) : true
@@ -90,7 +94,7 @@ export default class FormElement extends Vue {
     }
   }
 
-  getComponentData() {
+  componentData() {
     return {
       layout: this.modelValue.meta.layout
     }
