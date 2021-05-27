@@ -1,12 +1,12 @@
 <template>
-  <div style="min-height: 60px;max-height: 60px; min-width: 280px">
-    <a-form-item label="Activity name">
+  <div style="min-width: 280px">
+    <a-form-item label="Activity name" style="padding: 2px">
       <a-input v-blur />
     </a-form-item>
   </div>
 </template>
 <script lang="ts">
-import { Inject, Watch } from "vue-property-decorator"
+import { Inject } from "vue-property-decorator"
 import { Options, Vue } from "vue-class-component"
 
 @Options({

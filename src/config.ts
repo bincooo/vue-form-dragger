@@ -20,7 +20,10 @@ const config: any = {
         item: [{
           el: 'field',
           title: '表单布局',
-          field: 'text',
+          field: 'select',
+          map: {
+            horizontal: '水平布局', vertical: '垂直布局', inline: '内联布局'
+          },
           callback: (binding:any, val:any) => {
             // console.log(binding, val)
             binding.meta = binding.meta || {}

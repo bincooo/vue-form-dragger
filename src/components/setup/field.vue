@@ -1,8 +1,15 @@
 <template>
   <div class="field">
     <span>{{ item.title }}</span>
-    <div>
+    <div v-if="item.field === 'text'">
       <input type="text" @keyup="item.callback(config.setup.element, $event.target.value)" />
+    </div>
+    <div v-else-if="item.field === 'select'">
+      <select @change="item.callback(config.setup.element, $event.target.value)">
+        <option v-for="(item, key) in item.map" :value="key" :key="key">
+            {{item}}
+        </option>
+      </select>
     </div>
   </div>
 </template>
@@ -24,7 +31,7 @@ export default class Field extends Vue {
     font-size: 12px;
     color: @global-font-color;
   }
-  > div > input {
+  > div > input, > div > select {
     width: 100%;
     box-sizing: border-box;
     appearance: none;
@@ -33,6 +40,7 @@ export default class Field extends Vue {
     border: 1px solid @global-border-color;
     height: 25px;
     padding: 0 5px;
+    border-radius: 0;
   }
 }
 </style>
