@@ -28,21 +28,25 @@ const config: any = {
   element: [
     {
       el: "form",
+      group: '容器',
       name: "表单",
       icon: "fa fa-th-list"
     },
     {
       el: "grid",
+      group: '容器',
       name: "栅格",
       icon: "fa fa-th-large"
     },
     {
       el: "layout",
+      group: '容器',
       name: "布局",
       icon: "fa fa-th"
     },
     {
       el: 'input',
+      group: '表单组件',
       name: '文本输入框',
       icon: 'fa fa-keyboard-o'
     }

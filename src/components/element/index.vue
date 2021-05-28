@@ -9,27 +9,29 @@
           onSearch(e.target.previousElementSibling)
         }" />
     </div>
-    <div class="_-" name="通用" />
-    <draggable
-      :list="element"
-      :sort="false"
-      :group="{
-        name: 'container',
-        pull: 'clone',
-        put: false
-      }"
-      :move="(e) => onMove(3, e)"
-      @end="(e) => onMove(2, e)"
-      @start="(e) => onMove(1, e)"
-      item-key="type"
-    >
-      <template #item="d">
-        <div class="__item_" v-show="d.element.name.includes(search)">
-          <i :class="d.element.icon" />
-          {{ d.element.name }}
-        </div>
-      </template>
-    </draggable>
+    <template v-for="(item, key) in group" :key="key">
+      <div class="_-" :name="key" :hidden="item.filter(i => i.name.includes(search)).length === 0" />
+      <draggable
+        :list="item"
+        :sort="false"
+        :group="{
+          name: 'container',
+          pull: 'clone',
+          put: false
+        }"
+        :move="(e) => onMove(3, e)"
+        @end="(e) => onMove(2, e)"
+        @start="(e) => onMove(1, e)"
+        item-key="type"
+      >
+        <template #item="d">
+          <div class="__item_" v-show="d.element.name.includes(search)">
+            <i :class="d.element.icon" />
+            {{ d.element.name }}
+          </div>
+        </template>
+      </draggable>
+    </template>
   </div>
 </template>
 
@@ -45,6 +47,18 @@ import draggable from "vuedraggable"
 export default class Element extends Vue {
   @Inject() config!: any
   search: string = ""
+  readonly element:any[] = []
+
+  get group():any {
+    const map:any = {}
+    for (const index in this.element) {
+      const element = this.element[index]
+      const item = (map[element.group] = map[element.group] || [])
+      item.push(element)
+    }
+    console.log(map)
+    return map
+  }
 
   onSearch(search: any) {
     this.search = search.value
@@ -135,7 +149,7 @@ export default class Element extends Vue {
   }
   ._- {
     margin: 10px 0;
-    border-top: 1px solid @global-border-color;
+    border-top: 1px dashed @global-border-color;
     max-height: 1px;
     &::after {
       content: attr(name);
