@@ -12,12 +12,13 @@ import { Options, Vue } from "vue-class-component"
 
 @Options({
   name: "input-element",
-  props: ["modelValue"]
+  props: ["modelValue", "contextmenu"]
 })
 export default class InputElement extends Vue {
   @Inject() config: any
   readonly modelValue: any
   minWidth: string|null = '226px'
+  readonly contextmenu!: Function
 
   get label() {
     const label = this.modelValue.meta?.label
@@ -29,6 +30,9 @@ export default class InputElement extends Vue {
     if (!!element && !element.meta) {
       element.meta = {}
     }
+    this.contextmenu((evt: any, element: any) => {
+      console.log(evt)
+    })
   }
 }
 </script>

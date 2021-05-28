@@ -7,12 +7,12 @@
     :list="modelValue"
     animation="300"
     item-key="type"
-    :component-data="attribute?.props()"
-    @start="(e) => notice(1, e)"
-    @end="(e) => notice(2, e)"
-    :move="(e) => notice(3, e)"
-    @add="(e) => attribute.move(4, e)"
-    @remove="(e) => attribute.move(5, e)"
+    :component-data="componentData()"
+    @start="(e) => innerMove(1, e)"
+    @end="(e) => innerMove(2, e)"
+    :move="(e) => innerMove(3, e)"
+    @add="(e) => innerMove(4, e)"
+    @remove="(e) => innerMove(5, e)"
   >
     <template #item="d">
       <component
@@ -20,8 +20,8 @@
         @contextmenu.stop="contextmenu($event, d.element)"
         v-model="d.element"
         class="__box_ marsk"
-        :contextmenu="(fn) => (childrenmenu = fn)"
         :is="config.compoments[d.element.el]"
+        :contextmenu="(fn) => (childrenmenu = fn)"
       />
     </template>
   </draggable>
@@ -65,12 +65,18 @@ export default class DragWrapper extends Vue {
     evt.returnValue = false
   }
 
-  notice(other:number, evt:any) {
-    const ret = this.attribute.move(other, evt)
-    const { mitt } = this.config
-    const element = (!!evt.oldIndex || evt.oldIndex > -1) ? this.modelValue[evt.oldIndex] : evt.draggedContext.element
-    mitt.emit(`notice:${element.key}`, {other, evt})
-    return ret
+  componentData() {
+    const { props } = this.attribute
+    if (!!props && typeof(props) === "function") {
+      return props()
+    }
+  }
+
+  innerMove(other: number, evt: any) {
+    const { move } = this.attribute
+    if (!!move && typeof(move) === "function") {
+      return move(other, evt)
+    }
   }
 }
 </script>

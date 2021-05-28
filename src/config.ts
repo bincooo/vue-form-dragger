@@ -1,4 +1,5 @@
 import {
+  GridElement,
   FormElement,
   InputElement
 } from '@/components/container/items'
@@ -11,6 +12,7 @@ const config: any = {
   size: {},
   // 组件
   compoments: {
+    grid: GridElement,
     form: FormElement,
     input: InputElement
   },
@@ -21,8 +23,8 @@ const config: any = {
   },
   // 组件拖拽条件约束
   condition: {
-    root: ["form"],
-    form: ["input"]
+    root: ["form", "grid"],
+    form: ["input", "grid"]
   },
   // 组件标签
   element: [

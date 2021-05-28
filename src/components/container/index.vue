@@ -23,6 +23,7 @@
               v-model="d.element"
               class="__box_ marsk"
               :is="config.compoments[d.element.el]"
+              :contextmenu="(fn) => (childrenmenu = fn)"
             />
           </template>
         </draggable>
@@ -56,6 +57,7 @@ export default class Container extends Vue {
   readonly modelValue!: any
   @Ref() readonly menu!: any
   showmenu: boolean = false
+  childrenmenu?: Function
 
   created() {
     this.config.mitt = mitt()
@@ -104,8 +106,13 @@ export default class Container extends Vue {
 
   contextmenu(evt: any, element: any) {
     evt.returnValue = false
-    const { layerX, layerY, currentTarget } = evt
+    const { layerX, layerY } = evt
     this.config.showmenu(`${layerX + 5}px`, `${layerY + 25}px`, element)
+    if (!!this.childrenmenu) {
+      this.childrenmenu(evt, element)
+    }
+    evt.preventDefault()
+    evt.returnValue = false
   }
 
   menuHandler(other: number) {
