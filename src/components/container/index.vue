@@ -5,7 +5,7 @@
     @mouseleave="showmenu = false"
   >
     <div class="__inner_" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
-      <div class="__view_" @contextmenu.prevent="contextmenu" :style="{ ...modelValue.size }">
+      <div class="__view_" @contextmenu.prevent="contextmenu" @dblclick="dbclick" :style="{ ...modelValue.size }">
         <draggable
           class="__drag_"
           ghost-class="__placeholder_"
@@ -101,6 +101,12 @@ export default class Container extends Vue {
       const el = evt.to.getAttribute("data-box")
       return !!condition[el] ? condition[el].includes(element.el) : true
     }
+  }
+
+  dbclick(evt:any) {
+    this.contextmenu(evt)
+    this.showmenu = false
+    this.menuHandler(3)
   }
 
   contextmenu(evt: any) {

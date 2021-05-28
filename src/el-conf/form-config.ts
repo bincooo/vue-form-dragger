@@ -3,6 +3,38 @@ export default [
     title: "基本", // 手风琴标题
     layout: [
       {
+        el: 'grid',
+        col: 1,
+        item: [
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "组件 id",
+            field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.id
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.id = val
+            }
+          },
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "组件 class",
+            field: "textbox", // 输入框类型
+            get(binding: any) {
+              return (binding.meta.class)||[]
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.class = val
+            }
+          }
+        ]
+      },
+      {
         // 布局数据
         el: "grid",
         col: 2, // 行数
