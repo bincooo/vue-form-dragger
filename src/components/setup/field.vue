@@ -22,7 +22,7 @@
       </div>
     </div>
     <div v-if="item.field === 'textbox'">
-      <div class="textbox">
+      <div class="textbox" :class="{disabled:item.disabled}">
         <div v-for="(value, index) in item.get(config.setup.element)" :key=index>
           {{value}}
           <i class="fa fa-times-circle-o" @click="textbox.splice(index, 1)" />
@@ -119,17 +119,21 @@ export default class Field extends Vue {
       cursor: pointer;
     }
     >:checked::after {
-      background-color: #ebeeee;
+      background-color: #d8d8d8;
     }
   }
-  .disabled::after {
-    content: '';
+  .disabled {
     position: relative;
-    display: block;
-    top: -30px;
-    height: 23px;
-    background-color: #d2d1d163;
-    z-index: 1;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #dddddd36;
+      z-index: 10;
+    }
   }
   .textbox {
     border: 1px solid @global-border-color;

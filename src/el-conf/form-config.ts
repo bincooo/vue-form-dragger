@@ -83,7 +83,6 @@ export default [
             // 标签数据
             el: "field", // 组件名称
             title: "显示冒号",
-            // disabled: true,
             field: "radio", // 输入框类型
             get(binding: any) {
               const colon = binding.meta.colon
