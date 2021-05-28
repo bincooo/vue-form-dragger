@@ -62,10 +62,10 @@ export default class FormElement extends Vue {
         div.style.maxHeight = maxHeight
         break
       case 3: // 移动事件
-        // 根节点处理
         const element = evt.draggedContext.element
-        if (!evt.to.hasAttribute("data-box")) {
-          return !!condition["root"] ? condition["root"].includes(element.el) : true
+        // 不能拖出容器外
+        if (evt.from !== evt.to) {
+          return false
         }
         // 子节点处理
         else {
