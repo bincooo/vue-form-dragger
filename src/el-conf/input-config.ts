@@ -19,6 +19,45 @@ export default [
               binding.meta = binding.meta || {}
               binding.meta.label = val
             }
+          },
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "字段绑定",
+            field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.filed
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.filed = val
+            }
+          },
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "组件 id",
+            field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.id
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.id = val
+            }
+          },
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "组件 class",
+            field: "textbox", // 输入框类型
+            get(binding: any) {
+              return (binding.meta.class)||[]
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.class = val
+            }
           }
         ]
       },
@@ -36,7 +75,6 @@ export default [
               return binding.meta.width
             },
             callback: (binding: any, val: any) => {
-              
               binding.meta = binding.meta || {}
               binding.meta.width = val
             }

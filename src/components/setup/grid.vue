@@ -26,6 +26,10 @@ export default class Grid extends Vue {
     const { item, col } = this.layout
     if (!item) return list
     for (let index = 0; index < item.length; index++) {
+      if (col === 1) {
+        list.push([item[index]])
+      }
+      else 
       if (index > 0 && index % col === 0) {
         const it = item.slice(index - col, index)
         list.push(it)

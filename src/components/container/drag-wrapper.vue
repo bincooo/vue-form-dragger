@@ -8,9 +8,9 @@
     animation="300"
     item-key="type"
     :component-data="attribute?.props()"
-    @start="(e) => attribute.move(1, e)"
-    @end="(e) => attribute.move(2, e)"
-    :move="(e) => attribute.move(3, e)"
+    @start="(e) => notice(1, e)"
+    @end="(e) => notice(2, e)"
+    :move="(e) => notice(3, e)"
     @add="(e) => attribute.move(4, e)"
     @remove="(e) => attribute.move(5, e)"
   >
@@ -39,6 +39,7 @@ import draggable from "vuedraggable"
 })
 export default class DragWrapper extends Vue {
   @Inject() config: any
+  readonly modelValue: any
   readonly attribute: any = {}
   childrenmenu?: Function
 
@@ -62,6 +63,14 @@ export default class DragWrapper extends Vue {
     }
     evt.preventDefault()
     evt.returnValue = false
+  }
+
+  notice(other:number, evt:any) {
+    const ret = this.attribute.move(other, evt)
+    const { mitt } = this.config
+    const element = (!!evt.oldIndex || evt.oldIndex > -1) ? this.modelValue[evt.oldIndex] : evt.draggedContext.element
+    mitt.emit(`notice:${element.key}`, {other, evt})
+    return ret
   }
 }
 </script>

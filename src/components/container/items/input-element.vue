@@ -1,8 +1,9 @@
 <template>
-  <div :style="{ minWidth }">
+  <div>
     <a-form-item :label="label" style="padding: 0 2px">
-      <a-input v-blur :placeholder="modelValue.meta.placeholder" :style="{ width: modelValue.meta?.minWidth }" />
+      <a-input v-blur :placeholder="modelValue.meta.placeholder" :style="{ width: modelValue.meta?.width }" />
     </a-form-item>
+    <div style="clear:both"></div>
   </div>
 </template>
 <script lang="ts">
@@ -16,15 +17,11 @@ import { Options, Vue } from "vue-class-component"
 export default class InputElement extends Vue {
   @Inject() config: any
   readonly modelValue: any
+  minWidth: string|null = '226px'
 
   get label() {
     const label = this.modelValue.meta?.label
     return !!label ? label : "标签"
-  }
-
-  get minWidth() {
-    const width = this.modelValue.meta?.width
-    return !!width ? width : "190px"
   }
 
   created() {

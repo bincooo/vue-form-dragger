@@ -5,31 +5,6 @@ export default [
       {
         // 布局数据
         el: "grid",
-        col: 1, // 行数
-        item: [
-          {
-            // 标签数据
-            el: "field", // 组件名称
-            title: "表单布局",
-            field: "select", // 输入框类型
-            map: {
-              horizontal: "水平布局",
-              vertical: "垂直布局",
-              inline: "内联布局"
-            },
-            get(binding: any) {
-              return binding.meta?.layout
-            },
-            callback: (binding: any, val: any) => {
-              binding.meta = binding.meta || {}
-              binding.meta.layout = val
-            }
-          }
-        ]
-      },
-      {
-        // 布局数据
-        el: "grid",
         col: 2, // 行数
         label: "标签布局",
         item: [
@@ -102,12 +77,13 @@ export default [
       {
         // 布局数据
         el: "grid",
-        col: 2, // 行数
+        col: 3, // 行数
         item: [
           {
             // 标签数据
             el: "field", // 组件名称
             title: "显示冒号",
+            // disabled: true,
             field: "radio", // 输入框类型
             get(binding: any) {
               const colon = binding.meta.colon
@@ -133,6 +109,23 @@ export default [
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
               binding.meta.labelAlign = val
+            }
+          },  {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "表单布局",
+            field: "select", // 输入框类型
+            map: {
+              horizontal: "水平布局",
+              vertical: "垂直布局",
+              inline: "内联布局"
+            },
+            get(binding: any) {
+              return binding.meta?.layout
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.layout = val
             }
           }
         ]
