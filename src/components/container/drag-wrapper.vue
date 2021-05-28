@@ -17,11 +17,9 @@
     <template #item="d">
       <component
         :token="d.element.key"
-        @contextmenu.stop="contextmenu($event, d.element)"
         v-model="d.element"
         class="__box_ marsk"
         :is="config.compoments[d.element.el]"
-        :contextmenu="(fn) => (childrenmenu = fn)"
       />
     </template>
   </draggable>
@@ -52,17 +50,6 @@ export default class DragWrapper extends Vue {
     const { CPKit } = this.config
     const style = this.attribute.style || {}
     CPKit.copy(this.$el.style, style)
-  }
-
-  contextmenu(evt: any, element: any) {
-    const { layerX, layerY } = evt
-    const { offsetLeft, offsetTop } = evt.target
-    this.config.showmenu(`${offsetLeft + layerX + 5}px`, `${offsetTop + layerY + 25}px`, element)
-    if (!!this.childrenmenu) {
-      this.childrenmenu(evt, element)
-    }
-    evt.preventDefault()
-    evt.returnValue = false
   }
 
   componentData() {

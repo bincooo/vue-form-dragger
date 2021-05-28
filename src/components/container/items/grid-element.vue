@@ -1,12 +1,12 @@
 <template>
-  <a-row class="grid" v-unmarsk :title="modelValue.name">
+  <a-row class="grid" v-unmarsk :title="modelValue.name" style="padding-left: 12px">
     <template v-for="(item, index) in modelValue.items" :key="index">
       <a-col :span="item.span">
         <drag-wrapper
-          @contextmenu.prevent
           v-model="item.children"
           :data-box="modelValue.el"
           :attribute="{
+            move: (o, e) => onMove(o, e, item.children),
             style: { minHeight: '30px', width: '100%' }
           }"
         />
@@ -19,41 +19,70 @@
 import { Inject } from "vue-property-decorator"
 import { Options, Vue } from "vue-class-component"
 import DragWrapper from "../drag-wrapper.vue"
+import { bind } from "./index"
 
 @Options({
   name: "grid-element",
   components: { DragWrapper },
-  props: ["modelValue", "contextmenu"]
+  props: ["modelValue"]
 })
 export default class GridElement extends Vue {
   @Inject() config: any
   readonly modelValue: any
-  readonly contextmenu!: Function
 
   created() {
     const element = this.modelValue
     if (!!element && !element.items) {
-      element.items = [
-        {
-          span: 12,
-          children: []
-        },
-        {
-          span: 12,
-          children: []
-        }
-      ]
+      element.items = [{
+          span: 12, children: []
+        }, {
+          span: 12, children: []
+        }]
     }
-    this.contextmenu((evt: any, element: any) => {
-      const { showmenu } = this.config
-      let previousElementSibling = evt.target.parentNode,
-        x = 0
-      const parentTop = previousElementSibling.parentNode.offsetTop
-      const parentLeft = previousElementSibling.parentNode.offsetLeft
-      while ((previousElementSibling = previousElementSibling.previousElementSibling) !== null)
-        x += previousElementSibling.clientWidth
-      showmenu(x + evt.layerX + parentLeft + 10 + "px", evt.layerY + parentTop + 30 + "px", element)
-    })
+  }
+
+  onMove(other: number, evt: any, children: any[]) {
+    const { newIndex:index, item:div } = evt
+    const condition = this.config.condition
+    switch (other) {
+      case 1: // 开始移动
+        break
+      case 2: // 结束移动
+        break
+      case 3: // 移动事件
+        // 根节点处理
+        const element = evt.draggedContext.element
+        if (!evt.to.hasAttribute("data-box")) {
+          return !!condition["root"] ? condition["root"].includes(element.el) : true
+        }
+        // 子节点处理
+        else {
+          const el = evt.to.getAttribute("data-box")
+          return !!condition[el] ? condition[el].includes(element.el) : true
+        }
+      case 4: // add 事件
+        // 表单不允许嵌套
+        const path = evt.path
+        for (let index = 0; index < path.length; index++) {
+          const element = path[index]
+          if (element.classList.contains("__container-panel_")) {
+            break
+          }
+          if (element.hasAttribute("box") && element.getAttribute("box") === "form") {
+            children.splice(index, 1)
+            return false
+          }
+        }
+        // =============
+        const { CPKit } = this.config
+        const ndata = CPKit.copy({}, {
+            ...children[index],
+            key: `${children[index].el}-${Date.now()}`
+        })
+        children.splice(index, 1, ndata)
+        bind(this.config, ndata.key, children)
+        return true
+    }
   }
 }
 </script>

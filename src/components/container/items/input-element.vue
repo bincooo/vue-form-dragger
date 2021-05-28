@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :title="modelValue.name">
     <a-form-item :label="label" style="padding: 0 2px">
       <a-input v-blur :placeholder="modelValue.meta.placeholder" :style="{ width: modelValue.meta?.width }" />
     </a-form-item>
@@ -12,13 +12,12 @@ import { Options, Vue } from "vue-class-component"
 
 @Options({
   name: "input-element",
-  props: ["modelValue", "contextmenu"]
+  props: ["modelValue"]
 })
 export default class InputElement extends Vue {
   @Inject() config: any
   readonly modelValue: any
   minWidth: string|null = '226px'
-  readonly contextmenu!: Function
 
   get label() {
     const label = this.modelValue.meta?.label
@@ -30,9 +29,6 @@ export default class InputElement extends Vue {
     if (!!element && !element.meta) {
       element.meta = {}
     }
-    this.contextmenu((evt: any, element: any) => {
-      console.log(evt)
-    })
   }
 }
 </script>

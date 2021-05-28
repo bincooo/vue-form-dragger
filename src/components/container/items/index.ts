@@ -43,7 +43,12 @@ export function bindList(config:any, list:any[]) {
   if (!list) return
   list.forEach(li => {
       bind(config, li.key, list)
-      bindList(config, li.children)
+      if (li.hasOwnProperty("items")) {
+        li.items.forEach((el:any ) => {
+          debugger
+          bindList(config, el.children)
+        })
+      } else bindList(config, li.children)
     })
 }
 

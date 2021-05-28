@@ -5,7 +5,7 @@
     @mouseleave="showmenu = false"
   >
     <div class="__inner_" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
-      <div class="__view_" :style="{ ...modelValue.size }">
+      <div class="__view_" @contextmenu.prevent="contextmenu" :style="{ ...modelValue.size }">
         <draggable
           class="__drag_"
           ghost-class="__placeholder_"
@@ -19,7 +19,6 @@
           <template #item="d">
             <component
               :token="d.element.key"
-              @contextmenu.stop="contextmenu($event, d.element)"
               v-model="d.element"
               class="__box_ marsk"
               :is="config.compoments[d.element.el]"
@@ -104,13 +103,40 @@ export default class Container extends Vue {
     }
   }
 
-  contextmenu(evt: any, element: any) {
-    evt.returnValue = false
-    const { layerX, layerY } = evt
-    this.config.showmenu(`${layerX + 5}px`, `${layerY + 25}px`, element)
-    if (!!this.childrenmenu) {
-      this.childrenmenu(evt, element)
+  contextmenu(evt: any) {
+    const { path, pageX, pageY } = evt
+    const keys:string[] = []
+    for (let index = 0; index < path.length; index ++) {
+      const element = path[index]
+      // 根节点退出循环
+      if (element.classList.contains("__view_")) {
+        break
+      }
+      if (element.hasAttribute("token")) {
+        keys.push(element.getAttribute("token"))
+      }
     }
+    keys.reverse()
+    let { list } = this.modelValue
+    let element = null
+    for (let index = 0; index < keys.length; index ++) {
+      const key = keys[index]
+      for (let idx = 0; idx < list.length; idx ++) {
+        element = list[idx]
+        if (element.key === key) {
+          if (index === keys.length - 1)
+            break
+          if (element.hasOwnProperty("items")) {
+            const innerList:any[] = []
+            element.items.forEach((el:any) => innerList.push(...el.children))
+            list = innerList
+          } else list = element.children||[]
+        }
+      }
+    }
+    const { offsetLeft, offsetTop } = this.config.el
+    if (!element) return
+    this.config.showmenu(pageX - offsetLeft - 260 + 'px', pageY - offsetTop + 'px', element)
     evt.preventDefault()
     evt.returnValue = false
   }

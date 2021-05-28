@@ -3,7 +3,7 @@
     <drag-builder />
   </div> -->
 
-  <div style="width: 1200px; height: 800px; margin-top: 50px">
+  <div style="width: 1200px; height: 800px; margin-top: 50px; margin-left: 10px">
     <drag-builder :config="config" />
   </div>
 </template>

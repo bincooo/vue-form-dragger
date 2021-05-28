@@ -55,6 +55,7 @@ export default class DragBuilder extends Vue {
   }
 
   mounted() {
+    this.config.el = this.$el
     this.jsLoad("#fonticon", "//use.fontawesome.com/355056eaf2.js")
     this.$el.oncontextmenu = (evt: any) => (evt.returnValue = false)
   }
