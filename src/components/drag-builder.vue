@@ -12,7 +12,18 @@ import { Provide } from "vue-property-decorator"
 import ElementPanel from "./element/index.vue"
 import ContainerPanel from "./container/index.vue"
 import SetupPanel from "./setup/index.vue"
-import Obj, { is } from "@/utils/obj"
+import Obj, { is, uuid } from "@/utils/obj"
+import { moveHandler } from "./handler"
+
+class Handler implements Obj.Handler {
+  order: number = 1
+  support(param: Obj.Parameter): boolean {
+    return param.key === "key"
+  }
+  worked(param: Obj.Parameter, data: any, chain: Obj.Fn) {
+    return param.target.el + "-" + uuid()
+  }
+}
 
 @Options({
   name: "drag-builder",
@@ -35,23 +46,15 @@ export default class DragBuilder extends Vue {
   }
 
   created() {
-    this.config.CPKit = new Obj.Coper()
-    class HandlerImpl implements Obj.Handler {
-      order: number = 1
-      support(param: Obj.Parameter): boolean {
-        return param.key === "key"
-      }
-      worked(param: Obj.Parameter, data: any, chain: Obj.Fn) {
-        const split:string[] = data.split("-")
-        return `${split[0]}-${Date.now()}`
-      }
+    const config = this.config
+    config.moveHandler = (...args: any) => moveHandler.apply(config, args)
+    config.reload = () => {
+      this.$forceUpdate()
     }
-    this.config.CPKit.addHandler(new HandlerImpl())
-    this.config.showmenu = false
-    this.config.setup = {
-      show: false,
-      element: null
-    }
+    config.CPKit = new Obj.Coper()
+    config.CPKit.addHandler(new Handler())
+    config.showmenu = false
+    config.setup = { show: false, element: null }
   }
 
   mounted() {

@@ -14,14 +14,13 @@
 </template>
 <script lang="ts">
 import { Options, Vue } from "vue-class-component"
-import DragWrapper from "@/components/container/drag-wrapper.vue"
+import wrapper from "@/components/container/drag-wrapper.vue"
 import { Inject } from "vue-property-decorator"
-import { bind } from "./index"
 
 @Options({
   name: "form-element",
   props: ["modelValue"],
-  components: { DragWrapper }
+  components: { "drag-wrapper": wrapper }
 })
 export default class FormElement extends Vue {
   @Inject() config: any
@@ -42,64 +41,29 @@ export default class FormElement extends Vue {
   }
 
   onMove(other: number, evt: any) {
-    const { children } = this.modelValue
-    const { newIndex: index, item: div } = evt
-    const condition = this.config.condition
+    const { item: div } = evt
     switch (other) {
       case 1: // 开始移动
         const model = this.modelValue
-        this.cache.minWidth = div.style.minWidth
-        this.cache.maxHeight = div.style.maxHeight
-        this.cache.minHeight = div.style.minHeight
+        this.cache = { ...div.style }
         if (model.meta?.layout !== "inline") {
-          div.style.maxHeight = "3px"
-          div.style.minHeight = "3px"
+          div.style = { maxHeight: "3px", minHeight: "3px" }
         }
         break
       case 2: // 结束移动
         const { minHeight, maxHeight } = this.cache
-        div.style.minHeight = minHeight
-        div.style.maxHeight = maxHeight
+        div.style = { maxHeight, minHeight }
         break
       case 3: // 移动事件
-        const element = evt.draggedContext.element
-        // 不能拖出容器外
-        if (evt.from !== evt.to) {
-          return false
-        }
-        // 子节点处理
-        else {
-          const el = evt.to.getAttribute("data-box")
-          return !!condition[el] ? condition[el].includes(element.el) : true
-        }
-      case 4: // add 事件
-        // 表单不允许嵌套
-        const path = evt.path
-        for (let index = 0; index < path.length; index++) {
-          const element = path[index]
-          if (element.classList.contains("__container-panel_")) {
-            break
-          }
-          if (element.hasAttribute("box") && element.getAttribute("box") === "form") {
-            this.modelValue.children.splice(index, 1)
-            return false
-          }
-        }
-        // 添加新的元素时绑定事件
-        const { CPKit } = this.config
-        const ndata = CPKit.copy({}, {
-          ...children[index],
-          key: `${children[index].el}-${Date.now()}`
-        })
-        children.splice(index, 1, ndata)
-        this.config.active = ndata.key
-        bind(this.config, children)
-        return true
+      case 4: // 添加事件
+        const { children } = this.modelValue
+        const { moveHandler } = this.config
+        return moveHandler(other, evt, children, this.$nextTick)
     }
   }
 
   componentData() {
-    const { layout, labelCol, wrapperCol } = this.modelValue.meta
+    const { layout, wrapperCol } = this.modelValue.meta
     return {
       ...this.modelValue.meta,
       wrapperCol: layout === "inline" ? {} : wrapperCol

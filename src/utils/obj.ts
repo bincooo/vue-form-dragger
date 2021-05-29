@@ -1,3 +1,22 @@
+const UUID_CACHE = [-1, 0]
+/**
+ * 使用日期生成伪随机UUID
+ * @returns 伪随机字符串
+ */
+export function uuid(): string {
+  const timestamp: number = Date.now()
+  const num: number = UUID_CACHE[0] === timestamp ? (UUID_CACHE[1] += 1) : (UUID_CACHE[1] = 0)
+  UUID_CACHE[0] = timestamp
+  let str: string = timestamp + "" + num
+  let index = 0
+  let ret = ""
+  while (index < str.length) {
+    ret += parseInt(str.substr(index, 4)).toString(32)
+    index += 4
+  }
+  return ret
+}
+
 export function assert(condition: any, msg: string): asserts condition {
   if (!condition) {
     throw new Error(msg)
@@ -30,10 +49,10 @@ namespace Obj {
       ? "object"
       : "undefined"
 
-  export const convert: Function = (key: any, data: any): Parameter => {
+  export const convert: Function = (key: any, data: any, target: any): Parameter => {
     const kt: string = type(key)
     const dt: string = type(data)
-    return { kt, key, dt, data }
+    return { kt, key, dt, data, target }
   }
 
   export class Coper {
@@ -77,7 +96,7 @@ namespace Obj {
       if (IsArray(target) && IsArray(src)) {
         for (const key in src) {
           const value = src[key]
-          const param = convert([], value)
+          const param = convert([], value, src)
           const handlers: Handler[] = this.chain.filter((item) => item.support(param)).sort()
           const size: number = handlers.length
           let index = 0
@@ -117,7 +136,7 @@ namespace Obj {
           if (!Reflect.has(target, key)) {
             Reflect.set(target, key, IsArray(value) ? [] : IsObj(value) ? {} : null)
           }
-          const param = convert(key, value)
+          const param = convert(key, value, src)
           const handlers: Handler[] = this.chain.filter((item) => item.support(param)).sort()
           const size: number = handlers.length
           let index = 0
@@ -153,7 +172,7 @@ namespace Obj {
    * @param dt 数据类型
    * @param data 数据
    */
-  export declare type Parameter = { kt: string; key: any; dt: string; data: any }
+  export declare type Parameter = { kt: string; key: any; dt: string; data: any; target: any }
   export declare type Fn = (param: Parameter, data: any) => any
 
   /**

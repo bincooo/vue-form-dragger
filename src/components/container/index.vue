@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="__container-panel_"
-    @click="showmenu = false"
-    @mouseleave="showmenu = false"
-  >
+  <div class="__container-panel_" @click="showmenu = false" @mouseleave="showmenu = false">
     <div class="__inner_" @dblclick="dbclick" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
       <div class="__view_" @contextmenu.stop="contextmenu" :style="{ ...modelValue.size }">
         <draggable
@@ -14,15 +10,15 @@
           animation="300"
           item-key="type"
           @add="onAdd"
-          :move=onMove
+          :move="onMove"
         >
           <template #item="d">
             <component
               :token="d.element.key"
               v-model="d.element"
               class="__box_ marsk"
-              :class="{active: config.active === d.element.key}"
-              @click.prevent="config.active = (config.active === d.element.key) ? null : d.element.key"
+              :class="{ active: config.active === d.element.key }"
+              @click.prevent="config.active = config.active === d.element.key ? null : d.element.key"
               :is="config.components[d.element.el]"
             />
           </template>
@@ -45,7 +41,7 @@ import { Inject, Ref } from "vue-property-decorator"
 import Ruler from "./ruler.vue"
 import draggable from "vuedraggable"
 import mitt from "mitt"
-import { bind, unbind } from "./items/index"
+import { bind, unbind } from "@/components/handler"
 
 @Options({
   name: "container-panel",
@@ -60,7 +56,7 @@ export default class Container extends Vue {
 
   created() {
     this.config.mitt = mitt()
-    this.config.showmenu = (x:string, y:string, element: any) => {
+    this.config.showmenu = (x: string, y: string, element: any) => {
       this.showmenu = true
       const menu = this.menu
       menu.style.top = y
@@ -71,7 +67,7 @@ export default class Container extends Vue {
   }
 
   onAdd(e: any): void {
-    console.log('onadd');
+    console.log("onadd")
     const index = e.newIndex
     const list = this.modelValue.list
     const data = list[index]
@@ -90,7 +86,7 @@ export default class Container extends Vue {
     }
   }
 
-  onMove(evt:any) {
+  onMove(evt: any) {
     // 根节点处理
     const condition = this.config.condition
     const element = evt.draggedContext.element
@@ -104,7 +100,7 @@ export default class Container extends Vue {
     }
   }
 
-  dbclick(evt:any) {
+  dbclick(evt: any) {
     const div = evt.target
     if (!div.parentNode.classList.contains("__view_")) {
       this.contextmenu(evt)
@@ -115,8 +111,8 @@ export default class Container extends Vue {
 
   contextmenu(evt: any) {
     const { path, pageX, pageY } = evt
-    const keys:string[] = []
-    for (let index = 0; index < path.length; index ++) {
+    const keys: string[] = []
+    for (let index = 0; index < path.length; index++) {
       const element = path[index]
       // 根节点退出循环
       if (element.classList.contains("__view_")) {
@@ -127,26 +123,27 @@ export default class Container extends Vue {
       }
     }
     keys.reverse()
-    let { list } = this.modelValue
+    const { list } = this.modelValue
     let element = null
-    for (let index = 0; index < keys.length; index ++) {
-      const key = keys[index]
-      for (let idx = 0; idx < list.length; idx ++) {
-        element = list[idx]
-        if (element.key === key) {
-          if (index === keys.length - 1)
-            break
-          if (element.hasOwnProperty("items")) {
-            const innerList:any[] = []
-            element.items.forEach((el:any) => innerList.push(...el.children))
-            list = innerList
-          } else list = element.children||[]
-        }
+    const gEl = (key: string, list: any[] = []): any => {
+      for (let index = 0; index < list.length; index++) {
+        const element = list[index]
+        if (element.key === key) return element
       }
+    }
+    let temp: any[] = list
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index]
+      element = gEl(key, temp)
+      if (!element) return
+      if (element.hasOwnProperty("items")) {
+        temp = []
+        element?.items.forEach((el: any) => temp.push(...el.children))
+      } else temp = element.children || []
     }
     const { offsetLeft, offsetTop } = this.config.el
     if (!element) return
-    this.config.showmenu(pageX - offsetLeft - 260 + 'px', pageY - offsetTop + 'px', element)
+    this.config.showmenu(pageX - offsetLeft - 260 + "px", pageY - offsetTop + "px", element)
     evt.preventDefault()
     evt.returnValue = false
   }
@@ -157,26 +154,36 @@ export default class Container extends Vue {
     const list = g_list.filter((item: any) => item.key === token)
     const data = list.length > 0 ? list[0] : null
     switch (other) {
-      case 1: { // 删除
+      case 1: {
+        // 删除
         if (!!data) {
           g_list.splice(g_list.indexOf(data), 1)
           data.children?.forEach((el: any) => unbind(this.config, el))
         } else mitt.emit(`del:${token}`)
         break
       }
-      case 2: { // 拷贝
+      case 2: {
+        // 拷贝
         const index = !!data ? g_list.indexOf(data) : -1
         const ndata: any = {}
         if (!!data) {
-          g_list.splice(index, 0, CPKit.copy(ndata, {
-            ...data,
-            key: `${data.el}-${Date.now()}`
-          }))
-          bind(this.config, ndata.children)
+          g_list.splice(
+            index + 1,
+            0,
+            CPKit.copy(ndata, {
+              ...data,
+              key: null
+            })
+          )
+          const element = g_list[index + 1]
+          if (element.hasOwnProperty("items")) {
+            element.items?.forEach((el: any) => bind(this.config, el.children))
+          } else bind(this.config, element.children)
         } else mitt.emit(`copy:${token}`)
         break
       }
-      case 3: { // 配置
+      case 3: {
+        // 配置
         setup.show = true
         break
       }
@@ -236,7 +243,7 @@ export default class Container extends Vue {
           z-index: 0;
         }
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           left: 0;
           right: 0;
