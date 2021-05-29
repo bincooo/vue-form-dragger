@@ -45,7 +45,7 @@ import { Inject, Ref } from "vue-property-decorator"
 import Ruler from "./ruler.vue"
 import draggable from "vuedraggable"
 import mitt from "mitt"
-import { bind } from "./items/index"
+import { bind, unbind } from "./items/index"
 
 @Options({
   name: "container-panel",
@@ -153,22 +153,26 @@ export default class Container extends Vue {
     const list = g_list.filter((item: any) => item.key === token)
     const data = list.length > 0 ? list[0] : null
     switch (other) {
-      case 1: {
-        ;(() => (!!data ? g_list.splice(g_list.indexOf(data), 1) : mitt.emit(`del:${token}`)))()
+      case 1: { // 删除
+        if (!!data) {
+          g_list.splice(g_list.indexOf(data), 1)
+          data.children?.forEach((el: any) => unbind(this.config, el))
+        } else mitt.emit(`del:${token}`)
         break
       }
-      case 2: {
+      case 2: { // 拷贝
         const index = !!data ? g_list.indexOf(data) : -1
-        const ndata = {
-          children: []
-        }
-        ;(() => (!!data ? g_list.splice(index, 0, CPKit.copy(ndata, {
-          ...data,
-          key: `${data.el}-${Date.now()}`
-        })) && ndata.children.forEach((el: any) => bind(this.config, el.key, ndata.children)) : mitt.emit(`copy:${token}`)))()
+        const ndata: any = {}
+        if (!!data) {
+          g_list.splice(index, 0, CPKit.copy(ndata, {
+            ...data,
+            key: `${data.el}-${Date.now()}`
+          }))
+          this.$nextTick(() => bind(this.config, ndata.children))
+        } else mitt.emit(`copy:${token}`)
         break
       }
-      case 3: {
+      case 3: { // 配置
         setup.show = true
         break
       }

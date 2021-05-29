@@ -85,17 +85,14 @@ export default class GridElement extends Vue {
             return false
           }
         }
-        // =============
+        // 添加新的元素时绑定事件    
         const { CPKit } = this.config
-        const ndata = CPKit.copy(
-          {},
-          {
-            ...children[index],
-            key: `${children[index].el}-${Date.now()}`
-          }
-        )
+        const ndata = CPKit.copy({}, {
+          ...children[index],
+          key: `${children[index].el}-${Date.now()}`
+        })
         children.splice(index, 1, ndata)
-        bind(this.config, ndata.key, children)
+        bind(this.config, children)
         return true
     }
   }
