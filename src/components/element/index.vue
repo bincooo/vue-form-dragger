@@ -56,7 +56,6 @@ export default class Element extends Vue {
       const item = (map[element.group] = map[element.group] || [])
       item.push(element)
     }
-    console.log(map)
     return map
   }
 

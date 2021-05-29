@@ -4,8 +4,8 @@
     @click="showmenu = false"
     @mouseleave="showmenu = false"
   >
-    <div class="__inner_" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
-      <div class="__view_" @contextmenu.prevent="contextmenu" @dblclick="dbclick" :style="{ ...modelValue.size }">
+    <div class="__inner_" @dblclick="dbclick" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
+      <div class="__view_" @contextmenu.stop="contextmenu" :style="{ ...modelValue.size }">
         <draggable
           class="__drag_"
           ghost-class="__placeholder_"
@@ -84,6 +84,7 @@ export default class Container extends Vue {
     const condition = this.config.condition
     if (!condition["root"] || condition["root"].includes(data.el)) {
       list.splice(index, 1, ndata)
+      this.config.active = ndata.key
     } else {
       list.splice(index, 1)
     }
@@ -104,9 +105,12 @@ export default class Container extends Vue {
   }
 
   dbclick(evt:any) {
-    this.contextmenu(evt)
-    this.showmenu = false
-    this.menuHandler(3)
+    const div = evt.target
+    if (!div.parentNode.classList.contains("__view_")) {
+      this.contextmenu(evt)
+      this.showmenu = false
+      this.menuHandler(3)
+    }
   }
 
   contextmenu(evt: any) {
@@ -168,7 +172,7 @@ export default class Container extends Vue {
             ...data,
             key: `${data.el}-${Date.now()}`
           }))
-          this.$nextTick(() => bind(this.config, ndata.children))
+          bind(this.config, ndata.children)
         } else mitt.emit(`copy:${token}`)
         break
       }

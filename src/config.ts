@@ -42,12 +42,6 @@ const config: any = {
       icon: "fa fa-th-large"
     },
     {
-      el: "layout",
-      group: '容器',
-      name: "布局",
-      icon: "fa fa-th"
-    },
-    {
       el: 'input',
       group: '表单组件',
       name: '文本输入框',

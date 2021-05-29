@@ -92,6 +92,7 @@ export default class GridElement extends Vue {
           key: `${children[index].el}-${Date.now()}`
         })
         children.splice(index, 1, ndata)
+        this.config.active = ndata.key
         bind(this.config, children)
         return true
     }
