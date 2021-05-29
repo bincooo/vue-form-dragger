@@ -13,7 +13,6 @@
 <script lang="ts">
 import { Inject } from "vue-property-decorator"
 import { Options, Vue } from "vue-class-component"
-import Obj from "@/utils/obj"
 
 @Options({
   name: "grid-item",

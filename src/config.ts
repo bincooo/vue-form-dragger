@@ -3,6 +3,12 @@ import {
   FormElement,
   InputElement
 } from '@/components/container/items'
+import {
+  grid,
+  block,
+  field,
+  gridItem
+} from './components/setup/index'
 import gridConfig from './el-conf/grid-config'
 import formConfig from './el-conf/form-config'
 import inputConfig from './el-conf/input-config'
@@ -11,10 +17,17 @@ const config: any = {
   // 编辑器大小
   size: {},
   // 组件
-  compoments: {
+  components: {
     grid: GridElement,
     form: FormElement,
     input: InputElement
+  },
+  // 全局注册的组件本地开发没问题，到了编译后就丢失了组件。不得其解 T^T，无奈增加此节点
+  setupComponents: {
+    grid,
+    block,
+    field,
+    'grid-item': gridItem
   },
   // 属性面板表单构建信息
   props: {

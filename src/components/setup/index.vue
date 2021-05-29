@@ -8,7 +8,8 @@
           <template v-for="(item, index) in config.props[modelValue?.el]" :key="index">
             <collapse-wrapper :idx="index" :title="item.title">
               <template v-for="(it, index) in item.layout" :key="index">
-                <component :is="it.el" :layout=it />
+                <!-- <component :is="it.el" :layout=it /> -->
+                <component :is="config.setupComponents[it.el]" :layout=it />
               </template>
             </collapse-wrapper>
           </template>

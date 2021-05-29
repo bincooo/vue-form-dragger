@@ -21,7 +21,7 @@
         class="__box_ marsk"
         :class="{active: config.active === d.element.key}"
         @click.stop="config.active = (config.active === d.element.key) ? null : d.element.key"
-        :is="config.compoments[d.element.el]"
+        :is="config.components[d.element.el]"
       />
     </template>
   </draggable>
