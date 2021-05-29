@@ -3,7 +3,7 @@ import {
   FormElement,
   InputElement
 } from '@/components/container/items'
-
+import gridConfig from './el-conf/grid-config'
 import formConfig from './el-conf/form-config'
 import inputConfig from './el-conf/input-config'
 
@@ -18,12 +18,13 @@ const config: any = {
   },
   // 属性面板表单构建信息
   props: {
+    grid: gridConfig,
     form: formConfig,
     input: inputConfig
   },
   // 组件拖拽条件约束
   condition: {
-    root: ["form", "grid"],
+    root: ["form"],
     form: ["input", "grid"]
   },
   // 组件标签

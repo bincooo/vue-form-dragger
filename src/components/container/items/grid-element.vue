@@ -1,5 +1,12 @@
 <template>
-  <a-row class="grid" v-unmarsk :title="modelValue.name" style="padding-left: 12px">
+  <a-row
+    class="grid"
+    :align="modelValue.meta?.align"
+    :justify="modelValue.meta?.justify"
+    v-unmarsk
+    :title="modelValue.name"
+    style="padding-left: 12px"
+  >
     <template v-for="(item, index) in modelValue.items" :key="index">
       <a-col :span="item.span">
         <drag-wrapper
@@ -33,16 +40,22 @@ export default class GridElement extends Vue {
   created() {
     const element = this.modelValue
     if (!!element && !element.items) {
-      element.items = [{
-          span: 12, children: []
-        }, {
-          span: 12, children: []
-        }]
+      element.items = [
+        {
+          span: 12,
+          children: []
+        },
+        {
+          span: 12,
+          children: []
+        }
+      ]
+      element.meta = {}
     }
   }
 
   onMove(other: number, evt: any, children: any[]) {
-    const { newIndex:index, item:div } = evt
+    const { newIndex: index, item: div } = evt
     const condition = this.config.condition
     switch (other) {
       case 1: // 开始移动
@@ -75,10 +88,13 @@ export default class GridElement extends Vue {
         }
         // =============
         const { CPKit } = this.config
-        const ndata = CPKit.copy({}, {
+        const ndata = CPKit.copy(
+          {},
+          {
             ...children[index],
             key: `${children[index].el}-${Date.now()}`
-        })
+          }
+        )
         children.splice(index, 1, ndata)
         bind(this.config, ndata.key, children)
         return true

@@ -1,6 +1,5 @@
 <template>
   <div class="grid" :class="{'label': !!layout.label}" :label="layout.label">
-    <!-- <component :is="item.el" :item=item /> -->
     <table style="width: 100%">
       <tr v-for="(item, index) in list" :key=index>
         <td :style="{width: `${100 / layout.col}%`}" v-for="(it, idx) in item" :key=idx>

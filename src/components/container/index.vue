@@ -44,7 +44,7 @@ import { Inject, Ref } from "vue-property-decorator"
 import Ruler from "./ruler.vue"
 import draggable from "vuedraggable"
 import mitt from "mitt"
-import { bindList } from "./items/index"
+import { bind } from "./items/index"
 
 @Options({
   name: "container-panel",
@@ -159,10 +159,13 @@ export default class Container extends Vue {
       }
       case 2: {
         const index = !!data ? g_list.indexOf(data) : -1
-        ;(() => (!!data ? g_list.splice(index, 0, CPKit.copy({}, {
+        const ndata = {
+          children: []
+        }
+        ;(() => (!!data ? g_list.splice(index, 0, CPKit.copy(ndata, {
           ...data,
           key: `${data.el}-${Date.now()}`
-        })) && bindList(this.config, g_list[index].children) : mitt.emit(`copy:${token}`)))()
+        })) && ndata.children.forEach((el: any) => bind(this.config, el.key, ndata.children)) : mitt.emit(`copy:${token}`)))()
         break
       }
       case 3: {
