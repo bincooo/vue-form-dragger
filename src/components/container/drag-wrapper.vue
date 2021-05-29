@@ -19,6 +19,8 @@
         :token="d.element.key"
         v-model="d.element"
         class="__box_ marsk"
+        :class="{active: config.active === d.element.key}"
+        @click.stop="config.active = (config.active === d.element.key) ? null : d.element.key"
         :is="config.compoments[d.element.el]"
       />
     </template>

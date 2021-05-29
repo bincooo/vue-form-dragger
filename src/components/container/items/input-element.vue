@@ -1,6 +1,6 @@
 <template>
   <div :title="modelValue.name">
-    <a-form-item :label="label" style="padding: 0 2px">
+    <a-form-item :label="label" style="padding: 0 2px" :labelCol="modelValue.meta?.labelCol" :wrapperCol="modelValue.meta?.wrapperCol">
       <a-input v-blur :placeholder="modelValue.meta.placeholder" :style="{ width: modelValue.meta?.width }" />
     </a-form-item>
     <div style="clear:both"></div>

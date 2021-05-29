@@ -1,5 +1,5 @@
 <template>
-  <section title="表单" v-unmarsk style="padding-left: 10px">
+  <section title="表单" v-unmarsk>
     <drag-wrapper
       v-model="modelValue.children"
       :data-box="modelValue.el"
@@ -36,14 +36,14 @@ export default class FormElement extends Vue {
     if (!!element && !element.meta) {
       element.meta = {
         labelCol: { span: 4 },
-        wrapperCol: { span:14 }
+        wrapperCol: { span: 14 }
       }
     }
   }
 
   onMove(other: number, evt: any) {
     const { children } = this.modelValue
-    const { newIndex:index, item:div } = evt
+    const { newIndex: index, item: div } = evt
     const condition = this.config.condition
     switch (other) {
       case 1: // 开始移动
@@ -87,10 +87,13 @@ export default class FormElement extends Vue {
         }
         // =============
         const { CPKit } = this.config
-        const ndata = CPKit.copy({}, {
+        const ndata = CPKit.copy(
+          {},
+          {
             ...children[index],
             key: `${children[index].el}-${Date.now()}`
-        })
+          }
+        )
         children.splice(index, 1, ndata)
         bind(this.config, ndata.key, children)
         return true
@@ -104,6 +107,5 @@ export default class FormElement extends Vue {
       wrapperCol: layout === "inline" ? {} : wrapperCol
     }
   }
-
 }
 </script>

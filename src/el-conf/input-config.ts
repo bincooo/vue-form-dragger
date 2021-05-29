@@ -93,6 +93,78 @@ export default [
             }
           }
         ]
+      },
+      {
+        // 布局数据
+        el: "grid",
+        col: 2, // 行数
+        label: "标签布局",
+        item: [
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "跨度",
+            field: "text", // 输入框类型
+            get(binding:any) {
+              return binding.meta.labelCol?.span
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.labelCol = binding.meta.labelCol || {}
+              binding.meta.labelCol.span = Number(val)
+            }
+          },
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "偏移",
+            field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.labelCol?.offset
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.labelCol = binding.meta.labelCol || {}
+              binding.meta.labelCol.offset = val
+            }
+          }
+        ]
+      },
+      {
+        // 布局数据
+        el: "grid",
+        col: 2, // 行数
+        label: "包裹布局",
+        item: [
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "跨度",
+            field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.wrapperCol?.span
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.wrapperCol = binding.meta.wrapperCol || {}
+              binding.meta.wrapperCol.span = Number(val)
+            }
+          },
+          {
+            // 标签数据
+            el: "field", // 组件名称
+            title: "偏移",
+            field: "text", // 输入框类型
+            get(binding: any) {
+              return binding.meta.wrapperCol?.offset
+            },
+            callback: (binding: any, val: any) => {
+              binding.meta = binding.meta || {}
+              binding.meta.wrapperCol = binding.meta.wrapperCol || {}
+              binding.meta.wrapperCol.offset = val
+            }
+          }
+        ]
       }
     ]
   },

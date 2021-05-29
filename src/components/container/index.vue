@@ -21,8 +21,9 @@
               :token="d.element.key"
               v-model="d.element"
               class="__box_ marsk"
+              :class="{active: config.active === d.element.key}"
+              @click.prevent="config.active = (config.active === d.element.key) ? null : d.element.key"
               :is="config.compoments[d.element.el]"
-              :contextmenu="(fn) => (childrenmenu = fn)"
             />
           </template>
         </draggable>
@@ -56,7 +57,6 @@ export default class Container extends Vue {
   readonly modelValue!: any
   @Ref() readonly menu!: any
   showmenu: boolean = false
-  childrenmenu?: Function
 
   created() {
     this.config.mitt = mitt()
@@ -170,7 +170,6 @@ export default class Container extends Vue {
       }
       case 3: {
         setup.show = true
-        //;(() => (!!data ? setup.element = data : mitt.emit(`set:${token}`, (data:any) => setup.element = data)))()
         break
       }
     }
@@ -244,9 +243,18 @@ export default class Container extends Vue {
         box-sizing: border-box;
         .__box_ {
           box-sizing: border-box;
-          border: 1px dashed @global-box-border-color;
-          margin: 2px;
+          border: 1px dashed #00000000;
+          margin: 4px;
           z-index: 10;
+          &:hover {
+            border: 1px dashed @global-box-border-color;
+          }
+        }
+        .active {
+          border: 1px dashed rgb(37, 186, 255);
+          &:hover {
+            border: 1px dashed rgb(37, 186, 255);
+          }
         }
         > .__placeholder_ {
           background-color: rgb(37, 186, 255);
@@ -255,7 +263,7 @@ export default class Container extends Vue {
           min-width: 200px;
           padding: 0;
           font-size: 0;
-          margin: 2px;
+          margin: 4px;
           border: 0px solid;
           > * {
             display: none;

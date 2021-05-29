@@ -5,7 +5,6 @@
     :justify="modelValue.meta?.justify"
     v-unmarsk
     :title="modelValue.name"
-    style="padding-left: 12px"
   >
     <template v-for="(item, index) in modelValue.items" :key="index">
       <a-col :span="item.span">
@@ -107,8 +106,8 @@ export default class GridElement extends Vue {
 .drag-builder > .__container-panel_ .__view_ {
   .grid {
     padding: 2px;
-    > .ant-col {
-      border: 1px dashed grey;
+    > .ant-col:hover {
+      outline: 1px dashed @global-box-border-color;
     }
   }
 }
