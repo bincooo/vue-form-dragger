@@ -4,26 +4,24 @@
   </div> -->
 
   <div style="width: 1200px; height: 800px; margin-top: 50px; margin-left: 10px">
-    <drag-builder :config="config" />
+    <form-dragger :config="config" />
   </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component"
-import DragBuilder from './components/drag-builder.vue'
-import config from './config'
-import "ant-design-vue/dist/antd.css";
+import dragger from "./components/form-dragger.vue"
+import config from "./config"
+import "ant-design-vue/dist/antd.css"
 @Options({
-  name: 'app',
+  name: "app",
   components: {
-    DragBuilder
+    "form-dragger": dragger
   }
 })
 export default class App extends Vue {
-  config:any = config
+  config: any = config
 }
 </script>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>

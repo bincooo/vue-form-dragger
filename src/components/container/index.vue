@@ -1,7 +1,7 @@
 <template>
   <div class="__container-panel_" @click="showmenu = false" @mouseleave="showmenu = false">
     <div class="__inner_" @dblclick="dbclick" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
-      <div class="__view_" @contextmenu.stop="contextmenu" :style="{ ...modelValue.size }">
+      <div class="__view_" @contextmenu="contextmenu" :style="{ ...modelValue.size }">
         <draggable
           class="__drag_"
           ghost-class="__placeholder_"

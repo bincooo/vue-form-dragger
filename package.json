@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "lib": "vue-cli-service build --target lib --name index --dest lib src/index.ts"
   },
   "dependencies": {
     "ant-design-vue": "^2.1.6",
