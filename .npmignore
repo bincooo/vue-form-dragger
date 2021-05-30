@@ -1,9 +1,6 @@
 .DS_Store
 node_modules
-/images
-/public
 /dist
-/src
 
 vue.config.js
 babel.config.js

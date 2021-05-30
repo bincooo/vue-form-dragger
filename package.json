@@ -1,7 +1,14 @@
 {
   "name": "vue-form-dragger",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.01",
+  "private": false,
+  "main": "lib/index.umd.min.js",
+  "typings": "@types/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "@types/*.d.ts"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
