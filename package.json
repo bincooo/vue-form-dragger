@@ -1,7 +1,14 @@
 {
   "name": "vue-form-dragger",
-  "version": "0.1.01",
+  "version": "0.1.3",
   "private": false,
+  "author": "bingco",
+  "license": "MIT",
+  "homepage": "https://bingco-zhan.github.io/vue-form-dragger/dist/index.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bingco-zhan/vue-form-dragger.git"
+  },
   "main": "lib/index.umd.min.js",
   "typings": "@types/index.d.ts",
   "files": [
@@ -12,7 +19,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lib": "vue-cli-service build --target lib --name index --dest lib src/index.ts"
+    "lib": "vue-cli-service build --mode library --target lib --name index --dest lib src/index.ts"
   },
   "dependencies": {
     "ant-design-vue": "^2.1.6",

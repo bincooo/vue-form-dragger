@@ -1,0 +1,147 @@
+> .container-panel {
+  margin-left: @element-panel-width + 4px;
+  margin-top: 2px;
+  margin-right: 2px;
+  margin-bottom: 2px;
+  height: calc(100% - 4px);
+  max-width: 100%;
+  border: 1px solid @global-border-color;
+  background-color: @global-background-color;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  > .inner {
+    height: 100%;
+    width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    position: relative;
+    #ruler_1 {
+      padding-left: 20px;
+      box-sizing: border-box;
+      background-color: @global-background-color;
+      z-index: 10;
+      top: -20px;
+      width: 100%;
+      position: absolute;
+    }
+    #ruler_2 {
+      padding-top: 20px;
+      box-sizing: border-box;
+      background-color: @global-background-color;
+      left: 0;
+      top: -20px;
+      height: 100%;
+      position: absolute;
+    }
+    > .view {
+      width: calc(100% - 20px);
+      height: calc(100% - 20px);
+      margin-top: 20px;
+      margin-left: 20px;
+      box-sizing: border-box;
+      border: 1px solid red;
+      background-color: @global-background-color;
+      .marsk {
+        position: relative;
+        * {
+          z-index: 0;
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          z-index: 10;
+        }
+      }
+      .drag {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        .box {
+          box-sizing: border-box;
+          border: 1px dashed #00000000;
+          margin: 4px;
+          z-index: 10;
+          &:hover {
+            border: 1px dashed @global-box-border-color;
+          }
+        }
+        .active {
+          border: 1px dashed #40a9ff;
+          box-shadow: 0 0 0 2px #1890ff33;
+          &:hover {
+            border: 1px dashed #40a9ff;
+          }
+        }
+        > .placeholder {
+          background-color: #40a9ff;
+          box-shadow: unset;
+          position: relative;
+          min-height: 3px;
+          min-width: 200px;
+          padding: 0;
+          font-size: 0;
+          margin: 4px;
+          border: 0px solid;
+          > * {
+            display: none;
+          }
+          &:hover {
+            border: 0px;
+          }
+        }
+      }
+    }
+  }
+  > .empty::before {
+    content: "请拖入组件";
+    width: 200px;
+    font-size: 20px;
+    display: block;
+    position: absolute;
+    padding-left: 20px;
+    top: calc((100% - 60px) / 2);
+    left: calc((100% - 240px) / 2);
+    color: #d4d4d4;
+    text-align: center;
+    padding: 20px;
+    border: 1px dashed #d4d4d4;
+  }
+
+  > .contextmenu {
+    box-sizing: unset;
+    position: absolute;
+    top: 20px;
+    left: 50px;
+    font-size: 12px;
+    border: 1px dashed @global-box-border-color;
+    outline: 5px solid @element-background-color;
+    background-color: @element-background-color;
+    padding: 2px;
+    width: 50px;
+    text-align: center;
+    z-index: 1000;
+    > li {
+      list-style: none;
+      z-index: 100;
+      padding: 2px;
+      cursor: pointer;
+      user-select: none;
+      &:hover {
+        background-color: #e2e3ec;
+      }
+      &:active {
+        background-color: #c9cad3;
+      }
+      > i {
+        width: 13px;
+        height: 13px;
+        margin-right: 4px;
+      }
+    }
+  }
+}
