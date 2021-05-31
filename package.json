@@ -27,6 +27,7 @@
     "mitt": "^2.1.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
+    "vue-drag-resize": "^2.0.3",
     "vue-property-decorator": "^9.1.2",
     "vuedraggable": "^4.0.1"
   },

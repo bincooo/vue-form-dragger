@@ -1,4 +1,4 @@
-import { GridElement, FormElement, InputElement } from "@/components/container/items"
+import { GridElement, FormElement, InputElement, TableBox as table } from "@/components/container/items"
 import { grid, field } from "./components/setup/index"
 import gridConfig from "./el-conf/grid-config"
 import formConfig from "./el-conf/form-config"
@@ -11,7 +11,8 @@ const config: any = {
   components: {
     grid: GridElement,
     form: FormElement,
-    input: InputElement
+    input: InputElement,
+    table
   },
   // 全局注册的组件本地开发没问题，到了编译后就丢失了组件。不得其解 T^T，无奈增加此节点
   setupComponents: {
@@ -27,7 +28,7 @@ const config: any = {
   // 组件拖拽条件约束
   condition: {
     root: ["form"],
-    form: ["input", "grid"]
+    form: ["input", "grid", "table"]
   },
   // 组件标签
   element: [
@@ -41,6 +42,12 @@ const config: any = {
       el: "grid",
       group: "容器",
       name: "栅格",
+      icon: "fa fa-th-large"
+    },
+    {
+      el: "table",
+      group: "容器",
+      name: "表格",
       icon: "fa fa-th-large"
     },
     {

@@ -26,6 +26,7 @@
       </div>
       <Ruler id="ruler_1" />
       <Ruler id="ruler_2" left />
+      <resize hidden />
     </div>
     <ul ref="menu" class="contextmenu" v-show="this.showmenu">
       <li @click="menuHandler(1)"><i class="fa fa-trash" />删除</li>
@@ -39,6 +40,7 @@
 import { Options, Vue } from "vue-class-component"
 import { Inject, Ref } from "vue-property-decorator"
 import Ruler from "./ruler.vue"
+import resize from "vue-drag-resize"
 import draggable from "vuedraggable"
 import mitt from "mitt"
 import { bind, unbind } from "@/handler"
@@ -46,7 +48,7 @@ import { bind, unbind } from "@/handler"
 @Options({
   name: "container-panel",
   props: ["modelValue"],
-  components: { Ruler, draggable }
+  components: { Ruler, resize, draggable }
 })
 export default class Container extends Vue {
   @Inject() readonly config!: any
