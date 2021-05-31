@@ -3,7 +3,7 @@ export default [
     title: "基本",
     layout: [
       {
-        el: 'grid',
+        el: "grid",
         col: 1,
         item: [
           {
@@ -25,7 +25,7 @@ export default [
             title: "组件 class",
             field: "textbox", // 输入框类型
             get(binding: any) {
-              return (binding.meta.class)||[]
+              return binding.meta.class || []
             },
             callback: (binding: any, val: any) => {
               binding.meta = binding.meta || {}
@@ -37,51 +37,60 @@ export default [
       {
         el: "grid",
         col: 1,
-        label: '布局项',
-        item: [{
-            el: 'field', // 组件名称
-            title: '布局项',
+        label: "布局项",
+        item: [
+          {
+            el: "field", // 组件名称
+            title: "布局项",
             field: "grid-item", // 输入框类型
             get(binding: any) {
-                return binding.items
+              return binding.items
             },
             callback(binding: any, val: any) {
-                binding.items = val
+              binding.items = val
             }
-        }]
+          }
+        ]
       },
       {
         el: "grid",
         col: 2,
-        item: [{
-            el: 'field',
-            title: '垂直对齐',
-            field: 'select',
+        item: [
+          {
+            el: "field",
+            title: "垂直对齐",
+            field: "select",
             map: {
-              top: '顶部', middle: '居中', bottom: '底部'
+              top: "顶部",
+              middle: "居中",
+              bottom: "底部"
             },
             get(binding: any) {
-                return binding.meta.align || 'middle'
+              return binding.meta.align || "middle"
             },
             callback(binding: any, val: any) {
               binding.meta = binding.meta || {}
               binding.meta.align = val
             }
-        }, {
-          el: 'field',
-          title: '水平排列',
-          field: 'select',
-          map: {
-            start: '左边', center: '居中', end: '右边'
           },
-          get(binding: any) {
-              return binding.meta.justify || 'end'
-          },
-          callback(binding: any, val: any) {
-            binding.meta = binding.meta || {}
-            binding.meta.justify = val
+          {
+            el: "field",
+            title: "水平排列",
+            field: "select",
+            map: {
+              start: "左边",
+              center: "居中",
+              end: "右边"
+            },
+            get(binding: any) {
+              return binding.meta.justify || "end"
+            },
+            callback(binding: any, val: any) {
+              binding.meta = binding.meta || {}
+              binding.meta.justify = val
+            }
           }
-      }]
+        ]
       }
     ]
   }

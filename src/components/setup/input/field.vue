@@ -106,8 +106,11 @@ export default class Field extends Vue {
   }
 
   onGridItemDel(index: number) {
-    this.items.splice(index, 1)
-    this.item.callback(this.config.setup.element, this.items)
+    // 保留一个
+    if (this.items?.length > 1) {
+      this.items.splice(index, 1)
+      this.item.callback(this.config.setup.element, this.items)
+    }
   }
 
   onGridItemKeyup(evt: any, index: number) {

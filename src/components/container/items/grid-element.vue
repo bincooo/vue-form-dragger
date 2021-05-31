@@ -7,13 +7,13 @@
     :title="modelValue.name"
   >
     <template v-for="(item, index) in modelValue.items" :key="index">
-      <a-col :span="item.span">
+      <a-col :span="item.span" :class="{ empty: !item.children || item.children.length === 0 }">
         <drag-wrapper
           v-model="item.children"
           :data-box="modelValue.el"
           :attribute="{
             move: (o, e) => onMove(o, e, item.children),
-            style: { minHeight: '30px', width: '100%' }
+            style: { minHeight: '30px' }
           }"
         />
       </a-col>
@@ -67,14 +67,12 @@ export default class GridElement extends Vue {
 }
 </script>
 
-<style lang="less">
-@import '~@/style/var.less';
-.drag-builder > .__container-panel_ .__view_ {
-  .grid {
-    padding: 2px;
-    > .ant-col:hover {
-      outline: 1px dashed @global-box-border-color;
-    }
+<style lang="less" scoped>
+@import "~@/style/var.less";
+.grid {
+  padding: 2px;
+  > .empty {
+    border: 1px dashed @global-box-border-color;
   }
 }
 </style>
