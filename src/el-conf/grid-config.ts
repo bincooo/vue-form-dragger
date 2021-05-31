@@ -39,8 +39,9 @@ export default [
         col: 1,
         label: '布局项',
         item: [{
-            el: 'grid-item',
+            el: 'field', // 组件名称
             title: '布局项',
+            field: "grid-item", // 输入框类型
             get(binding: any) {
                 return binding.items
             },

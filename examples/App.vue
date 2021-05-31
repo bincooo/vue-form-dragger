@@ -10,8 +10,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component"
-import dragger from "@/components/form-dragger.vue"
-import config from "@/config"
+import dragger, { config } from "@/index"
 import "ant-design-vue/dist/antd.css"
 @Options({
   name: "app",

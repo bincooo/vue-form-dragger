@@ -1,5 +1,5 @@
 <template>
-  <div class="__collapse-wrapper_">
+  <div class="collapse-wrapper">
     <div class="title" @click="onClick">
       <div>{{ title }}</div>
       <i v-show="idx == this.native.active" class="fa fa-angle-down" />
@@ -35,43 +35,3 @@ export default class CollapseWrapper extends Vue {
   }
 }
 </script>
-
-<style lang="less">
-.__collapse_ > .__collapse-wrapper_ {
-  > .title {
-    padding: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    border-bottom: 1px solid #e8e8e8;
-    background-color: @global-background-color;
-    position: relative;
-    > div {
-      padding-right: 20px;
-      color: #4c4b4b;
-    }
-    > i {
-      position: absolute;
-      top: 4px;
-      right: 0;
-      margin: 4px;
-      width: 16px;
-      text-align: center;
-      color: #d4d4d4;
-    }
-  }
-  > .content {
-    border-bottom: 1px solid #e8e8e8;
-    padding: 5px 5px;
-  }
-  > .fade-enter-active {
-    transition: all 0.3s ease-out;
-    overflow: hidden;
-  }
-  > .fade-enter-from,
-  > .fade-leave-to {
-    transform: translateY(20px);
-    overflow: hidden;
-    opacity: 0;
-  }
-}
-</style>

@@ -1,10 +1,10 @@
 <template>
-  <div class="__container-panel_" @click="showmenu = false" @mouseleave="showmenu = false">
-    <div class="__inner_" @dblclick="dbclick" :class="{ __empty_: !modelValue.list || modelValue.list.length === 0 }">
-      <div class="__view_" @contextmenu="contextmenu" :style="{ ...modelValue.size }">
+  <div class="container-panel" @click="showmenu = false" @mouseleave="showmenu = false">
+    <div class="inner" @dblclick="dbclick" :class="{ empty: !modelValue.list || modelValue.list.length === 0 }">
+      <div class="view" @contextmenu="contextmenu" :style="{ ...modelValue.size }">
         <draggable
-          class="__drag_"
-          ghost-class="__placeholder_"
+          class="drag"
+          ghost-class="placeholder"
           group="container"
           :list="modelValue.list"
           animation="300"
@@ -16,7 +16,7 @@
             <component
               :token="d.element.key"
               v-model="d.element"
-              class="__box_ marsk"
+              class="box marsk"
               :class="{ active: config.active === d.element.key }"
               @click.prevent="config.active = config.active === d.element.key ? null : d.element.key"
               :is="config.components[d.element.el]"
@@ -27,7 +27,7 @@
       <Ruler id="ruler_1" />
       <Ruler id="ruler_2" left />
     </div>
-    <ul ref="menu" class="__contextmenu_" v-show="this.showmenu">
+    <ul ref="menu" class="contextmenu" v-show="this.showmenu">
       <li @click="menuHandler(1)"><i class="fa fa-trash" />删除</li>
       <li @click="menuHandler(2)"><i class="fa fa-clipboard" />复制</li>
       <li @click="menuHandler(3)"><i class="fa fa-cogs" />设置</li>
@@ -41,7 +41,7 @@ import { Inject, Ref } from "vue-property-decorator"
 import Ruler from "./ruler.vue"
 import draggable from "vuedraggable"
 import mitt from "mitt"
-import { bind, unbind } from "@/components/handler"
+import { bind, unbind } from "@/handler"
 
 @Options({
   name: "container-panel",
@@ -102,7 +102,7 @@ export default class Container extends Vue {
 
   dbclick(evt: any) {
     const div = evt.target
-    if (!div.parentNode.classList.contains("__view_")) {
+    if (!div.parentNode.classList.contains("view")) {
       this.contextmenu(evt)
       this.showmenu = false
       this.menuHandler(3)
@@ -115,7 +115,7 @@ export default class Container extends Vue {
     for (let index = 0; index < path.length; index++) {
       const element = path[index]
       // 根节点退出循环
-      if (element.classList.contains("__view_")) {
+      if (element.classList.contains("view")) {
         break
       }
       if (element.hasAttribute("token")) {
@@ -191,148 +191,3 @@ export default class Container extends Vue {
   }
 }
 </script>
-
-<style lang="less">
-.drag-builder > .__container-panel_ {
-  margin-left: @element-panel-width + 4px;
-  margin-top: 2px;
-  margin-right: 2px;
-  margin-bottom: 2px;
-  height: calc(100% - 4px);
-  max-width: 100%;
-  border: 1px solid @global-border-color;
-  background-color: @global-background-color;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden;
-  > .__inner_ {
-    height: 100%;
-    width: 100%;
-    min-width: 100%;
-    min-height: 100%;
-    position: relative;
-    #ruler_1 {
-      padding-left: 20px;
-      box-sizing: border-box;
-      background-color: @global-background-color;
-      z-index: 10;
-      top: -20px;
-      width: 100%;
-      position: absolute;
-    }
-    #ruler_2 {
-      padding-top: 20px;
-      box-sizing: border-box;
-      background-color: @global-background-color;
-      left: 0;
-      top: -20px;
-      height: 100%;
-      position: absolute;
-    }
-    > .__view_ {
-      width: calc(100% - 20px);
-      height: calc(100% - 20px);
-      margin-top: 20px;
-      margin-left: 20px;
-      box-sizing: border-box;
-      border: 1px solid red;
-      background-color: @global-background-color;
-      .marsk {
-        position: relative;
-        * {
-          z-index: 0;
-        }
-        &::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          z-index: 10;
-        }
-      }
-      .__drag_ {
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-        .__box_ {
-          box-sizing: border-box;
-          border: 1px dashed #00000000;
-          margin: 4px;
-          z-index: 10;
-          &:hover {
-            border: 1px dashed @global-box-border-color;
-          }
-        }
-        .active {
-          border: 1px dashed rgb(37, 186, 255);
-          &:hover {
-            border: 1px dashed rgb(37, 186, 255);
-          }
-        }
-        > .__placeholder_ {
-          background-color: rgb(37, 186, 255);
-          position: relative;
-          min-height: 3px;
-          min-width: 200px;
-          padding: 0;
-          font-size: 0;
-          margin: 4px;
-          border: 0px solid;
-          > * {
-            display: none;
-          }
-        }
-      }
-    }
-  }
-  > .__empty_::before {
-    content: "请拖入组件";
-    width: 200px;
-    font-size: 20px;
-    display: block;
-    position: absolute;
-    padding-left: 20px;
-    top: calc((100% - 60px) / 2);
-    left: calc((100% - 240px) / 2);
-    color: #d4d4d4;
-    text-align: center;
-    padding: 20px;
-    border: 1px dashed #d4d4d4;
-  }
-
-  > .__contextmenu_ {
-    box-sizing: unset;
-    position: absolute;
-    top: 20px;
-    left: 50px;
-    font-size: 12px;
-    border: 1px dashed @global-box-border-color;
-    outline: 5px solid @element-background-color;
-    background-color: @element-background-color;
-    padding: 2px;
-    width: 50px;
-    text-align: center;
-    z-index: 1000;
-    > li {
-      list-style: none;
-      z-index: 100;
-      padding: 2px;
-      cursor: pointer;
-      user-select: none;
-      &:hover {
-        background-color: #e2e3ec;
-      }
-      &:active {
-        background-color: #c9cad3;
-      }
-      > i {
-        width: 13px;
-        height: 13px;
-        margin-right: 4px;
-      }
-    }
-  }
-}
-</style>

@@ -1,8 +1,8 @@
 <template>
   <draggable
     :tag="attribute.tag"
-    class="__drag_"
-    ghost-class="__placeholder_"
+    class="drag"
+    ghost-class="placeholder"
     group="container"
     :list="modelValue"
     animation="300"
@@ -18,7 +18,7 @@
       <component
         :token="d.element.key"
         v-model="d.element"
-        class="__box_ marsk"
+        class="box marsk"
         :class="{active: config.active === d.element.key}"
         @click.stop="config.active = (config.active === d.element.key) ? null : d.element.key"
         :is="config.components[d.element.el]"

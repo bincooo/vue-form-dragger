@@ -68,6 +68,7 @@ export default class GridElement extends Vue {
 </script>
 
 <style lang="less">
+@import '~@/style/var.less';
 .drag-builder > .__container-panel_ .__view_ {
   .grid {
     padding: 2px;

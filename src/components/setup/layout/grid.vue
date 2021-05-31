@@ -50,23 +50,3 @@ export default class Grid extends Vue {
   }
 }
 </script>
-
-<style lang="less">
-.drag-builder > .__setup-panel_ .inner .label {
-  margin-top: 10px;
-  padding-top: 5px;
-  padding-bottom: 2px;
-  border: 1px dashed @global-border-color;
-  box-sizing: border-box;
-  position: relative;
-  &::before {
-    color: @global-border-color;
-    background-color: @global-background-color;
-    content: attr(label);
-    position: absolute;
-    top: -10px;
-    right: 10px;
-    font-size: 12px;
-  }
-}
-</style>

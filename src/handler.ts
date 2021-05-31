@@ -115,7 +115,7 @@ export function moveHandler(this: any, other: number, evt: any, childList: any =
       const path = evt.path
       for (let index = 0; index < path.length; index++) {
         const element = path[index]
-        if (element.classList.contains("__container-panel_")) break
+        if (element.classList.contains("container-panel")) break
         if (element.hasAttribute("box") && element.getAttribute("box") === "form") {
           childList.splice(index, 1)
           return false

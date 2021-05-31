@@ -9,11 +9,12 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component"
 import { Provide } from "vue-property-decorator"
-import ElementPanel from "./element/index.vue"
-import ContainerPanel from "./container/index.vue"
-import SetupPanel from "./setup/index.vue"
+import ElementPanel from "./components/element/index.vue"
+import ContainerPanel from "./components/container/index.vue"
+import SetupPanel from "./components/setup/index.vue"
 import Obj, { is, uuid } from "@/utils/obj"
 import { moveHandler } from "./handler"
+import "@/style/index.less"
 
 class Handler implements Obj.Handler {
   order: number = 1
@@ -74,13 +75,3 @@ export default class DragBuilder extends Vue {
   }
 }
 </script>
-
-<style lang="less">
-.drag-builder {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-</style>

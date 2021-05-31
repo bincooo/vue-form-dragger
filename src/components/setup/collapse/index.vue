@@ -1,5 +1,5 @@
 <template>
-  <div class="__collapse_">
+  <div class="collapse">
     <slot />
   </div>
 </template>
