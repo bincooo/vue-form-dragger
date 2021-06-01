@@ -20,7 +20,7 @@
         v-model="d.element"
         class="box marsk"
         :class="{active: config.active === d.element.key}"
-        @click.stop="config.active = (config.active === d.element.key) ? null : d.element.key"
+        @click.stop="config.defaultClickEvt(d.element.key)"
         :is="config.components[d.element.el]"
       />
     </template>

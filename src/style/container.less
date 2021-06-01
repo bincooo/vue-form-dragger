@@ -62,11 +62,13 @@
         height: 100%;
         box-sizing: border-box;
         .box {
-          box-sizing: border-box;
-          border: 1px dashed #00000000;
           margin: 4px;
           z-index: 10;
+          box-sizing: border-box;
           border: 1px dashed @global-box-border-color;
+          &:hover {
+            border: 1px dashed @global-box-border-hover-color;
+          }
         }
         .active {
           border: 1px dashed #40a9ff;

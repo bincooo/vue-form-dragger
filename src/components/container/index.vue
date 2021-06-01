@@ -1,6 +1,6 @@
 <template>
   <div class="container-panel" @click="showmenu = false" @mouseleave="showmenu = false">
-    <div class="inner" @dblclick="dbclick" :class="{ empty: !modelValue.list || modelValue.list.length === 0 }">
+    <div class="inner" :class="{ empty: !modelValue.list || modelValue.list.length === 0 }">
       <div class="view" @contextmenu="contextmenu" :style="{ ...modelValue.size }">
         <draggable
           class="drag"
@@ -18,7 +18,7 @@
               v-model="d.element"
               class="box marsk"
               :class="{ active: config.active === d.element.key }"
-              @click.prevent="config.active = config.active === d.element.key ? null : d.element.key"
+              @click="config.defaultClickEvt(d.element.key)"
               :is="config.components[d.element.el]"
             />
           </template>
@@ -57,14 +57,22 @@ export default class Container extends Vue {
   showmenu: boolean = false
 
   created() {
-    this.config.mitt = mitt()
-    this.config.showmenu = (x: string, y: string, element: any) => {
-      this.showmenu = true
+    const config = this.config
+    config.mitt = mitt()
+    config.defaultClickEvt = (key: string): void => {
+      if (this.showmenu) {
+        config.showmenu(0, 0, {}, false)
+        return
+      }
+      config.active = config.active === key ? null : key
+    }
+    config.showmenu = (x: string, y: string, element: any, show: boolean = true): void => {
+      this.showmenu = show
       const menu = this.menu
       menu.style.top = y
       menu.style.left = x
-      this.config.token = element.key
-      this.config.setup.element = element
+      config.token = element.key
+      config.setup.element = element
     }
   }
 
@@ -99,15 +107,6 @@ export default class Container extends Vue {
     else {
       const el = evt.to.getAttribute("data-box")
       return !!condition[el] ? condition[el].includes(element.el) : true
-    }
-  }
-
-  dbclick(evt: any) {
-    const div = evt.target
-    if (!div.parentNode.classList.contains("view")) {
-      this.contextmenu(evt)
-      this.showmenu = false
-      this.menuHandler(3)
     }
   }
 
