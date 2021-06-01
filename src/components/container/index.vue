@@ -29,9 +29,23 @@
       <resize hidden />
     </div>
     <ul ref="menu" class="contextmenu" v-show="this.showmenu">
-      <li @click="menuHandler(1)"><i class="fa fa-trash" />删除</li>
-      <li @click="menuHandler(2)"><i class="fa fa-clipboard" />复制</li>
-      <li @click="menuHandler(3)"><i class="fa fa-cogs" />设置</li>
+      <li @click="menuHandler(1)"><i class="fa fa-trash" /><div>删除</div></li>
+      <li @click="menuHandler(2)"><i class="fa fa-clipboard" /><div>复制</div></li>
+      <li @click="menuHandler(3)"><i class="fa fa-cogs" /><div>设置</div></li>
+      <template v-for="(item, index) in showmenuData.list" :key="index">
+        <li v-if="!item.list" @click="othermenuHandler($event, item.handler)">
+          <i :class="item.icon" />{{ item.text }}
+        </li>
+        <li v-else @mouseover="othermenuChildrenEvt" @click.stop>
+          <ul>
+            <li v-for="(it, idx) in item.list" @click="othermenuHandler($event, it.handler)" :key="idx">
+              <i :class="it.icon" />
+              <div>{{ it.text }}</div>
+            </li>
+          </ul>
+          <i :class="item.icon" /><div>{{ item.text }}</div>
+        </li>
+      </template>
     </ul>
   </div>
 </template>
@@ -55,19 +69,22 @@ export default class Container extends Vue {
   readonly modelValue!: any
   @Ref() readonly menu!: any
   showmenu: boolean = false
+  showmenuData: any = {}
 
   created() {
     const config = this.config
     config.mitt = mitt()
     config.defaultClickEvt = (key: string): void => {
       if (this.showmenu) {
-        config.showmenu(0, 0, {}, false)
+        config.showmenu(0, 0, {}, {}, false)
         return
       }
       config.active = config.active === key ? null : key
     }
-    config.showmenu = (x: string, y: string, element: any, show: boolean = true): void => {
+    config.showmenu = (x: string, y: string, element: any, data: any = {}, show: boolean = true): void => {
+      console.log("showmenu", x, y)
       this.showmenu = show
+      this.showmenuData = data
       const menu = this.menu
       menu.style.top = y
       menu.style.left = x
@@ -108,6 +125,16 @@ export default class Container extends Vue {
       const el = evt.to.getAttribute("data-box")
       return !!condition[el] ? condition[el].includes(element.el) : true
     }
+  }
+
+  /**
+   * 右键菜单拓展菜单事件
+   */
+  othermenuHandler(evt: any, handler: Function) {
+    this.showmenu = false
+    setTimeout(() => {
+      handler?.call(this, evt)
+    }, 200)
   }
 
   contextmenu(evt: any) {

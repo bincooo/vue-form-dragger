@@ -1,6 +1,6 @@
 <template>
-  <div class="table-box">
-    <table cellspacing="0" width="100%" cellpadding="0">
+  <div class="table-box" v-unmarsk>
+    <table cellspacing="0" width="100%" cellpadding="0" @contextmenu.stop="contextmenu">
       <thead>
         <tr>
           <th v-for="(item, index) in modelValue.meta.head" :key="index" :style="item.style">{{ item.text }}</th>
@@ -8,7 +8,7 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in modelValue.meta.body" :key="index">
-          <td v-for="(it, idx) in item" :key="idx" :style="item.style">{{it.text}}</td>
+          <td v-for="(it, idx) in item" :key="idx" :style="item.style">{{ it.text }}</td>
         </tr>
       </tbody>
     </table>
@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+import { Inject } from "vue-property-decorator"
 import { Vue, Options } from "vue-class-component"
 
 @Options({
@@ -23,6 +24,7 @@ import { Vue, Options } from "vue-class-component"
   props: ["modelValue"]
 })
 export default class TableBox extends Vue {
+  @Inject() config: any
   readonly modelValue: any
 
   created() {
@@ -111,7 +113,35 @@ export default class TableBox extends Vue {
     }
   }
 
-  mounted() {}
+  contextmenu(evt: any) {
+    const config = this.config
+    const { offsetLeft, offsetTop } = config.el
+    const { pageX, pageY } = evt
+    config.showmenu(pageX - offsetLeft - 260 + "px", pageY - offsetTop + "px", this.modelValue, {
+      list: [
+        {
+          text: "hello",
+          icon: "fa fa-question-circle",
+          list: [
+            {
+              text: "Hi12222222222222",
+              icon: "fa fa-question-circle",
+              handler(evt: any) {
+                alert(1)
+              }
+            }, {
+              text: "Hi211111111111111",
+              icon: "fa fa-question-circle",
+              handler(evt: any) {
+                alert(2)
+              }
+            }
+          ]
+        }
+      ]
+    })
+    evt.returnValue = false
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -119,13 +149,15 @@ export default class TableBox extends Vue {
 .table-box {
   box-sizing: border-box;
   table {
-    td, th {
+    td,
+    th {
       border-right: 1px dashed @global-box-border-color;
       border-bottom: 1px dashed @global-box-border-color;
     }
     thead,
     tbody {
-      th:last-child, td:last-child {
+      th:last-child,
+      td:last-child {
         border-right: unset;
       }
       tr:last-child {
