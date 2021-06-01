@@ -36,7 +36,7 @@
         <li v-if="!item.list" @click="othermenuHandler($event, item.handler)">
           <i :class="item.icon" />{{ item.text }}
         </li>
-        <li v-else @mouseover="othermenuChildrenEvt" @click.stop>
+        <li v-else @mouseover="(e) => e.currentTarget.children[0].style.left = e.currentTarget.clientWidth + 'px'" @click.stop>
           <ul>
             <li v-for="(it, idx) in item.list" @click="othermenuHandler($event, it.handler)" :key="idx">
               <i :class="it.icon" />

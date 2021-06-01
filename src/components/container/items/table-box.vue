@@ -120,7 +120,7 @@ export default class TableBox extends Vue {
     config.showmenu(pageX - offsetLeft - 260 + "px", pageY - offsetTop + "px", this.modelValue, {
       list: [
         {
-          text: "hello",
+          text: "hello122222222222222",
           icon: "fa fa-question-circle",
           list: [
             {
