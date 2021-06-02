@@ -17,7 +17,7 @@ export function uuid(): string {
   return ret
 }
 
-export function assert(condition: any, msg: string): asserts condition {
+export function assert(condition: any, msg: string = "the type assert error!"): asserts condition {
   if (!condition) {
     throw new Error(msg)
   }
