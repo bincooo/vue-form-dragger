@@ -192,8 +192,9 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
       table.onmousedown = function(e: any) {
         // 鼠标组件按下
         if (e.which === 1) {
+          const td = getTd(e.path)
           cacheTableData.enabled = true
-          const serial: string = e.target.getAttribute("serial")
+          const serial: string = td.getAttribute("serial")
           cacheTableData.type = serial.includes("-") ? 1 : 0
           if (serial.includes("-")) {
             cacheTableData.type = 1
@@ -204,18 +205,17 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
             cacheTableData.midRowIndex = 0
             cacheTableData.midColIndex = parseInt(serial)
           }
-          console.log(cacheTableData)
+          e.stopPropagation()
+          e.returnValue = false
         }
-        e.stopPropagation()
-        e.returnValue = false
       }
       table.onmousemove = function(e: any) {
         if (cacheTableData.enabled) {
-          if (cacheTableData.type === 0 && e.target.nodeName !== "TH") return
+          const td = getTd(e.path)
+          if (cacheTableData.type === 0 && td?.nodeName !== "TH") return
           if (cacheTarget != e.target) {
             cacheTarget = e.target
-            console.log("onmousemove target", cacheTarget)
-            const serial: string = e.target.getAttribute("serial")
+            const serial: string = td.getAttribute("serial")
             const rowIndex = cacheTableData.type === 1 ? parseInt(serial.split("-")[0]) : 0
             const colIndex = parseInt(cacheTableData.type === 1 ? serial.split("-")[1] : serial)
             // 擦除样式
@@ -354,4 +354,14 @@ function doMerge(cacheTableData: any, meta: any, menuList: any[], self: any) {
   } else {
     callback([meta.head])
   }
+}
+
+function getTd(path: any) {
+  for (const key in path) {
+    const element = path[key]
+    if (["TH", "TD"].includes(element.nodeName)) {
+      return element
+    }
+  }
+  return null
 }
