@@ -4,14 +4,23 @@
       <thead>
         <tr>
           <template v-for="(item, index) in modelValue.meta.head" :key="index">
-            <th v-if="!item.del" :serial="index" :class="item.class" :style="item.style">{{ item.text }}&emsp;</th>
+            <th v-show="!item.del" :colspan="item.colspan" :serial="index" :class="item.class" :style="item.style">
+              {{ item.text }}&emsp;
+            </th>
           </template>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in modelValue.meta.body" :key="index">
           <template v-for="(it, idx) in item" :key="idx">
-            <td v-if="!it.del" :serial="serial(index, idx)" :class="{ 'last-td': false }" :style="it.style">
+            <td
+              v-show="!it.del"
+              :rowspan="it.rowspan"
+              :colspan="it.colspan"
+              :serial="serial(index, idx)"
+              :class="{ 'last-td': false }"
+              :style="it.style"
+            >
               {{ it.text }}&emsp;
             </td>
           </template>

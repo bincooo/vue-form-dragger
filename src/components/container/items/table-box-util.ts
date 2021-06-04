@@ -211,12 +211,13 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
       }
       table.onmousemove = function(e: any) {
         if (cacheTableData.enabled) {
-          const serial: string = e.target.getAttribute("serial")
-          const rowIndex = cacheTableData.type === 1 ? parseInt(serial.split("-")[0]) : 0
-          const colIndex = parseInt(cacheTableData.type === 1 ? serial.split("-")[1] : serial)
           if (cacheTableData.type === 0 && e.target.nodeName !== "TH") return
           if (cacheTarget != e.target) {
             cacheTarget = e.target
+            console.log("onmousemove target", cacheTarget)
+            const serial: string = e.target.getAttribute("serial")
+            const rowIndex = cacheTableData.type === 1 ? parseInt(serial.split("-")[0]) : 0
+            const colIndex = parseInt(cacheTableData.type === 1 ? serial.split("-")[1] : serial)
             // 擦除样式
             eraseStyle(cacheTableData.tdList)
             // 选中单元格
@@ -235,9 +236,9 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
       table.onmouseup = function(e: any) {
         if (cacheTableData.enabled) {
           cacheTableData.enabled = false
+          doMerge(cacheTableData, meta, menuList, self)
           // 擦除样式
           eraseStyle(cacheTableData.tdList)
-          doMerge(cacheTableData, meta, menuList, self)
           table.onclick = undefined
           table.onmousedown = undefined
           table.onmousemove = undefined
@@ -307,4 +308,50 @@ function doColSelect(table: any, cacheTableData: any, colList: any[], colIndex: 
 
 function doMerge(cacheTableData: any, meta: any, menuList: any[], self: any) {
   // TODO - 合并单元格数据处理
+  let beginX = -1,
+    endX = -1,
+    beginY = -1,
+    endY = -1
+
+  for (let index = 0; index < cacheTableData.tdList.length; index++) {
+    const element = cacheTableData.tdList[index]
+    for (let idx = 0; idx < element.length; idx++) {
+      const el = element[idx]
+      if (!el.selected) continue
+      if (beginX === -1) {
+        beginX = index
+        beginY = idx
+        endX = index
+        endY = idx
+      } else {
+        endX = index
+        endY = idx
+      }
+    }
+  }
+  const callback = (list: any[][]) => {
+    // 一行
+    if (beginX === endX) {
+      list[beginX][beginY].colspan = endY - beginY + 1
+      for (let idx = beginY + 1; idx <= endY; idx++) {
+        list[beginX][idx].del = true
+      }
+    }
+    // 多行
+    else {
+      list[beginX][beginY].colspan = endY - beginY + 1
+      list[beginX][beginY].rowspan = endX - beginX + 1
+      for (let index = beginX; index <= endX; index++) {
+        for (let idx = beginY; idx <= endY; idx++) {
+          if (index === beginX && idx === beginY) continue
+          list[index][idx].del = true
+        }
+      }
+    }
+  }
+  if (cacheTableData.type == 1) {
+    callback(meta.body)
+  } else {
+    callback([meta.head])
+  }
 }
