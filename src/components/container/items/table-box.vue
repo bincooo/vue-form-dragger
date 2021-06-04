@@ -1,6 +1,6 @@
 <template>
   <div class="table-box" :title="modelValue.name" v-unmarsk>
-    <table @contextmenu.stop="contextmenu">
+    <table cellspacing="0" cellpadding="0" @contextmenu.stop="contextmenu">
       <thead>
         <tr>
           <template v-for="(item, index) in modelValue.meta.head" :key="index">
@@ -65,17 +65,27 @@ export default class TableBox extends Vue {
   table {
     width: 100%;
     height: 100%;
-    outline: 1px solid #efefef;
-    border-collapse: collapse;
+    border: 1px dashed @global-box-border-color;
+    // border-collapse: unset;
     tr td,
     tr th {
-      outline: 1px solid #efefef;
+      border: 1px dashed @global-box-border-color;
       box-sizing: content-box;
       padding: 2px;
       margin: 1px;
     }
-    .cell-select {
-      background-color: #009aff47;
+    .cell-selected {
+      position: relative;
+      &::after {
+        content: "";
+        background-color: rgba(180, 215, 255, 0.7);
+        border: 1px solid rgba(180, 215, 255, 0.7);
+        bottom: -1px;
+        left: -1px;
+        position: absolute;
+        right: -1px;
+        top: -1px;
+      }
     }
   }
 }

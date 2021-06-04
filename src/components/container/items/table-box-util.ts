@@ -141,7 +141,7 @@ function colMenu(meta: any, menuList: any[], serial: string) {
   }
 }
 
-let HAS_EVENT = false
+const __class_name_ = "cell-selected"
 /**
  * 合并单元格菜单
  * @param meta 单元数据
@@ -150,25 +150,21 @@ let HAS_EVENT = false
  */
 function mergeMenu(meta: any, menuList: any[], self: any) {
   const table = self.$el.querySelector("table")
-  if (!HAS_EVENT) {
+  const hasEvt = ((window as any).__Has_Table_Evt_ = (window as any).__Has_Table_Evt_ || false)
+  if (!hasEvt) {
     self.config.el.addEventListener("click", (e: any) => {
       table.onclick = undefined
       table.onmousedown = undefined
       table.onmousemove = undefined
       table.onmouseup = undefined
     })
-    HAS_EVENT = true
+    ;(window as any).__Has_Table_Evt_ = !hasEvt
   }
-  const className = "cell-select"
-  const evtData: any = {
+  const cacheTableData: any = {
+    midRowIndex: 0,
+    midColIndex: 0,
     enabled: false,
-    isbody: true,
-    matrix: {
-      col1: -1,
-      row1: -1,
-      col2: -1,
-      row2: -1
-    }
+    tdList: [] // 外层是行，内层是列
   }
   let cacheTarget: any = null
   menuList.push({
@@ -179,57 +175,54 @@ function mergeMenu(meta: any, menuList: any[], self: any) {
         e.stopPropagation()
         e.returnValue = false
       }
+      // 扫描所有的td
+      cacheTableData.tdList = []
+      const tdList: any[] = table.querySelectorAll("tr td[serial]")
+      tdList.forEach((el) => {
+        const sp: any[] = el.getAttribute("serial").split("-")
+        const colList: any[] = (cacheTableData.tdList[sp[0]] = cacheTableData.tdList[sp[0]] || [])
+        colList.push({ selected: false, el: el })
+      })
       table.onmousedown = function(e: any) {
         // 鼠标组件按下
         if (e.which === 1) {
-          evtData.enabled = true
+          cacheTableData.enabled = true
           const serial: string = e.target.getAttribute("serial")
-          evtData.isbody = serial.indexOf("-") > 0
-          evtData.matrix.row1 = parseInt(serial.split("-")[0])
-          evtData.matrix.col1 = parseInt(serial.split("-")[1])
+          cacheTableData.midRowIndex = parseInt(serial.split("-")[0])
+          cacheTableData.midColIndex = parseInt(serial.split("-")[1])
         }
         e.stopPropagation()
         e.returnValue = false
       }
       table.onmousemove = function(e: any) {
-        if (evtData.enabled) {
-          const { classList } = e.target
+        if (cacheTableData.enabled) {
           const serial: string = e.target.getAttribute("serial")
-          const row2 = parseInt(serial.split("-")[0])
-          const col2 = parseInt(serial.split("-")[1])
+          const rowIndex = parseInt(serial.split("-")[0])
+          const colIndex = parseInt(serial.split("-")[1])
 
           if (cacheTarget != e.target) {
             cacheTarget = e.target
-            if (!classList.contains(className)) {
-              evtData.matrix.col1 = evtData.matrix.col1 < col2 ? evtData.matrix.col1 : col2
-              evtData.matrix.row1 = evtData.matrix.row1 < row2 ? evtData.matrix.row1 : row2
-              evtData.matrix.col2 = evtData.matrix.col2 > col2 ? evtData.matrix.col2 : col2
-              evtData.matrix.row2 = evtData.matrix.row2 > row2 ? evtData.matrix.row2 : row2
-            } else {
-              evtData.matrix.row2 = row2
-              evtData.matrix.col2 = col2
-            }
-            //   先清空
-            table.querySelectorAll("." + className).forEach((el: any) => {
-              el.classList.remove(className)
-            })
-            //   再渲染
-            for (let index = evtData.matrix.row1; index <= row2; index++) {
-              for (let idx = evtData.matrix.col1; idx <= col2; idx++) {
-                const node = table.querySelector("td[serial='" + index + "-" + idx + "']")
-                node.classList.add(className)
+            // 擦除样式
+            eraseStyle(cacheTableData.tdList)
+            // 选中单元格
+            doRowSelect(table, cacheTableData, rowIndex, colIndex)
+            // 渲染
+            for (const key in cacheTableData.tdList) {
+              const element = cacheTableData.tdList[key]
+              for (const k in element) {
+                const td = element[k]
+                if (td.selected) td.el.classList.add(__class_name_)
               }
             }
           }
         }
       }
       table.onmouseup = function(e: any) {
-        if (evtData.enabled) {
-          evtData.enabled = false
-          table.querySelectorAll("." + className).forEach((el: any) => {
-            el.classList.remove(className)
-          })
-          doMerge(evtData, meta, menuList, self)
+        if (cacheTableData.enabled) {
+          cacheTableData.enabled = false
+          // 擦除样式
+          eraseStyle(cacheTableData.tdList)
+          doMerge(cacheTableData, meta, menuList, self)
           table.onclick = undefined
           table.onmousedown = undefined
           table.onmousemove = undefined
@@ -240,8 +233,63 @@ function mergeMenu(meta: any, menuList: any[], self: any) {
   })
 }
 
-function doMerge(evtData: any, meta: any, menuList: any[], self: any) {
-    const table = self.$el.querySelector("table")
-    const node = table.querySelector("td[serial='" + evtData.row1 + "-" + evtData.col1 + "']")
-    console.log('node ===> ', node)
+/**
+ * 擦除样式
+ * @param tdList 单元格集合
+ */
+function eraseStyle(tdList: any[][]) {
+  for (const key in tdList) {
+    const element = tdList[key]
+    for (const k in element) {
+      const td = element[k]
+      if (td.selected) {
+        td.selected = false
+        td.el.classList.remove(__class_name_)
+      }
+    }
+  }
+}
+
+// 选中行方法
+function doRowSelect(table: any, cacheTableData: any, rowIndex: number, colIndex: number) {
+  // 选中上半边单元格
+  if (cacheTableData.midRowIndex > rowIndex) {
+    for (let index = rowIndex; index <= cacheTableData.midRowIndex; index++) {
+      doColSelect(table, cacheTableData, cacheTableData.tdList[index], colIndex)
+    }
+  }
+  // 选中中间的单元格
+  else if (cacheTableData.midRowIndex === rowIndex) {
+    doColSelect(table, cacheTableData, cacheTableData.tdList[rowIndex], colIndex)
+  }
+  // 选中下半边单元格
+  else {
+    for (let index = cacheTableData.midRowIndex; index <= rowIndex; index++) {
+      doColSelect(table, cacheTableData, cacheTableData.tdList[index], colIndex)
+    }
+  }
+}
+
+// 选中列方法
+function doColSelect(table: any, cacheTableData: any, colList: any[], colIndex: number) {
+  // 选中左边单元格
+  if (cacheTableData.midColIndex > colIndex) {
+    for (let idx = colIndex; idx <= cacheTableData.midColIndex; idx++) {
+      colList[idx].selected = true
+    }
+  }
+  // 选中中间的单元格
+  else if (cacheTableData.midColIndex === colIndex) {
+    colList[colIndex].selected = true
+  }
+  // 选中右边的单元格
+  else {
+    for (let idx = cacheTableData.midColIndex; idx <= colIndex; idx++) {
+      colList[idx].selected = true
+    }
+  }
+}
+
+function doMerge(cacheTableData: any, meta: any, menuList: any[], self: any) {
+  // TODO - 合并单元格数据处理
 }
