@@ -30,7 +30,7 @@ namespace Tbu {
     headMenu(meta, list)
     rowMenu(meta, list, serial)
     colMenu(meta, list, serial)
-    mergeMenu(meta, list, self)
+    mergeMenu(evt, meta, list, self)
     config.showmenu(pageX - offsetLeft - 260 + "px", pageY - offsetTop + "px", model, menuList)
   }
 }
@@ -148,7 +148,7 @@ const __class_name_ = "cell-selected"
  * @param menuList 菜单集合
  * @param self vue组件实例
  */
-function mergeMenu(meta: any, menuList: any[], self: any) {
+function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
   const table = self.$el.querySelector("table")
   const hasEvt = ((window as any).__Has_Table_Evt_ = (window as any).__Has_Table_Evt_ || false)
   if (!hasEvt) {
@@ -164,32 +164,47 @@ function mergeMenu(meta: any, menuList: any[], self: any) {
     midRowIndex: 0,
     midColIndex: 0,
     enabled: false,
+    type: 1,
     tdList: [] // 外层是行，内层是列
   }
   let cacheTarget: any = null
   menuList.push({
     text: "合并单元格",
     icon: "fa fa-question-circle",
-    handler(evt: any) {
+    handler(e: any) {
       table.onclick = (e: any) => {
         e.stopPropagation()
         e.returnValue = false
       }
       // 扫描所有的td
       cacheTableData.tdList = []
-      const tdList: any[] = table.querySelectorAll("tr td[serial]")
+      const tdList: any[] = table.querySelectorAll(evt.target.nodeName === "TD" ? "tr td[serial]" : "tr th[serial]")
       tdList.forEach((el) => {
-        const sp: any[] = el.getAttribute("serial").split("-")
-        const colList: any[] = (cacheTableData.tdList[sp[0]] = cacheTableData.tdList[sp[0]] || [])
-        colList.push({ selected: false, el: el })
+        if (evt.target.nodeName === "TD") {
+          const sp: any[] = el.getAttribute("serial").split("-")
+          const colList: any[] = (cacheTableData.tdList[sp[0]] = cacheTableData.tdList[sp[0]] || [])
+          colList.push({ selected: false, el: el })
+        } else {
+          const colList: any[] = (cacheTableData.tdList[0] = cacheTableData.tdList[0] || [])
+          colList.push({ selected: false, el: el })
+        }
       })
       table.onmousedown = function(e: any) {
         // 鼠标组件按下
         if (e.which === 1) {
           cacheTableData.enabled = true
           const serial: string = e.target.getAttribute("serial")
-          cacheTableData.midRowIndex = parseInt(serial.split("-")[0])
-          cacheTableData.midColIndex = parseInt(serial.split("-")[1])
+          cacheTableData.type = serial.includes("-") ? 1 : 0
+          if (serial.includes("-")) {
+            cacheTableData.type = 1
+            cacheTableData.midRowIndex = parseInt(serial.split("-")[0])
+            cacheTableData.midColIndex = parseInt(serial.split("-")[1])
+          } else {
+            cacheTableData.type = 0
+            cacheTableData.midRowIndex = 0
+            cacheTableData.midColIndex = parseInt(serial)
+          }
+          console.log(cacheTableData)
         }
         e.stopPropagation()
         e.returnValue = false
@@ -197,9 +212,9 @@ function mergeMenu(meta: any, menuList: any[], self: any) {
       table.onmousemove = function(e: any) {
         if (cacheTableData.enabled) {
           const serial: string = e.target.getAttribute("serial")
-          const rowIndex = parseInt(serial.split("-")[0])
-          const colIndex = parseInt(serial.split("-")[1])
-
+          const rowIndex = cacheTableData.type === 1 ? parseInt(serial.split("-")[0]) : 0
+          const colIndex = parseInt(cacheTableData.type === 1 ? serial.split("-")[1] : serial)
+          if (cacheTableData.type === 0 && e.target.nodeName !== "TH") return
           if (cacheTarget != e.target) {
             cacheTarget = e.target
             // 擦除样式
