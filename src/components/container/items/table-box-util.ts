@@ -1,5 +1,3 @@
-import { assert, is } from "@/utils/obj"
-
 namespace Tbu {
   export function template() {
     return [
@@ -192,9 +190,10 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
           if (td.nodeName === "TD") {
             const tdList: any[] = table.querySelectorAll("tr td[serial]")
             tdList.forEach((el) => {
-              const sp: any[] = el.getAttribute("serial").split("-")
+              const serial: string = el.getAttribute("serial")
+              const sp: any[] = serial.split("-")
               const colList: any[] = (cacheTableData.tdList[sp[0]] = cacheTableData.tdList[sp[0]] || [])
-              colList.push({ selected: false, el: el })
+              colList.push({ selected: false, el: el, serial })
             })
             cacheTableData.type = 1
             cacheTableData.midRowIndex = parseInt(serial.split("-")[0])
@@ -203,7 +202,8 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
             const tdList: any[] = table.querySelectorAll("tr th[serial]")
             tdList.forEach((el) => {
               const colList: any[] = (cacheTableData.tdList[0] = cacheTableData.tdList[0] || [])
-              colList.push({ selected: false, el: el })
+              const serial: string = el.getAttribute("serial")
+              colList.push({ selected: false, el: el, serial: `0-${serial}` })
             })
             cacheTableData.type = 0
             cacheTableData.midRowIndex = 0
@@ -227,20 +227,14 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
             // 选中单元格
             doRowSelect(cacheTableData, rowIndex, colIndex)
             // 渲染
-            for (const key in cacheTableData.tdList) {
-              const element = cacheTableData.tdList[key]
-              for (const k in element) {
-                const td = element[k]
-                if (td.selected) td.el.classList.add(__class_name_)
-              }
-            }
+            drawRowSelect(cacheTableData)
           }
         }
       }
       table.onmouseup = function(e: any) {
         if (cacheTableData.enabled) {
           cacheTableData.enabled = false
-          doMerge(cacheTableData, meta, menuList, self)
+          doMerge(cacheTableData, meta)
           // 擦除样式
           eraseStyle(cacheTableData.tdList)
           table.onclick = undefined
@@ -324,7 +318,59 @@ function doColSelect(cacheTableData: any, rowIndex: number, colIndex: number) {
   }
 }
 
-function doMerge(cacheTableData: any, meta: any, menuList: any[], self: any) {
+/**
+ * 渲染选中单元格
+ * @param cacheTableData 表格缓存数据
+ */
+function drawRowSelect(cacheTableData: any) {
+  // 0-0      0-1[sp 2] 0-2     0-3
+  // 1-0      1-1       1-2     1-3
+  // 2-0      2-1       2-2     2-3
+
+  let rowMinIndex = 100000
+  let rowMaxIndex = 0
+  let cellMinIndex = 100000
+  let cellMaxIndex = 0
+
+  // 行循环
+  for (let index = 0; index < cacheTableData.tdList.length; index++) {
+    const rows = cacheTableData.tdList[index]
+    // 列循环
+    for (let idx = 0; idx < rows.length; idx++) {
+      const cell = rows[idx]
+      if (!cell || !cell.selected) continue
+      const split: string[] = cell.serial.split("-")
+      const n1: number = parseInt(split[0])
+      const n2: number = parseInt(split[1])
+      if (rowMinIndex > n1) rowMinIndex = n1
+      if (rowMaxIndex < n1) rowMaxIndex = n1
+      if (cellMinIndex > n2) cellMinIndex = n2
+      if (cellMaxIndex < n2) cellMaxIndex = n2
+      const rowspan = parseInt(cell.el.getAttribute("rowspan") || "1") - 1
+      const colspan = parseInt(cell.el.getAttribute("colspan") || "1") - 1
+      if (rowspan + index > rowMaxIndex) {
+        rowMaxIndex = rowspan + index
+      }
+      if (colspan + idx > cellMaxIndex) {
+        cellMaxIndex = colspan + idx
+      }
+    }
+  }
+
+  for (let index = rowMinIndex; index <= rowMaxIndex; index++) {
+    for (let idx = cellMinIndex; idx <= cellMaxIndex; idx++) {
+      cacheTableData.tdList[index][idx].selected = true
+      cacheTableData.tdList[index][idx].el.classList.add(__class_name_)
+    }
+  }
+}
+
+/**
+ * 合并单元格
+ * @param cacheTableData 表格缓存数据
+ * @param meta 绑定数据
+ */
+function doMerge(cacheTableData: any, meta: any) {
   let beginX = -1,
     endX = -1,
     beginY = -1,
