@@ -1,6 +1,6 @@
 <template>
-  <div class="table-box" :title="modelValue.name" v-unmarsk>
-    <table cellspacing="0" cellpadding="0" @contextmenu.stop="contextmenu">
+  <div class="table-box" :style="{ minHeight }" :title="modelValue.name" v-unmarsk>
+    <table ref="tableRef" cellspacing="0" cellpadding="0" @contextmenu.stop="contextmenu">
       <thead>
         <tr>
           <template v-for="(item, index) in modelValue.meta.head" :key="index">
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { Inject } from "vue-property-decorator"
+import { Inject, Ref } from "vue-property-decorator"
 import { Vue, Options } from "vue-class-component"
 import Tbu from "./table-box-util"
 
@@ -45,7 +45,8 @@ export default class TableBox extends Vue {
   @Inject() config: any
   readonly modelValue: any
   cacheEdit: any = null
-  update: number = 0
+  minHeight: string|null = null
+  @Ref() tableRef!: any
 
   created() {
     const model = this.modelValue
@@ -53,8 +54,16 @@ export default class TableBox extends Vue {
     if (model) {
       model.meta = {}
       model.meta.head = CPKit.copy([], Tbu.template())
-      model.meta.body = [CPKit.copy([], Tbu.template()), CPKit.copy([], Tbu.template())]
+      model.meta.body = [
+        CPKit.copy([], Tbu.template()),
+        CPKit.copy([], Tbu.template()),
+        CPKit.copy([], Tbu.template()),
+      ]
     }
+  }
+
+  mounted() {
+    Tbu.editAddListener(this)
   }
 
   serial(i1: number, i2: number) {
@@ -65,6 +74,7 @@ export default class TableBox extends Vue {
     if (this.cacheEdit) this.cacheEdit.edit = false
     this.cacheEdit = item
     item.edit = true
+    this.minHeight = this.tableRef.offsetHeight + 5 + "px"
     this.$nextTick(() => evt.target.nextElementSibling.focus())
     evt.stopPropagation()
     evt.returnValue = false
@@ -80,7 +90,9 @@ export default class TableBox extends Vue {
   }
 
   contextmenu(evt: any) {
-    console.log("表格的右键", evt)
+    if (this.cacheEdit) {
+      this.cacheEdit.edit = false
+    }
     Tbu.menuHandler(evt, this)
     evt.returnValue = false
   }
@@ -89,12 +101,13 @@ export default class TableBox extends Vue {
 <style lang="less" scoped>
 @import "~@/style/var.less";
 .table-box {
-  box-sizing: border-box;
-  overflow: auto;
+  overflow: hidden;
   padding: 2px;
+  min-height: 82px;
   table {
     width: 100%;
     height: 100%;
+    min-height: 82px;
     border: 1px dashed @global-box-border-color;
     tr td,
     tr th {
@@ -113,6 +126,7 @@ export default class TableBox extends Vue {
         border: 1px solid;
         outline: 0;
         border-radius: 0;
+        min-height: 26px;
       }
     }
     .cell-selected {

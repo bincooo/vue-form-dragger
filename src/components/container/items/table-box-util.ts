@@ -33,6 +33,21 @@ namespace Tbu {
     mergeMenu(evt, meta, list, self)
     config.showmenu(pageX - offsetLeft - 260 + "px", pageY - offsetTop + "px", model, menuList)
   }
+
+  export function editAddListener(self: any) {
+    const table = self.$el.querySelector("table")
+    const hasEvt = ((window as any).__Has_Table_Evt_ = (window as any).__Has_Table_Evt_ || false)
+    if (!hasEvt) {
+      self.config.el.addEventListener("click", (e: any) => {
+        table.onclick = undefined
+        table.onmousedown = undefined
+        table.onmousemove = undefined
+        table.onmouseup = undefined
+        if (self.cacheEdit) self.cacheEdit.edit = false
+      })
+      ;(window as any).__Has_Table_Evt_ = !hasEvt
+    }
+  }
 }
 export default Tbu
 
@@ -150,16 +165,6 @@ const __class_name_ = "cell-selected"
  */
 function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
   const table = self.$el.querySelector("table")
-  const hasEvt = ((window as any).__Has_Table_Evt_ = (window as any).__Has_Table_Evt_ || false)
-  if (!hasEvt) {
-    self.config.el.addEventListener("click", (e: any) => {
-      table.onclick = undefined
-      table.onmousedown = undefined
-      table.onmousemove = undefined
-      table.onmouseup = undefined
-    })
-    ;(window as any).__Has_Table_Evt_ = !hasEvt
-  }
   const cacheTableData: any = {
     midRowIndex: 0,
     midColIndex: 0,
