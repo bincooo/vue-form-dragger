@@ -106,8 +106,15 @@ function rowMenu(meta: any, menuList: any[], serial: string) {
         if (idx !== NaN) {
           // 即将被删除的行,遍历将上面行的rowspan扣除
           const row = meta.body[idx]
+          const keys = Object.keys(meta.body)
           for (const index in row) {
             const cell = row[index]
+            if (cell.rowspan && cell.rowspan > 1 && idx < keys.length - 1) {
+              let nextCell = meta.body[idx + 1][index]
+              nextCell.del = false
+              nextCell.rowspan = cell.rowspan -= 1
+              if (nextCell.rowspan === 1) delete nextCell.rowspan
+            }
             if (!cell.del) continue
             for (const key in meta.body) {
               const r = meta.body[key]
@@ -151,16 +158,38 @@ function colMenu(meta: any, menuList: any[], serial: string) {
     }
   })
   if (Object.keys(meta.body[0]).length > 1) {
+    const callback = (row: any[], index: number) => {
+      for (let idx = index - 1; idx >= 0; idx--) {
+        const cell = row[idx]
+        if (cell.colspan && cell.colspan > 1) {
+          cell.colspan -= 1
+          if (cell.colspan === 1) delete cell.colspan
+          return
+        }
+      }
+    }
     menuList.push({
       text: "删除列",
       icon: "fa fa-question-circle",
       handler(evt: any) {
         const idx: number = serial.indexOf("-") > 0 ? parseInt(serial.split("-")[1]) : parseInt(serial)
         if (Object.keys(meta.head).length !== 0) {
+          const cell = meta.head[idx]
+          if (cell.colspan && cell.colspan > 1) {
+            const nextCell = meta.head[idx + 1]
+            if (nextCell) nextCell.del = false
+          } else callback(meta.head, idx)
           meta.head.splice(idx, 1)
         }
         for (let index = 0; index < meta.body.length; index++) {
-          const li = Object.values(meta.body[index])
+          const li: any[] = Object.values(meta.body[index])
+          if (li[idx].colspan && li[idx].colspan > 1) {
+            const nextCell = li[idx + 1]
+            if (nextCell) {
+              nextCell.del = false
+              nextCell.colspan = li[idx].colspan - 1
+            }
+          } else callback(li, idx)
           li.splice(idx, 1)
           meta.body[index] = li
         }
