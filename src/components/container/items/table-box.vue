@@ -23,7 +23,7 @@
               :style="it.style"
             >
               <div v-show="!it.edit" @dblclick="edit($event, it)">{{ it.text }}&emsp;</div>
-              <input v-show="it.edit" @keyup="onInputKeyup($event, it)" type="text" :value="it.text" />
+              <input v-show="it.edit" @keyup="onInputKeyup($event, it)" :value="it.text" />
             </td>
           </template>
         </tr>

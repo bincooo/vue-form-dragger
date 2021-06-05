@@ -15,7 +15,7 @@ namespace Tbu {
     const { offsetLeft, offsetTop } = config.el
     const { pageX, pageY } = evt
     const { meta } = model
-    const serial: string = evt.target.getAttribute("serial")
+    const serial: string = getTd(evt.path).getAttribute("serial")
     const menuList = {
       width: "80px",
       list: [
@@ -178,29 +178,28 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
       }
       // 扫描所有的td
       cacheTableData.tdList = []
-      const tdList: any[] = table.querySelectorAll(evt.target.nodeName === "TD" ? "tr td[serial]" : "tr th[serial]")
-      tdList.forEach((el) => {
-        if (evt.target.nodeName === "TD") {
-          const sp: any[] = el.getAttribute("serial").split("-")
-          const colList: any[] = (cacheTableData.tdList[sp[0]] = cacheTableData.tdList[sp[0]] || [])
-          colList.push({ selected: false, el: el })
-        } else {
-          const colList: any[] = (cacheTableData.tdList[0] = cacheTableData.tdList[0] || [])
-          colList.push({ selected: false, el: el })
-        }
-      })
       table.onmousedown = function(e: any) {
         // 鼠标组件按下
         if (e.which === 1) {
           const td = getTd(e.path)
           cacheTableData.enabled = true
           const serial: string = td.getAttribute("serial")
-          cacheTableData.type = serial.includes("-") ? 1 : 0
-          if (serial.includes("-")) {
+          if (td.nodeName === "TD") {
+            const tdList: any[] = table.querySelectorAll("tr td[serial]")
+            tdList.forEach((el) => {
+              const sp: any[] = el.getAttribute("serial").split("-")
+              const colList: any[] = (cacheTableData.tdList[sp[0]] = cacheTableData.tdList[sp[0]] || [])
+              colList.push({ selected: false, el: el })
+            })
             cacheTableData.type = 1
             cacheTableData.midRowIndex = parseInt(serial.split("-")[0])
             cacheTableData.midColIndex = parseInt(serial.split("-")[1])
           } else {
+            const tdList: any[] = table.querySelectorAll("tr th[serial]")
+            tdList.forEach((el) => {
+              const colList: any[] = (cacheTableData.tdList[0] = cacheTableData.tdList[0] || [])
+              colList.push({ selected: false, el: el })
+            })
             cacheTableData.type = 0
             cacheTableData.midRowIndex = 0
             cacheTableData.midColIndex = parseInt(serial)
@@ -213,15 +212,15 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
         if (cacheTableData.enabled) {
           const td = getTd(e.path)
           if (cacheTableData.type === 0 && td?.nodeName !== "TH") return
-          if (cacheTarget != e.target) {
-            cacheTarget = e.target
+          if (cacheTarget != td) {
+            cacheTarget = td
             const serial: string = td.getAttribute("serial")
             const rowIndex = cacheTableData.type === 1 ? parseInt(serial.split("-")[0]) : 0
             const colIndex = parseInt(cacheTableData.type === 1 ? serial.split("-")[1] : serial)
             // 擦除样式
             eraseStyle(cacheTableData.tdList)
             // 选中单元格
-            doRowSelect(table, cacheTableData, rowIndex, colIndex)
+            doRowSelect(cacheTableData, rowIndex, colIndex)
             // 渲染
             for (const key in cacheTableData.tdList) {
               const element = cacheTableData.tdList[key]
@@ -267,31 +266,39 @@ function eraseStyle(tdList: any[][]) {
 }
 
 // 选中行方法
-function doRowSelect(table: any, cacheTableData: any, rowIndex: number, colIndex: number) {
+function doRowSelect(cacheTableData: any, rowIndex: number, colIndex: number) {
   // 选中上半边单元格
   if (cacheTableData.midRowIndex > rowIndex) {
     for (let index = rowIndex; index <= cacheTableData.midRowIndex; index++) {
-      doColSelect(table, cacheTableData, cacheTableData.tdList[index], colIndex)
+      doColSelect(cacheTableData, index, colIndex)
     }
   }
   // 选中中间的单元格
   else if (cacheTableData.midRowIndex === rowIndex) {
-    doColSelect(table, cacheTableData, cacheTableData.tdList[rowIndex], colIndex)
+    doColSelect(cacheTableData, rowIndex, colIndex)
   }
   // 选中下半边单元格
   else {
     for (let index = cacheTableData.midRowIndex; index <= rowIndex; index++) {
-      doColSelect(table, cacheTableData, cacheTableData.tdList[index], colIndex)
+      doColSelect(cacheTableData, index, colIndex)
     }
   }
 }
 
 // 选中列方法
-function doColSelect(table: any, cacheTableData: any, colList: any[], colIndex: number) {
+function doColSelect(cacheTableData: any, rowIndex: number, colIndex: number) {
+  const colList = cacheTableData.tdList[rowIndex]
+  if (!colList) return
   // 选中左边单元格
   if (cacheTableData.midColIndex > colIndex) {
+    const rowspan = parseInt(colList[cacheTableData.midColIndex].el.getAttribute("rowspan") || "0")
     for (let idx = colIndex; idx <= cacheTableData.midColIndex; idx++) {
       colList[idx].selected = true
+      if (rowspan === 0) continue
+      for (let index = 1; index < rowspan; index++) {
+        const nextColList = cacheTableData.tdList[index + rowIndex]
+        nextColList[idx].selected = true
+      }
     }
   }
   // 选中中间的单元格
@@ -300,14 +307,19 @@ function doColSelect(table: any, cacheTableData: any, colList: any[], colIndex: 
   }
   // 选中右边的单元格
   else {
+    const rowspan = parseInt(colList[cacheTableData.midColIndex].el.getAttribute("rowspan") || "0")
     for (let idx = cacheTableData.midColIndex; idx <= colIndex; idx++) {
       colList[idx].selected = true
+      if (rowspan === 0) continue
+      for (let index = 1; index < rowspan; index++) {
+        const nextColList = cacheTableData.tdList[index + rowIndex]
+        nextColList[idx].selected = true
+      }
     }
   }
 }
 
 function doMerge(cacheTableData: any, meta: any, menuList: any[], self: any) {
-  // TODO - 合并单元格数据处理
   let beginX = -1,
     endX = -1,
     beginY = -1,
@@ -332,6 +344,7 @@ function doMerge(cacheTableData: any, meta: any, menuList: any[], self: any) {
   const callback = (list: any[][]) => {
     // 一行
     if (beginX === endX) {
+      if (beginY === endY) return
       list[beginX][beginY].colspan = endY - beginY + 1
       for (let idx = beginY + 1; idx <= endY; idx++) {
         list[beginX][idx].del = true
