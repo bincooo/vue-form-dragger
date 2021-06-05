@@ -333,11 +333,20 @@ function doRowSelect(cacheTableData: any, rowIndex: number, colIndex: number) {
 function doColSelect(cacheTableData: any, rowIndex: number, colIndex: number) {
   const colList = cacheTableData.tdList[rowIndex]
   if (!colList) return
+  const upExtend = (rowIndex: number, colIndex: number) => {
+    for (let index = rowIndex; index >= 0; index--) {
+      const cell = cacheTableData.tdList[index][colIndex]
+      const { style } = cell.el
+      if (style.display !== "none" && cell.el.rowSpan < 2) return
+      cell.selected = true
+    }
+  }
   // 选中左边单元格
   if (cacheTableData.midColIndex > colIndex) {
     const rowspan = parseInt(colList[cacheTableData.midColIndex].el.getAttribute("rowspan") || "0")
     for (let idx = colIndex; idx <= cacheTableData.midColIndex; idx++) {
       colList[idx].selected = true
+      upExtend(rowIndex, idx)
       if (rowspan === 0) continue
       for (let index = 1; index < rowspan; index++) {
         const nextColList = cacheTableData.tdList[index + rowIndex]
@@ -348,12 +357,14 @@ function doColSelect(cacheTableData: any, rowIndex: number, colIndex: number) {
   // 选中中间的单元格
   else if (cacheTableData.midColIndex === colIndex) {
     colList[colIndex].selected = true
+    upExtend(rowIndex, colIndex)
   }
   // 选中右边的单元格
   else {
     const rowspan = parseInt(colList[cacheTableData.midColIndex].el.getAttribute("rowspan") || "0")
     for (let idx = cacheTableData.midColIndex; idx <= colIndex; idx++) {
       colList[idx].selected = true
+      upExtend(rowIndex, idx)
       if (rowspan === 0) continue
       for (let index = 1; index < rowspan; index++) {
         const nextColList = cacheTableData.tdList[index + rowIndex]
