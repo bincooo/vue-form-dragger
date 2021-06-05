@@ -103,7 +103,22 @@ function rowMenu(meta: any, menuList: any[], serial: string) {
       icon: "fa fa-question-circle",
       handler(evt: any) {
         const idx: number = serial.indexOf("-") > 0 ? parseInt(serial.split("-")[0]) : NaN
-        if (serial.indexOf("-") > 0) {
+        if (idx !== NaN) {
+          // 即将被删除的行,遍历将上面行的rowspan扣除
+          const row = meta.body[idx]
+          for (const index in row) {
+            const cell = row[index]
+            if (!cell.del) continue
+            for (const key in meta.body) {
+              const r = meta.body[key]
+              const c = r[index]
+              if (c.rowspan > 0) {
+                c.rowspan = c.rowspan - 1
+                if (c.rowspan === 1) delete c.rowspan
+                break
+              }
+            }
+          }
           meta.body.splice(idx, 1)
         } else {
           meta.head = []
@@ -181,38 +196,38 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
       }
       // 扫描所有的td
       cacheTableData.tdList = []
+      // 鼠标左键按下
       table.onmousedown = function(e: any) {
-        // 鼠标组件按下
-        if (e.which === 1) {
-          const td = getTd(e.path)
-          cacheTableData.enabled = true
-          const serial: string = td.getAttribute("serial")
-          if (td.nodeName === "TD") {
-            const tdList: any[] = table.querySelectorAll("tr td[serial]")
-            tdList.forEach((el) => {
-              const serial: string = el.getAttribute("serial")
-              const sp: any[] = serial.split("-")
-              const colList: any[] = (cacheTableData.tdList[sp[0]] = cacheTableData.tdList[sp[0]] || [])
-              colList.push({ selected: false, el: el, serial })
-            })
-            cacheTableData.type = 1
-            cacheTableData.midRowIndex = parseInt(serial.split("-")[0])
-            cacheTableData.midColIndex = parseInt(serial.split("-")[1])
-          } else {
-            const tdList: any[] = table.querySelectorAll("tr th[serial]")
-            tdList.forEach((el) => {
-              const colList: any[] = (cacheTableData.tdList[0] = cacheTableData.tdList[0] || [])
-              const serial: string = el.getAttribute("serial")
-              colList.push({ selected: false, el: el, serial: `0-${serial}` })
-            })
-            cacheTableData.type = 0
-            cacheTableData.midRowIndex = 0
-            cacheTableData.midColIndex = parseInt(serial)
-          }
-          e.stopPropagation()
-          e.returnValue = false
+        if (e.which !== 1) return
+        const td = getTd(e.path)
+        cacheTableData.enabled = true
+        const serial: string = td.getAttribute("serial")
+        if (td.nodeName === "TD") {
+          const tdList: any[] = table.querySelectorAll("tr td[serial]")
+          tdList.forEach((el) => {
+            const serial: string = el.getAttribute("serial")
+            const sp: any[] = serial.split("-")
+            const colList: any[] = (cacheTableData.tdList[sp[0]] = cacheTableData.tdList[sp[0]] || [])
+            colList.push({ selected: false, el: el, serial })
+          })
+          cacheTableData.type = 1
+          cacheTableData.midRowIndex = parseInt(serial.split("-")[0])
+          cacheTableData.midColIndex = parseInt(serial.split("-")[1])
+        } else {
+          const tdList: any[] = table.querySelectorAll("tr th[serial]")
+          tdList.forEach((el) => {
+            const colList: any[] = (cacheTableData.tdList[0] = cacheTableData.tdList[0] || [])
+            const serial: string = el.getAttribute("serial")
+            colList.push({ selected: false, el: el, serial: `0-${serial}` })
+          })
+          cacheTableData.type = 0
+          cacheTableData.midRowIndex = 0
+          cacheTableData.midColIndex = parseInt(serial)
         }
+        e.stopPropagation()
+        e.returnValue = false
       }
+      // 鼠标移动
       table.onmousemove = function(e: any) {
         if (cacheTableData.enabled) {
           const td = getTd(e.path)
@@ -231,10 +246,11 @@ function mergeMenu(evt: any, meta: any, menuList: any[], self: any) {
           }
         }
       }
+      // 鼠标释放
       table.onmouseup = function(e: any) {
         if (cacheTableData.enabled) {
           cacheTableData.enabled = false
-          doMerge(cacheTableData, meta)
+          mergeCell(cacheTableData, meta)
           // 擦除样式
           eraseStyle(cacheTableData.tdList)
           table.onclick = undefined
@@ -370,44 +386,41 @@ function drawRowSelect(cacheTableData: any) {
  * @param cacheTableData 表格缓存数据
  * @param meta 绑定数据
  */
-function doMerge(cacheTableData: any, meta: any) {
-  let beginX = -1,
-    endX = -1,
-    beginY = -1,
-    endY = -1
+function mergeCell(cacheTableData: any, meta: any) {
+  let rowMinIndex = -1
+  let rowMaxIndex = -1
+  let cellMinIndex = -1
+  let cellMaxIndex = -1
 
   for (let index = 0; index < cacheTableData.tdList.length; index++) {
     const element = cacheTableData.tdList[index]
     for (let idx = 0; idx < element.length; idx++) {
       const el = element[idx]
       if (!el.selected) continue
-      if (beginX === -1) {
-        beginX = index
-        beginY = idx
-        endX = index
-        endY = idx
-      } else {
-        endX = index
-        endY = idx
+      rowMaxIndex = index
+      cellMaxIndex = idx
+      if (rowMinIndex === -1) {
+        rowMinIndex = index
+        cellMinIndex = idx
       }
     }
   }
   const callback = (list: any[][]) => {
     // 一行
-    if (beginX === endX) {
-      if (beginY === endY) return
-      list[beginX][beginY].colspan = endY - beginY + 1
-      for (let idx = beginY + 1; idx <= endY; idx++) {
-        list[beginX][idx].del = true
+    if (rowMinIndex === rowMaxIndex) {
+      if (cellMinIndex === cellMaxIndex) return
+      list[rowMinIndex][cellMinIndex].colspan = cellMaxIndex - cellMinIndex + 1
+      for (let idx = cellMinIndex + 1; idx <= cellMaxIndex; idx++) {
+        list[rowMinIndex][idx].del = true
       }
     }
     // 多行
     else {
-      list[beginX][beginY].colspan = endY - beginY + 1
-      list[beginX][beginY].rowspan = endX - beginX + 1
-      for (let index = beginX; index <= endX; index++) {
-        for (let idx = beginY; idx <= endY; idx++) {
-          if (index === beginX && idx === beginY) continue
+      list[rowMinIndex][cellMinIndex].rowspan = rowMaxIndex - rowMinIndex + 1
+      list[rowMinIndex][cellMinIndex].colspan = cellMaxIndex - cellMinIndex + 1
+      for (let index = rowMinIndex; index <= rowMaxIndex; index++) {
+        for (let idx = cellMinIndex; idx <= cellMaxIndex; idx++) {
+          if (index === rowMinIndex && idx === cellMinIndex) continue
           list[index][idx].del = true
         }
       }
