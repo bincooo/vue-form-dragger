@@ -19,7 +19,6 @@
               :rowspan="it.rowspan"
               :colspan="it.colspan"
               :serial="serial(index, idx)"
-              :class="{ 'last-td': false }"
               :style="it.style"
             >
               <div v-show="!it.edit" @dblclick="edit($event, it)">{{ it.text }}&emsp;</div>
@@ -45,7 +44,7 @@ export default class TableBox extends Vue {
   @Inject() config: any
   readonly modelValue: any
   cacheEdit: any = null
-  minHeight: string|null = null
+  minHeight: string | null = null
   @Ref() tableRef!: any
 
   created() {
@@ -54,11 +53,7 @@ export default class TableBox extends Vue {
     if (model) {
       model.meta = {}
       model.meta.head = CPKit.copy([], Tbu.template())
-      model.meta.body = [
-        CPKit.copy([], Tbu.template()),
-        CPKit.copy([], Tbu.template()),
-        CPKit.copy([], Tbu.template()),
-      ]
+      model.meta.body = [CPKit.copy([], Tbu.template()), CPKit.copy([], Tbu.template()), CPKit.copy([], Tbu.template())]
     }
   }
 
@@ -127,6 +122,7 @@ export default class TableBox extends Vue {
         outline: 0;
         border-radius: 0;
         min-height: 26px;
+        background-color: white;
       }
     }
     .cell-selected {
