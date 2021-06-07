@@ -3,6 +3,7 @@ import { grid, field } from "./components/setup/index"
 import gridConfig from "./el-conf/grid-config"
 import formConfig from "./el-conf/form-config"
 import inputConfig from "./el-conf/input-config"
+import tableConfig from "./el-conf/table-config"
 
 const config: any = {
   // 编辑器大小
@@ -23,7 +24,8 @@ const config: any = {
   props: {
     grid: gridConfig,
     form: formConfig,
-    input: inputConfig
+    input: inputConfig,
+    table: tableConfig
   },
   // 组件拖拽条件约束
   condition: {

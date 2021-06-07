@@ -82,7 +82,6 @@ export default class Container extends Vue {
       config.active = config.active === key ? null : key
     }
     config.showmenu = (x: string, y: string, element: any, data: any = {}, show: boolean = true): void => {
-      console.log("showmenu", x, y)
       this.showmenu = show
       this.showmenuData = data
       const menu = this.menu
@@ -94,7 +93,6 @@ export default class Container extends Vue {
   }
 
   onAdd(e: any): void {
-    console.log("onadd")
     const index = e.newIndex
     const list = this.modelValue.list
     const data = list[index]

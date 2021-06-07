@@ -21,14 +21,23 @@ namespace Tbu {
           text: "表格",
           icon: "fa fa-chevron-right",
           list: []
+        },
+        {
+          text: "表行",
+          icon: "fa fa-chevron-right",
+          list: []
+        },
+        {
+          text: "表列",
+          icon: "fa fa-chevron-right",
+          list: []
         }
       ]
     }
-    const { list }: any = menuList.list[0]
-    headMenu(meta, list)
-    rowMenu(meta, list, serial)
-    colMenu(meta, list, serial)
-    mergeMenu(evt, meta, list, self)
+    headMenu(meta, menuList.list[0].list)
+    rowMenu(meta, menuList.list[1].list, serial)
+    colMenu(meta, menuList.list[2].list, serial)
+    mergeMenu(evt, meta, menuList.list[0].list, self)
     config.showmenu(pageX - offsetLeft - 260 + "px", pageY - offsetTop + "px", model, menuList)
   }
 
@@ -42,6 +51,7 @@ namespace Tbu {
         table.onmousemove = undefined
         table.onmouseup = undefined
         if (self.cacheEdit) self.cacheEdit.edit = false
+        self.minHeight = null
       })
       ;(window as any).__Has_Table_Evt_ = !hasEvt
     }
@@ -57,7 +67,7 @@ export default Tbu
 function headMenu(meta: any, menuList: any[]) {
   if (Object.keys(meta.head).length === 0) {
     menuList.push({
-      text: "添加头",
+      text: "添加表头",
       icon: "fa fa-question-circle",
       handler(evt: any) {
         const size = Object.keys(meta.body[0]).length
@@ -68,13 +78,20 @@ function headMenu(meta: any, menuList: any[]) {
     })
   } else {
     menuList.push({
-      text: "删除头",
+      text: "删除表头",
       icon: "fa fa-question-circle",
       handler(evt: any) {
         meta.head = []
       }
     })
   }
+  menuList.push({
+    text: "编辑单元格",
+    icon: "fa fa-question-circle",
+    handler(evt: any) {
+      alert("编辑单元格: TODO")
+    }
+  })
 }
 
 /**
@@ -133,6 +150,13 @@ function rowMenu(meta: any, menuList: any[], serial: string) {
       }
     })
   }
+  menuList.push({
+    text: "编辑行",
+    icon: "fa fa-question-circle",
+    handler(evt: any) {
+      alert("编辑行: TODO")
+    }
+  })
 }
 
 /**
@@ -196,9 +220,16 @@ function colMenu(meta: any, menuList: any[], serial: string) {
       }
     })
   }
+  menuList.push({
+    text: "编辑列",
+    icon: "fa fa-question-circle",
+    handler(evt: any) {
+      alert("编辑列: TODO")
+    }
+  })
 }
 
-const __class_name_ = "cell-selected"
+// const __class_name_ = "cell-selected"
 /**
  * 合并单元格菜单
  * @param meta 单元数据
@@ -303,7 +334,8 @@ function eraseStyle(tdList: any[][]) {
       const td = element[k]
       if (td.selected) {
         td.selected = false
-        td.el.classList.remove(__class_name_)
+        // td.el.classList.remove(__class_name_)
+        td.el.removeAttribute("selected")
       }
     }
   }
@@ -338,7 +370,9 @@ function doColSelect(cacheTableData: any, rowIndex: number, colIndex: number) {
       const cell = cacheTableData.tdList[index][colIndex]
       const { style } = cell.el
       if (style.display !== "none" && cell.el.rowSpan < 2) return
-      cell.selected = true
+      if (cell.el.rowSpan === rowIndex - index + 1) {
+        cell.selected = true
+      }
     }
   }
   // 选中左边单元格
@@ -416,7 +450,8 @@ function drawRowSelect(cacheTableData: any) {
   for (let index = rowMinIndex; index <= rowMaxIndex; index++) {
     for (let idx = cellMinIndex; idx <= cellMaxIndex; idx++) {
       cacheTableData.tdList[index][idx].selected = true
-      cacheTableData.tdList[index][idx].el.classList.add(__class_name_)
+      // cacheTableData.tdList[index][idx].el.classList.add(__class_name_)
+      cacheTableData.tdList[index][idx].el.setAttribute("selected", 1)
     }
   }
 }

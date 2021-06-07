@@ -1,6 +1,29 @@
 <template>
-  <div class="table-box" :style="{ minHeight }" :title="modelValue.name" v-unmarsk>
-    <table ref="tableRef" cellspacing="0" cellpadding="0" @contextmenu.stop="contextmenu">
+  <div
+    v-unmarsk
+    class="table-box"
+    :title="modelValue.name"
+    :style="{
+      minHeight,
+      float: modelValue.meta.float === 'center' ? null : modelValue.meta.float
+    }"
+  >
+    <table
+      ref="tableRef"
+      cellspacing="0"
+      cellpadding="0"
+      @contextmenu.stop="contextmenu"
+      :border="modelValue.meta.border"
+      :style="{
+        width: modelValue.meta.width,
+        height: modelValue.meta.height,
+        borderColor: modelValue.meta.borderColor,
+        borderStyle: modelValue.meta.borderStyle,
+        backgroundColor: modelValue.meta.backgroundColor,
+        marginLeft: modelValue.meta.float === 'center' ? 'auto' : null,
+        marginRight: modelValue.meta.float === 'center' ? 'auto' : null
+      }"
+    >
       <thead>
         <tr>
           <template v-for="(item, index) in modelValue.meta.head" :key="index">
@@ -79,6 +102,7 @@ export default class TableBox extends Vue {
     item.text = evt.target.value
     if (["NumpadEnter", "Enter"].includes(evt.code)) {
       item.edit = false
+      this.minHeight = null
     }
     evt.stopPropagation()
     evt.returnValue = false
@@ -87,6 +111,7 @@ export default class TableBox extends Vue {
   contextmenu(evt: any) {
     if (this.cacheEdit) {
       this.cacheEdit.edit = false
+      this.minHeight = null
     }
     Tbu.menuHandler(evt, this)
     evt.returnValue = false
@@ -99,17 +124,24 @@ export default class TableBox extends Vue {
   overflow: hidden;
   padding: 2px;
   min-height: 82px;
+  table:not([border]),
+  table[border="0"] {
+    border: 1px dashed @global-box-border-color;
+    tr td:not([style*="border-style"]),
+    tr th:not([style*="border-style"]) {
+      border: 1px dashed @global-box-border-color;
+    }
+  }
   table {
+    tr td:not([style*="padding"]),
+    tr th:not([style*="padding"]) {
+      padding: 4px;
+    }
     width: 100%;
     height: 100%;
     min-height: 82px;
-    border: 1px dashed @global-box-border-color;
     tr td,
     tr th {
-      border: 1px dashed @global-box-border-color;
-      box-sizing: content-box;
-      padding: 2px;
-      margin: 1px;
       position: relative;
       > input {
         position: absolute;
@@ -125,17 +157,18 @@ export default class TableBox extends Vue {
         background-color: white;
       }
     }
-    .cell-selected {
+    tr td[selected],
+    tr th[selected] {
       position: relative;
       &::after {
         content: "";
+        position: absolute;
         background-color: rgba(180, 215, 255, 0.7);
         border: 1px solid rgba(180, 215, 255, 0.7);
+        top: 0;
         bottom: -1px;
         left: -1px;
-        position: absolute;
         right: -1px;
-        top: -1px;
       }
     }
   }

@@ -9,6 +9,14 @@
         @keyup="item.callback(config.setup.element, $event.target.value)"
       />
     </div>
+    <div v-else-if="item.field === 'number'">
+      <input
+        type="number"
+        :disabled="item.disabled"
+        :value="item.get(config.setup.element)"
+        @keyup="item.callback(config.setup.element, $event.target.value)"
+      />
+    </div>
     <div v-else-if="item.field === 'select'">
       <select :disabled="item.disabled" @change="item.callback(config.setup.element, $event.target.value)">
         <option

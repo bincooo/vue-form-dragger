@@ -35,7 +35,7 @@ export default class Grid extends Vue {
         const it = item.slice(index - col, index)
         list.push(it)
       } else if (item.length - 1 === index && (index % col !== 0 || index < col)) {
-        const it = item.slice(index - (index % col), index + 1)
+        const it = item.slice(index - (index % col), index)
         list.push(it)
       }
     }
@@ -46,6 +46,7 @@ export default class Grid extends Vue {
         li.push(null)
       }
     }
+    console.log(list)
     return list
   }
 }
