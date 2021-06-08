@@ -142,7 +142,7 @@ export default [
                   binding.meta = binding.meta || {}
                   binding.meta.backgroundColor = val
                 }
-            }, {}
+            }
           ]
         }
       ]

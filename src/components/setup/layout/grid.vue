@@ -18,7 +18,7 @@ import { Inject } from "vue-property-decorator"
 import { Options, Vue } from "vue-class-component"
 @Options({
   name: "grid",
-  props: ["layout"]
+  props: ["modelValue", "layout"]
 })
 export default class Grid extends Vue {
   @Inject() config: any
@@ -28,6 +28,7 @@ export default class Grid extends Vue {
     const list: any[] = []
     const { item, col } = this.layout
     if (!item) return list
+    item.push({})
     for (let index = 0; index < item.length; index++) {
       if (col === 1) {
         list.push([item[index]])

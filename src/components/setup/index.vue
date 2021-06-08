@@ -1,5 +1,5 @@
 <template>
-  <div @mousedown="showHandler" class="setup-panel" v-show="config.setup.show">
+  <div @mousedown="showHandler" class="setup-panel" v-if="config.setup.show">
     <transition name="fade">
       <div class="inner" v-show="config.setup.show">
         <div>{{ modelValue?.name }}</div>

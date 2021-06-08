@@ -70,7 +70,7 @@
       </div>
     </div>
     <div v-else-if="item.field === 'color'">
-      <div :id="colorPickerId" />
+      <div :style="{ left: colorPickerLeft }" @click="onColorClick" :id="colorPickerId" />
     </div>
   </div>
 </template>
@@ -81,7 +81,7 @@ import Colorpicker from "./colorpicker"
 import { uuid } from "@/utils/obj"
 @Options({
   name: "field",
-  props: ["modelValue", "item"]
+  props: ["item"]
 })
 export default class Field extends Vue {
   @Inject() config!: any
@@ -89,6 +89,7 @@ export default class Field extends Vue {
   textbox: string[] = []
   items: any[] = []
   colorPickerId?: string
+  colorPickerLeft: string | null = null
 
   created() {
     if (this.item.field === "textbox") {
@@ -99,7 +100,7 @@ export default class Field extends Vue {
       const self: any = this
       this.colorPickerId = "color-picker-" + uuid()
       this.$nextTick(() => {
-        new Colorpicker({
+        const picker = new Colorpicker({
           el: this.colorPickerId,
           color: self.item.get(self.config.setup.element),
           change: function(elem: any, hex: string) {
@@ -107,6 +108,22 @@ export default class Field extends Vue {
             self.item?.callback(self.config.setup.element, hex)
           }
         })
+        const show = picker.show
+        picker.show = (...args) => {
+          const maxWidth: number = document.body.offsetWidth
+          const { offsetLeft } = this.config.el
+          const left: number = (document.querySelector("#" + this.colorPickerId) as any).offsetLeft
+          let ox = maxWidth > offsetLeft + left + 405 ? 0 : maxWidth - (offsetLeft + left + 405)
+          if (this.colorPickerLeft === null) {
+            this.colorPickerLeft = ox + "px"
+          }
+          show.bind(picker).call(args)
+        }
+        const hide = picker.hide
+        picker.hide = (...args) => {
+          this.colorPickerLeft = null
+          hide.bind(picker).call(args)
+        }
       })
     }
   }
@@ -146,5 +163,18 @@ export default class Field extends Vue {
     element.span = Number(value)
     this.item.callback(this.config.setup.element, this.items)
   }
+
+  // onColorClick(evt: any) {
+  //   const maxWidth: number = document.body.offsetWidth
+  //   const { offsetLeft } = this.config.el
+  //   const left: number = evt.target.offsetLeft
+  //   let ox = maxWidth > offsetLeft + left + 425 ? 0 : maxWidth - (offsetLeft + left + 425)
+  //   console.log(ox)
+  //   if (this.colorPickerLeft === null) {
+  //     this.colorPickerLeft = ox + "px"
+  //   }
+  //   evt.returnValue = false
+  //   // evt.stopPropagation()
+  // }
 }
 </script>
