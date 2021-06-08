@@ -134,7 +134,7 @@ export default [
                 // 标签数据
                 el: "field", // 组件名称
                 title: "背景色",
-                field: "text", // 输入框类型
+                field: "color", // 输入框类型
                 get(binding: any) {
                   return binding.meta?.backgroundColor
                 },

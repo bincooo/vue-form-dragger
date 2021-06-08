@@ -69,11 +69,16 @@
         </div>
       </div>
     </div>
+    <div v-else-if="item.field === 'color'">
+      <div :id="colorPickerId" />
+    </div>
   </div>
 </template>
 <script lang="ts">
 import { Inject } from "vue-property-decorator"
 import { Options, Vue } from "vue-class-component"
+import Colorpicker from "./colorpicker"
+import { uuid } from "@/utils/obj"
 @Options({
   name: "field",
   props: ["modelValue", "item"]
@@ -83,12 +88,24 @@ export default class Field extends Vue {
   readonly item: any
   textbox: string[] = []
   items: any[] = []
+  colorPickerId?: string
 
   created() {
     if (this.item.field === "textbox") {
       this.textbox = [...this.item.get(this.config.setup.element)]
     } else if (this.item.field === "grid-item") {
       this.items = [...this.item.get(this.config.setup.element)]
+    } else if (this.item.field === "color") {
+      this.colorPickerId  = 'color-picker-' + uuid()
+      this.$nextTick(() => {
+        new Colorpicker({
+          el: this.colorPickerId,
+          color: "#000fff",
+          change: function(elem: any, hex: string) {
+            elem.style.backgroundColor = hex
+          }
+        })
+      })
     }
   }
 
