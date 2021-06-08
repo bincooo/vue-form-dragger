@@ -96,13 +96,15 @@ export default class Field extends Vue {
     } else if (this.item.field === "grid-item") {
       this.items = [...this.item.get(this.config.setup.element)]
     } else if (this.item.field === "color") {
-      this.colorPickerId  = 'color-picker-' + uuid()
+      const self: any = this
+      this.colorPickerId = "color-picker-" + uuid()
       this.$nextTick(() => {
         new Colorpicker({
           el: this.colorPickerId,
-          color: "#000fff",
+          color: self.item.get(self.config.setup.element),
           change: function(elem: any, hex: string) {
             elem.style.backgroundColor = hex
+            self.item?.callback(self.config.setup.element, hex)
           }
         })
       })

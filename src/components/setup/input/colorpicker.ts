@@ -17,9 +17,7 @@ export default class Colorpicker {
     this.init(opt)
     this._opt_ = opt
   }
-  //   }
 
-  //   Colorpicker.prototype = {
   init(opt: any) {
     let { el, initColor = "rgb(255,0,0)", allMode = ["hex", "rgb"], color = "" } = opt
     var elem = document.getElementById(el)
@@ -70,11 +68,9 @@ export default class Colorpicker {
     self.rgba.g = parseInt(rgb[1])
     self.rgba.b = parseInt(rgb[2])
 
-    var body = document.getElementsByTagName("body")[0],
-      div = document.createElement("div")
-
+    var div = document.createElement("div")
     div.innerHTML = this.render()
-    body.appendChild(div)
+    elem.appendChild(div)
 
     self.elem_wrap = div
     self.fixedBg = div.children[0]
@@ -119,14 +115,28 @@ export default class Colorpicker {
       "click",
       function() {
         _this.show()
+        self.pancel_width = self.elem_colorPancel.offsetWidth
+        self.pancel_height = self.elem_colorPancel.offsetHeight
+        let bindElem: any = self.bindElem
+        var top = bindElem.offsetTop
+        var left = bindElem.offsetLeft
+        while (bindElem.offsetParent) {
+          top += bindElem.offsetParent.offsetTop
+          left += bindElem.offsetParent.offsetLeft
+          bindElem = bindElem.offsetParent
+        }
+        self.pancelLeft = left + self.elem_colorPalette.clientWidth
+        self.pancelTop = top + self.bindElem.offsetHeight - 25
       },
       false
     )
 
     self.fixedBg.addEventListener(
       "click",
-      function() {
+      function(e: any) {
         _this.hide()
+        e.returnValue = false
+        e.stopPropagation()
       },
       false
     )
@@ -170,7 +180,6 @@ export default class Colorpicker {
               inputs[1].value = rgba.g
               inputs[2].value = rgba.b
               _this.setColorByInput(colorStr)
-              /* 	_this.hsb = _this.rgbToHsb(rgba); */
               break
           }
         }
@@ -184,7 +193,7 @@ export default class Colorpicker {
   render() {
     const self: any = this
     var tpl = `<div style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px;"></div>
-				<div style="position: inherit;z-index: 100;display: flex;box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 2px, rgba(0, 0, 0, 0.3) 0px 4px 8px;">
+				<div style="position: fixed;z-index: 100;display: flex;box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 2px, rgba(0, 0, 0, 0.3) 0px 4px 8px;">
 					<div style='width:180px;padding:10px;background: #f9f9f9;display: flex;flex-flow: row wrap;align-content: space-around;justify-content: space-around;' class='color-palette'>
 						${this.getPaletteColorsItem()}
 					</div>
@@ -331,7 +340,7 @@ export default class Colorpicker {
     const self: any = this
     let LEFT: number = x - self.pancelLeft,
       TOP: number = y - self.pancelTop
-
+    // debugger
     self.pointLeft = Math.max(0, Math.min(LEFT, self.pancel_width))
     self.pointTop = Math.max(0, Math.min(TOP, self.pancel_height))
 
