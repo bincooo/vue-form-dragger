@@ -108,22 +108,6 @@ export default class Field extends Vue {
             self.item?.callback(self.config.setup.element, hex)
           }
         })
-        const show = picker.show
-        picker.show = (...args) => {
-          const maxWidth: number = document.body.offsetWidth
-          const { offsetLeft } = this.config.el
-          const left: number = (document.querySelector("#" + this.colorPickerId) as any).offsetLeft
-          let ox = maxWidth > offsetLeft + left + 405 ? 0 : maxWidth - (offsetLeft + left + 405)
-          if (this.colorPickerLeft === null) {
-            this.colorPickerLeft = ox + "px"
-          }
-          show.bind(picker).call(args)
-        }
-        const hide = picker.hide
-        picker.hide = (...args) => {
-          this.colorPickerLeft = null
-          hide.bind(picker).call(args)
-        }
       })
     }
   }

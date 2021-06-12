@@ -487,14 +487,16 @@ export default class Colorpicker {
   show() {
     const self: any = this
     util.css(self.elem_wrap, {
-      display: "block"
+      display: "block",
+      position: "unset"
     })
   }
 
   hide() {
     const self: any = this
     util.css(self.elem_wrap, {
-      display: "none"
+      display: "none",
+      position: "fixed"
     })
   }
 
