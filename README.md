@@ -12,7 +12,7 @@
 
 [live demo](http://www.bingco.top/form-dragger)
   
-[嗯... dev版 demo](https://bingco-zhan.github.io/vue-form-dragger/dist/index.html)
+[嗯... dev版 demo](https://medlar01.github.io/vue-form-dragger/dist/index.html)
 
 ## 三方类库
 * [element-ui 2.x+](https://github.com/ElemeFE/element)
