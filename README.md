@@ -10,9 +10,9 @@
 * 减少大量代码编写
 * 实现表单数据绑定
 
-[live demo](http://www.bingco.top/form-dragger)
+[live demo](https://medlar01.github.io/vue-form-dragger/main/index.html)
   
-[嗯... dev版 demo](https://medlar01.github.io/vue-form-dragger/dist/index.html)
+[嗯... dev版 demo](https://medlar01.github.io/vue-form-dragger/dev/index.html)
 
 ## 三方类库
 * [element-ui 2.x+](https://github.com/ElemeFE/element)
