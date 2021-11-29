@@ -25,9 +25,15 @@ function __fn_build__(data, bind, fn_bind, fn_build) {
  */
 function __fn_bind__(data, bind, _fn_) {
     if (data.value && data.value.trim().length > 0) {
+
+        if (data.rules) { // 鉴权
+            bind.rules = bind.rules || {}
+            bind.rules[data.value] = data.rules
+        }
+
         if (data.value.indexOf('.') > 0) {
             const split = data.value.split('.')
-            let len = split.length, d = bind
+            let len = split.length, d = bind.data
             split.forEach((it, index) => {
                 if (index + 1 !== len) {
                     d[it] = {}
@@ -64,7 +70,7 @@ __map__.layout = layout
  */
 function input(data, _bind_) {
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-input ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}'/></el-form-item>`
+    return `<el-form-item size='${data.size}' prop='${data.value}' label='${data.name}'><el-input ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.input = input
 
@@ -169,12 +175,15 @@ class encoder {
         if (!data || typeof data !== 'object') {
             return
         }
-        const local = {}
+        const local = {
+            data: {}
+        }
         return {
-            template: `<el-container><el-form style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
+            template: `<el-container><el-form ref='formData' :rules='rules' style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
             data() {
                 return {
-                    data: local
+                    data: local.data,
+                    rules: local.rules
                 }
             }
         }

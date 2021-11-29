@@ -74,6 +74,41 @@
       </div>
       <!-- === end 选项配置项 === -->
 
+      <!-- === start 校验 === -->
+      <div v-if="Object.keys(data).indexOf('rules') >= 0">
+        <el-divider content-position="left">校验</el-divider>
+        <div class="table_item_param" v-for="(item, idx) in data.rules" :key="idx">
+          <el-form-item label="必填">
+            <el-switch
+              v-model="item.required"
+              active-color="#13ce66"
+              inactive-color="#ff4949" />
+          </el-form-item>
+          <el-form-item label="事件">
+            <el-select v-model="item.trigger" placeholder="请选择事件类型">
+              <el-option label="blur" value="blur" />
+              <el-option label="change" value="change" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="类型">
+            <el-select v-model="item.type" placeholder="请选择数据类型" clearable>
+              <el-option label="date" value="date" />
+              <el-option label="array" value="array" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="提示">
+            <el-input v-model="item.message" placeholder="请填写提示信息" />
+          </el-form-item>
+          <div style="margin: 0 12px 5px; text-align: right">
+            <el-button type="info" size="mini" @click="data.rules.splice(idx, 1)">删除</el-button>
+          </div>
+        </div>
+        <el-form-item style="float: right">
+          <el-button type="primary" size="mini" @click="data.rules.push({ required: true, message: '请输入...', trigger: 'blur' })">添加</el-button>
+        </el-form-item>
+      </div>
+      <!-- === end 校验 === -->
+
       <!-- === 其他配置 === -->
       <slot></slot>
     </el-form>

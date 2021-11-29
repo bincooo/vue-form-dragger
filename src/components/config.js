@@ -23,7 +23,11 @@ const __config_list__ = [
         value: '',
         disabled: false,
         labelWidth: '80px',
-        placeholder: '请输入'
+        placeholder: '请输入',
+        rules: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+        ]
     }, {
         type: 'textarea',
         name: '文本域',
@@ -32,7 +36,8 @@ const __config_list__ = [
         value: '',
         disabled: false,
         labelWidth: '80px',
-        placeholder: '请输入文本'
+        placeholder: '请输入文本',
+        rules: []
     }, {
         type: 'select',
         name: '选择框',
@@ -50,7 +55,8 @@ const __config_list__ = [
                 label: '区域二',
                 value: '2'
             }
-        ]
+        ],
+        rules: []
     }, {
         type: 'date',
         name: '日期',
@@ -59,14 +65,16 @@ const __config_list__ = [
         value: '',
         disabled: false,
         labelWidth: '80px',
-        placeholder: '请选择日期'
+        placeholder: '请选择日期',
+        rules: []
     }, {
         type: 'switch',
         name: '开关',
         size: 'mini',
         value: '',
         disabled: false,
-        labelWidth: 80
+        labelWidth: 80,
+        rules: []
     }, {
         type: 'checkbox',
         name: '多选',
@@ -84,7 +92,8 @@ const __config_list__ = [
                 value: '2',
                 disabled: false
             }
-        ]
+        ],
+        rules: []
     }, {
         type: 'radio',
         name: '单选',
@@ -102,7 +111,8 @@ const __config_list__ = [
                 value: '2',
                 disabled: false
             }
-        ]
+        ],
+        rules: []
     }
 ]
 

@@ -162,7 +162,14 @@ export default {
       })
     },
     metadata() {
-      this.$alert(JSON.stringify(this.preview.data) || "{ }", '数据获取')
+      this.preview.$refs['formData'].validate((valid) => {
+        if (valid) {
+          this.$alert(JSON.stringify(this.preview.data) || "{ }", '数据获取')
+        } else {
+          this.$alert('校验不通过~');
+        }
+      })
+      
     }
   }
 }
