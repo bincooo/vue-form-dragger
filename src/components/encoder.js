@@ -86,7 +86,7 @@ function select(data, _bind_) {
         return html
     }
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-select ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}' value=''>${item(data.option)}</el-select></el-form-item>`
+    return `<el-form-item size='${data.size}' prop='${data.value}' label='${data.name}'><el-select ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} placeholder='${data.placeholder}' value=''>${item(data.option)}</el-select></el-form-item>`
 }
 __map__.select = select
 
@@ -95,7 +95,7 @@ __map__.select = select
  */
 function date(data, _bind_) {
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-date-picker ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} type="date" placeholder='${data.placeholder}'/></el-form-item>`
+    return `<el-form-item size='${data.size}' prop='${data.value}' label='${data.name}'><el-date-picker ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' id='${data.key}' ${data.disabled?'disabled':''} type="date" placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.date = date
 
@@ -105,7 +105,7 @@ __map__.date = date
  */
 function _switch(data, _bind_) {
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item  size='${data.size}' label='${data.name}'><el-switch id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} ${data.disabled?'disabled':''}/></el-form-item>`
+    return `<el-form-item  size='${data.size}' prop='${data.value}' label='${data.name}'><el-switch id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} ${data.disabled?'disabled':''}/></el-form-item>`
 }
 __map__.switch = _switch
 
@@ -122,7 +122,7 @@ function checkbox(data, _bind_) {
         return html
     }
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item  size='${data.size}' label='${data.name}'><el-checkbox-group id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''}>${item(data.option)}</el-checkbox-group></el-form-item>`
+    return `<el-form-item  size='${data.size}' prop='${data.value}' label='${data.name}'><el-checkbox-group id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''}>${item(data.option)}</el-checkbox-group></el-form-item>`
 }
 __map__.checkbox = checkbox
 
@@ -139,7 +139,7 @@ function radio(data, _bind_) {
         return html
     }
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item  size='${data.size}' label='${data.name}'><el-radio-group id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''}>${item(data.option)}</el-radio-group></el-form-item>`
+    return `<el-form-item  size='${data.size}' prop='${data.value}' label='${data.name}'><el-radio-group id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''}>${item(data.option)}</el-radio-group></el-form-item>`
 }
 __map__.radio = radio
 
@@ -149,7 +149,7 @@ __map__.radio = radio
  */
 function textarea(data, _bind_) {
     let bind = __fn_bind__(data, _bind_)
-    return `<el-form-item size='${data.size}' label='${data.name}'><el-input resize='none' id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' type="textarea" placeholder='${data.placeholder}'/></el-form-item>`
+    return `<el-form-item size='${data.size}' prop='${data.value}' label='${data.name}'><el-input resize='none' id='${data.key}' ${bind?'v-model="' + pre + data.value + '"': ''} style='width: ${data.width}' type="textarea" placeholder='${data.placeholder}'/></el-form-item>`
 }
 __map__.textarea = textarea
 
