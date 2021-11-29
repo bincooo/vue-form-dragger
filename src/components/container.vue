@@ -140,7 +140,7 @@
             <i class="el-icon-close" @click="closeCommand(index)"/>
             <div style="overflow: auto">
               <el-form-item :label-width="item.labelWidth" :size="item.size" :label="item.name">
-                <el-input resize='none' :disabled="item.disabled" :style="{width: item.Width}" type="textarea" :placeholder="item.placeholder"/>
+                <el-input resize='none' :disabled="item.disabled" :style="{width: item.width}" type="textarea" :placeholder="item.placeholder"/>
               </el-form-item>
             </div>
           </div>
