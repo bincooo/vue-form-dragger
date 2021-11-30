@@ -34,6 +34,9 @@ export default class OUtil {
                     }
                     // 执行拦截器
                     let data = this.filters[index](key, source[key], this.agn)
+                    if (data === '$ignore$') {
+                        continue
+                    }
                     // 没有结果返回时
                     result[key] = (typeof data === 'undefined') ? this.agn(source[key]) : data
                 }

@@ -1,5 +1,13 @@
+import ObjUtils from '@/utils/objects'
 const __map__ = {}, pre = 'data.'
-
+const objUtils = new ObjUtils(function(key, data) {
+    if (key == 'script') {
+        return '$ignore$';
+    }
+    if (key == 'type' && data == 'custom') {
+        return '$ignore$';
+    }
+})
 /**
  * 递归方法
  */
@@ -28,7 +36,15 @@ function __fn_bind__(data, bind, _fn_) {
 
         if (data.rules) { // 鉴权
             bind.rules = bind.rules || {}
-            bind.rules[data.value] = data.rules
+            bind.rules[data.value] = data.rules.map(rule => {
+                const ret = objUtils.agn(rule);
+                if (rule.type == 'custom') {
+                    delete ret.required
+                    delete ret.message
+                    ret.validator = `(rule, value, callback) => { ${rule.script} }`;
+                }
+                return ret;
+            })
         }
 
         if (data.value.indexOf('.') > 0) {
@@ -171,19 +187,29 @@ class encoder {
         delete this.__map__[key]
     }
 
-    build(data) {
+    build(data, preview) {
         if (!data || typeof data !== 'object') {
             return
         }
         const local = {
             data: {}
         }
+        function $do(rules) {
+            if (preview) {
+                Object.keys(rules).forEach(key => {
+                    rules[key].forEach(rule => {
+                        rule.validator = eval(rule.validator)
+                    })
+                })
+            }
+            return rules;
+        }
         return {
             template: `<el-container><el-form ref='formData' :rules='rules' style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
             data() {
                 return {
                     data: local.data,
-                    rules: local.rules
+                    rules: $do(local.rules)
                 }
             }
         }

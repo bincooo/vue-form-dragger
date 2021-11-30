@@ -94,11 +94,15 @@
             <el-select v-model="item.type" placeholder="请选择数据类型" clearable>
               <el-option label="date" value="date" />
               <el-option label="array" value="array" />
+              <el-option label="custom" value="custom" />
             </el-select>
           </el-form-item>
           <el-form-item label="提示">
             <el-input v-model="item.message" placeholder="请填写提示信息" />
           </el-form-item>
+          <div style="text-align: center" v-show="item.type == 'custom'">
+            <el-button size="mini" round @click="() => {showRule = true ; currRule = item; ruleScript = item.script}">自定义规则</el-button>
+          </div>
           <div style="margin: 0 12px 5px; text-align: right">
             <el-button type="info" size="mini" @click="data.rules.splice(idx, 1)">删除</el-button>
           </div>
@@ -112,6 +116,17 @@
       <!-- === 其他配置 === -->
       <slot></slot>
     </el-form>
+
+    <el-dialog
+      title="自定义规则"
+      :visible.sync="showRule"
+      width="60%">
+      <div><el-input v-model="ruleScript" type="textarea" :autosize="{ minRows: 12 }" show-word-limit/></div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="showRule = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="cfmRuleScript">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -122,6 +137,21 @@ export default {
     data: {
       validator() {
         return true
+      }
+    }
+  },
+  data() {
+    return {
+      showRule: false,
+      ruleScript: null,
+      currRule: null
+    }
+  },
+  methods: {
+    cfmRuleScript() {
+      this.showRule = false;
+      if (this.currRule) {
+        this.currRule.script = this.ruleScript;
       }
     }
   }

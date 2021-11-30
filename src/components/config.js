@@ -25,8 +25,7 @@ const __config_list__ = [
         labelWidth: '80px',
         placeholder: '请输入',
         rules: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+            { required: true, message: '请输入...', trigger: 'blur' }
         ]
     }, {
         type: 'textarea',
@@ -145,8 +144,8 @@ class modeler {
         })
     }
 
-    build(data) {
-        return this.__encoder__.build(data)
+    build(data, preview) {
+        return this.__encoder__.build(data, preview)
     }
 
     __fn_search__(type) {

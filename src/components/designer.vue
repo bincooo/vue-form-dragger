@@ -139,8 +139,13 @@ export default {
     },
     handleCode() {
       const buildMap = this.modeler.build(this.list)
-      const dataStr = JSON.stringify(buildMap.data()).replace(/"([^"]+)":/g,"$1:")
+      const dataStr = JSON.stringify(buildMap.data())
+        .replace(/"([^"]+)":/g,"$1:")
+        .replace(/"([(].+})"/g,"$1")
+        .replace(/\\n/g, "\n")
+        .replace(/\\"/g, '"')
       const code = `<template>${buildMap.template}</template><script>export default { data() { return ${dataStr} }}${'</'}script><style></style>`
+      console.log('code', code);
       return formatter(code)
     },
     generator() {
@@ -157,7 +162,7 @@ export default {
         if (!children) {
           element.querySelector(".el-dialog__body").innerHTML = '<div id="preview"/>'
         }
-        const _Vue_ = Vue.extend(self.modeler.build(self.list))
+        const _Vue_ = Vue.extend(self.modeler.build(self.list, true))
         self.preview = new _Vue_().$mount('#preview')
       })
     },
