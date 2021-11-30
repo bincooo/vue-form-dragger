@@ -42,6 +42,7 @@
       "parser": "babel-eslint"
     },
     "rules": {
+      "no-unused-vars": "off",
       "no-debugger": "off",
       "no-console": "off"
     }

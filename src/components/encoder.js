@@ -194,11 +194,17 @@ class encoder {
         const local = {
             data: {}
         }
-        function $do(rules) {
+        function $do(rules, vm) {
             if (preview) {
                 Object.keys(rules).forEach(key => {
                     rules[key].forEach(rule => {
-                        rule.validator = eval(rule.validator)
+                        const validator = rule.validator
+                        rule.validator = (a, b, c) => {
+                            function callback() {
+                                eval(validator)(a, b, c)
+                            }
+                            callback.bind(vm)()
+                        }
                     })
                 })
             }
@@ -207,9 +213,10 @@ class encoder {
         return {
             template: `<el-container><el-form ref='formData' :rules='rules' style='width: 100%' :model='${pre.substr(0, pre.length - 1)}' label-width='80px'>${__fn_build__(data, local, __fn_bind__, __fn_build__)}</el-form></el-container>`,
             data() {
+                const vm = this;
                 return {
                     data: local.data,
-                    rules: $do(local.rules)
+                    rules: $do(local.rules, vm)
                 }
             }
         }

@@ -121,7 +121,10 @@
       title="自定义规则"
       :visible.sync="showRule"
       width="60%">
-      <div><el-input v-model="ruleScript" type="textarea" :autosize="{ minRows: 12 }" show-word-limit/></div>
+      <div>
+        <div style="margin: 0 0 10px 2px; color: #1975d3">函数定义了四个参数：this, rule, value, callback</div>
+        <el-input v-model="ruleScript" type="textarea" :autosize="{ minRows: 12 }" show-word-limit/>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="showRule = false">取 消</el-button>
         <el-button size="mini" type="primary" @click="cfmRuleScript">确 定</el-button>

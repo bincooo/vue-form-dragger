@@ -139,12 +139,24 @@ export default {
     },
     handleCode() {
       const buildMap = this.modeler.build(this.list)
-      const dataStr = JSON.stringify(buildMap.data())
+      const data = buildMap.data()
+      const funs = [];
+      if (data.rules) {
+        Object.keys(data.rules).forEach(key => {
+          data.rules[key].forEach((rule, idx) => {
+            funs.push(`const ${key}Validator${idx}` + rule.validator)
+            rule.validator = `#${key}Validator${idx}#`
+          })
+        })
+      }
+      const dataStr = JSON.stringify(data)
         .replace(/"([^"]+)":/g,"$1:")
-        .replace(/"([(].+})"/g,"$1")
-        .replace(/\\n/g, "\n")
+        // .replace(/"([(].+})"/g,"$1")
+        // .replace(/\\n/g, "\n")
+        .replace(/"#([^#]+)#"/g, '$1')
         .replace(/\\"/g, '"')
-      const code = `<template>${buildMap.template}</template><script>export default { data() { return ${dataStr} }}${'</'}script><style></style>`
+      console.log("funs:", funs);
+      const code = `<template>${buildMap.template}</template><script>export default { data() { ${funs.join(" ")} return ${dataStr} }}${'</'}script><style></style>`
       console.log('code', code);
       return formatter(code)
     },
