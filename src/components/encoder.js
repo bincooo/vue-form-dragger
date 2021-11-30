@@ -63,7 +63,7 @@ function __fn_bind__(data, bind, _fn_) {
                 }
             })
         } else {
-            bind[data.value] = data.type === 'checkbox' ? [] : (_fn_ ? _fn_() : '')
+            bind.data[data.value] = data.type === 'checkbox' ? [] : (_fn_ ? _fn_() : '')
         }
         return true
     } else return false
