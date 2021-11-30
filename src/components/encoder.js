@@ -41,7 +41,11 @@ function __fn_bind__(data, bind, _fn_) {
                 if (rule.type == 'custom') {
                     delete ret.required
                     delete ret.message
-                    ret.validator = `(rule, value, callback) => { ${rule.script} }`;
+                    let script = rule.script
+                    if (!script || script.trim() == '') {
+                        script = "callback()"
+                    }
+                    ret.validator = `(rule, value, callback) => { ${script} }`;
                 }
                 return ret;
             })
@@ -198,12 +202,14 @@ class encoder {
             if (preview) {
                 Object.keys(rules).forEach(key => {
                     rules[key].forEach(rule => {
-                        const validator = rule.validator
-                        rule.validator = (a, b, c) => {
-                            function callback() {
-                                eval(validator)(a, b, c)
+                        if (rule.validator) {
+                            const validator = rule.validator
+                            rule.validator = (a, b, c) => {
+                                function callback() {
+                                    eval(validator)(a, b, c)
+                                }
+                                callback.bind(vm)()
                             }
-                            callback.bind(vm)()
                         }
                     })
                 })

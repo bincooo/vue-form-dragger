@@ -144,7 +144,7 @@ export default {
       if (data.rules) {
         Object.keys(data.rules).forEach(key => {
           data.rules[key].forEach((rule, idx) => {
-            funs.push(`const ${key}Validator${idx}` + rule.validator)
+            funs.push(`const ${key}Validator${idx}` + ' = ' + rule.validator)
             rule.validator = `#${key}Validator${idx}#`
           })
         })
