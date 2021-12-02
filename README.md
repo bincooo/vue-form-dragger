@@ -14,6 +14,8 @@
   
 [嗯... dev版 demo](https://medlar01.github.io/vue-form-dragger/dev/index.html)
 
+[另一个使用tinymce实现的可视化](https://github.com/medlar01/editjs)
+
 ## 三方类库
 * [element-ui 2.x+](https://github.com/ElemeFE/element)
 * [vuedraggable 2.x+](https://github.com/SortableJS/Vue.Draggable)
