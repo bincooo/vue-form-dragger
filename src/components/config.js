@@ -25,7 +25,13 @@ const __config_list__ = [
         labelWidth: '80px',
         placeholder: '请输入',
         rules: [
-            { required: true, message: '请输入...', trigger: 'blur' }
+            { required: true, message: '请输入...', trigger: 'blur', type: 'custom', script: `
+                if(value && value != '') {
+                  callback()
+                } else {
+                  callback(new Error('该项不能为空~'))
+                }`
+            }
         ]
     }, {
         type: 'textarea',
